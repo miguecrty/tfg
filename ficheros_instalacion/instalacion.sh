@@ -90,17 +90,26 @@ sudo curl -L -o /etc/containers/policy.json https://src.fedoraproject.org/rpms/c
 
 # Clonar el repositorio de Podman, compilarlo e instalarlo
 cd /
-git clone https://github.com/containers/podman/
-cd podman
+TAG=5.0.2
+wget https://github.com/containers/podman/archive/refs/tags/v${TAG}.tar.gz
+tar xvf v${TAG}.tar.gz
+cd podman*
 make BUILDTAGS="selinux seccomp" PREFIX=/usr
 sudo make install PREFIX=/usr
 systemctl enable --now podman.socket
 
-cd /lib
-git clone https://github.com/containers/netavark
-cd netavark
+##pasta
+git clone https://passt.top/passt
+cd passt
 make
-cp /lib/netavark/bin/netavark /usr/libexec/podman/
+make install PREFIX=/usr
+
+##netavark
+#cd /lib
+#git clone https://github.com/containers/netavark
+#cd netavark
+#make
+#make install PREFIX=/usr
 else
   echo "Podman no se va a instalar."
 fi
