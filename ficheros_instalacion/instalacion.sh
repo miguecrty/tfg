@@ -98,18 +98,24 @@ make BUILDTAGS="selinux seccomp" PREFIX=/usr
 sudo make install PREFIX=/usr
 systemctl enable --now podman.socket
 
+
+##netavark
+cd /lib
+git clone https://github.com/containers/netavark
+cd netavark
+make
+make install PREFIX=/usr
+
 ##pasta
 git clone https://passt.top/passt
 cd passt
 make
 make install PREFIX=/usr
 
-##netavark
-#cd /lib
-#git clone https://github.com/containers/netavark
-#cd netavark
-#make
-#make install PREFIX=/usr
+echo "---------	Podman instalado correctamente---------"
+echo "Toca alguna tecla para continuar.........."
+read response
+
 else
   echo "Podman no se va a instalar."
 fi
