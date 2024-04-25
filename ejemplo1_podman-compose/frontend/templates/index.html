@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo1</title>
+</head>
+<body>
+    <h1>Ejemplo 1 Podman Compose</h1>
+    <p>(Comunicación Front-Back)</p>
+   <button id="boton">Obtener Mensaje del Backend</button>
+    <script>
+        document.getElementById('boton').addEventListener('click', function() {
+            fetch('/obtenerMsgBack')
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.mensaje);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html> 
