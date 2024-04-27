@@ -27,8 +27,8 @@ echo "	_______________________________________________________________________	"
 sleep 2
 
 # Descargar e instalar Go
-wget https://go.dev/dl/go1.20.2.linux-amd64.tar.gz
-sudo tar -xvf go1.20.2.linux-amd64.tar.gz
+wget https://go.dev/dl/go1.22.2.linux-amd64.tar.gz
+sudo tar -xvf go1.22.2.linux-amd64.tar.gz
 
 sudo mv go /usr/local
 
