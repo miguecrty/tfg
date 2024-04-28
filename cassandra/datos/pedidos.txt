@@ -1,0 +1,11 @@
+id,fecha,productos,total
+70f4674f-018e-4884-b4f7-c371b5d14c3d,2024-04-06,"{tomates,huevos,agua}",15.99
+4d9cf179-64eb-4e97-8729-0a240f14ceac,2024-04-12,"{leche,pan,queso}",12.49
+ccfbc251-d9f5-4f3e-bf72-ffb44c8f3ebb,2024-04-18,"{papel higienico,detergente,jabon}",8.99
+edfc7098-870e-4728-bf57-14ff1da7e730,2024-04-24,"{pollo,carne,pescado}",24.99
+8a7ad56e-e8d7-4ddc-a79e-5abb140d88df,2024-04-05,"{arroz,pasta,legumbres}",11.99
+0fa56e53-3c02-44e1-8e3c-4be3da761a39,2024-04-15,"{manzanas,platanos,naranjas}",9.99
+356c1158-bbd6-4f16-accd-c3d86fa52d40,2024-04-21,"{yogur,cereales,frutos secos}",6.99
+133d77f4-bed7-4e53-9223-057f6b4ee393,2024-04-09,"{panuelos,cepillo de dientes,pasta de dientes}",5.99
+deea24e7-e6ca-4bf2-baad-9465357b2d0c,2024-04-29,"{jabon de manos,desinfectante,mascarillas}",14.99
+292f1137-1199-4e4f-addf-efe94c453df2,2024-04-14,"{patatas,cebollas,zanahorias}",7.99

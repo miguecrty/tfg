@@ -1,0 +1,11 @@
+id,nombre,apellido,email,asignaturas
+c75d7cb4-9a68-4fc6-a08b-bd0da328c25f,Carlos,Rodriguez,carlos@email.com,"{Senales y Sistemas, Comunicaciones Digitales, Redes de Telecomunicaciones}"
+b0d09715-9734-42f2-a21a-1d1cff9bc727,Ana,Gutierrez,ana@email.com,"{Teoria de la Informacion, Antenas y Propagacion, Procesamiento de Senales}"
+bb2b405e-6f3a-4d02-a444-08a2907241e4,Daniel,Lopez,daniel@email.com,"{Transmision de Datos, Teoria de la Comunicacion, Sistemas de Telecomunicaciones}"
+96511a35-d47e-4011-961e-cde65c726226,Maria,Fernandez,maria@email.com,"{Electronica de Comunicaciones, Radiocomunicaciones, Telematica}"
+bf794aa6-5b15-4501-abbe-29f156dc403e,Pablo,Ramirez,pablo@email.com,"{Telefonia Movil, Teoria de la Modulacion, Sistemas Inalambricos}"
+7151cd96-c837-4dab-a7a2-f03378f2015e,Laura,Martinez,laura@email.com,"{Redes Moviles, Fibra Optica, Protocolos de Comunicacion}"
+ea7d8e60-76f5-4c62-9e91-6f64d45cd951,Andres,Garcia,andres@email.com,"{Procesamiento de Imagenes, Codificacion de Voz y Audio, Protocolos de Red}"
+90750447-9e05-4cd5-a2a4-ed13ed4a0c5f,Sofia,Rodriguez,sofia@email.com,"{Seguridad en las Comunicaciones, Comunicaciones Satelitales, Ingenieria de Trafico}"
+5973e999-1591-4930-b28c-0b4f066ff170,Juan,Lopez,juan@email.com,"{Redes Opticas, Comunicaciones Digitales Avanzadas, Teoria de la Conmutacion}"
+e7782492-508c-499a-bd0b-3f707c90b026,Ana,Ramirez,ana.ramirez@email.com,"{Diseno de Circuitos Integrados, Tecnologias de la Informacion y Comunicacion, Comunicaciones por Fibra Optica}"
