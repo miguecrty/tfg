@@ -8,15 +8,15 @@
 
 En este repositorio se explora las funcionalidades de las siguientes tecnologías:
 
-• Podman
+• **[Podman](https://github.com/containers/podman)**
 
-• Apache Cassandra
+• **[Apache Cassandra](https://cassandra.apache.org/_/index.html)**
 
-• Podman Compose
+• **[Podman Compose](https://github.com/containers/podman-compose)**
 
-• Kubernetes (Kind)
+• **[Kubernetes (Kind)](https://kind.sigs.k8s.io/)**
 
-• Kubernetes (GKE)
+• **[Kubernetes (GKE)](https://cloud.google.com/kubernetes-engine?hl=es-419)**
 
 
 ## Configuración del proyecto
