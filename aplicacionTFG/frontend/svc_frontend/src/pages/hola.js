@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Cabecera from '../components/cabecera';
 import Pie from '../components/pie';
+
 const Hola = () => {
-    let hola;
     const [responseData, setResponseData] = useState(null); // Estado para almacenar la respuesta
     const router = useRouter();
-    const handleClick = async () => {
+
+    const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api'); // Ruta de ejemplo para la petición
+            const response = await fetch('http://localhost:3000/api/tabla');
             if (response.ok) {
                 const data = await response.json();
                 setResponseData(data); // Almacena la respuesta en el estado
@@ -20,11 +20,22 @@ const Hola = () => {
             console.error(error);
         }
     };
+
     useEffect(() => {
-        if (router.asPath === '/') {
-            router.push('/');
-        }
-    }, []);
+        fetchData(); // Llama a la función fetchData cuando se monta el componente
+
+        // Establecer una conexión WebSocket
+        const ws = new WebSocket('ws://localhost:3000');
+        ws.onmessage = () => {
+            // Si se recibe un mensaje del servidor, actualizar los datos
+            fetchData();
+        };
+
+        return () => {
+            // Cerrar la conexión WebSocket cuando el componente se desmonte
+            ws.close();
+        };
+    }, []); // El segundo argumento de useEffect vacío asegura que se ejecute solo una vez al montar el componente
 
     return (
         <div style={{ 
@@ -34,13 +45,27 @@ const Hola = () => {
             <Cabecera/>
             <h1>Página de Saludo</h1>
             <p>Hola! Bienvenido a esta página de saludo.</p>
-            <button onClick={handleClick}>Realizar Petición</button>
-            <button onClick={() => { window.location.href = "/" }}>Volver inicio</button>
-            {/* Renderiza la respuesta si existe */}
             {responseData && (
                 <div>
-                    <h2>Respuesta del servidor:</h2>
-                    <pre>{responseData.message}</pre>
+                    <h2>Tabla de la base de datos:</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Edad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {responseData.map(row => (
+                                <tr key={row.id}>
+                                    <td>{row.id}</td>
+                                    <td>{row.nombre}</td>
+                                    <td>{row.edad}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             )}
             <Pie/>
@@ -49,4 +74,3 @@ const Hola = () => {
 };
 
 export default Hola;
-
