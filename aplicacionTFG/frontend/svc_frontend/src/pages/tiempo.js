@@ -15,7 +15,7 @@ const Hola = () => {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/tabla');
+            const response = await fetch('http://backend:3000/api/tabla');
             if (response.ok) {
                 const data = await response.json();
                 setResponseData(data); // Almacena la respuesta en el estado
@@ -29,7 +29,7 @@ const Hola = () => {
     const handlePlaceSelected = (nombre_corto) => {
         setSelectedPlace(nombre_corto);
         // Enviar nombre_corto al servidor a través de WebSocket
-        const ws = new WebSocket('ws://localhost:3000');
+        const ws = new WebSocket('ws://backend:3000');
         ws.onopen = () => {
             // Enviar un mensaje al servidor con el nombre_corto seleccionado
             ws.send(JSON.stringify({ nombre_corto }));
@@ -42,7 +42,7 @@ const Hola = () => {
         fetchData(); // Llama a la función fetchData cuando se monta el componente
 
         // Establecer una conexión WebSocket
-        const ws = new WebSocket('ws://localhost:3000');
+        const ws = new WebSocket('ws://backend:3000');
         ws.onmessage = () => {
             // Si se recibe un mensaje del servidor, actualizar los datos
             fetchData();
