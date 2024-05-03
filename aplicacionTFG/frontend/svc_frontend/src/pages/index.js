@@ -6,8 +6,8 @@ const Home = () => {
     const router = useRouter();
 
     useEffect(() => {
-        if (router.asPath === '/hola') {
-            router.push('/hola');
+        if (router.asPath === '/tiempo') {
+            router.push('/tiempo');
         }
     }, []);
     
