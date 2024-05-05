@@ -25,6 +25,7 @@ const Home = () => {
                 setExito('Credenciales correctas, redirigiendo a menú...');
                 setTimeout(() => {
                     Cookies.set('isLoggedIn', 'true');
+                    Cookies.set('username', userData.username);
                     router.push('/menu');
                 }, 1000); // Espera 2 segundos antes de redirigir
                         } else {

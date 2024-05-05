@@ -5,7 +5,7 @@ const Pie = () => {
     <div style={{ 
       backgroundColor: 'rgba(0, 0, 0, 0.6)', // Negro semi-transparente (0.8 es el valor alfa)
       color: 'white', 
-      padding: '10px', 
+      padding: '1px', 
       textAlign: 'center',
       position: 'fixed', // Fija el pie de página
       bottom: 0, // Lo coloca al fondo

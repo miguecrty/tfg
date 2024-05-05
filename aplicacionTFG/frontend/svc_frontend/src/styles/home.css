@@ -117,3 +117,34 @@ body {
   margin: 5px 0; /* Ajusta el margen entre los elementos de la lista */
   cursor: pointer; /* Cambia el cursor al modo de selección */
 }
+.btn {
+  border: 2px solid black;
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.home {
+  border: 2px solid rgb(5, 35, 73);
+  background-color: rgb(129, 198, 221);
+  color: rgb(58, 86, 243);
+  border-radius: 10px;
+}
+
+.home:hover {
+  background: #e7e55a;
+}
+/* Red */
+.cerrar {
+  padding: 14px 28px;
+  background-color: rgb(212, 38, 38);
+  border-color: #770404;
+  color: rgb(255, 255, 255)
+  
+}
+
+.cerrar:hover {
+  background: #f44336;
+  color: rgb(78, 15, 15);
+}

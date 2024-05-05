@@ -60,7 +60,7 @@ const Hola = () => {
             width: '100vw',
             height: '100vh',
           }}>
-            <Cabecera/>
+            <Cabecera mostrarBotonHome={true}/>
             <h1>Página de Saludo</h1>
             <p>Hola! Bienvenido a esta página de saludo.</p>
             <h1>SearchBox</h1>
