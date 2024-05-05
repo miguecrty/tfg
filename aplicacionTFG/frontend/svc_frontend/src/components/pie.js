@@ -14,7 +14,7 @@ const Pie = () => {
       boxShadow: '0px -5px 10px rgba(0, 0, 0, 0.5)', // Sombra para efecto 3D
     }}>
       {/* Contenido de la barra */}
-      <p>&copy; PIE</p>
+      <p>&copy; TFG [Monitorización] : Miguel Ángel López Rodríguez</p>
     </div>
   );
 }

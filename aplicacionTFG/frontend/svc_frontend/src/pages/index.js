@@ -1,24 +1,92 @@
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import Cabecera from '../components/cabecera';
+import Cookies from 'js-cookie'; // Importa la biblioteca para manejar cookies
 import Pie from '../components/pie';
+
 const Home = () => {
     const router = useRouter();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [exito,setExito] = useState('');
+    const fetchData = async (userData) => {
+        try {
+            const response = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+    
+            if (response.status == 200) {
+                // Si las credenciales son correctas, muestra un mensaje y luego redirige a la página de menú
+                setExito('Credenciales correctas, redirigiendo a menú...');
+                setTimeout(() => {
+                    Cookies.set('isLoggedIn', 'true');
+                    router.push('/menu');
+                }, 1000); // Espera 2 segundos antes de redirigir
+                        } else {
+                const responseData = await response.json();
+                setError(responseData.error);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    
 
     useEffect(() => {
-        if (router.asPath === '/tiempo') {
-            router.push('/tiempo');
-        }
+        const isLoggedIn = Cookies.get('isLoggedIn');
+
+        // Simular una carga durante 2 segundos
+        const timer = setTimeout(() => {
+            if (isLoggedIn === 'true') {
+                // Si el usuario está logueado, redirecciona a la página de menú
+                router.push('/menu');
+            } else {
+                // Si el usuario no está logueado, se ha completado la carga
+                setIsLoading(false);
+                router.push('/');
+            }
+        }, 500);
+
+        return () => clearTimeout(timer); // Limpia el temporizador al desmontar el componente
     }, []);
-    
-    return (    
-         <div className="container">
-            <Cabecera></Cabecera>
-            <h1>Bienvenido a mi aplicación con Next.js</h1>
-            <p>Esta es una aplicación simple con el frontend en Next.js y el backend en Node.js.</p>
-            <Pie></Pie>
+
+    const handleLogin = () => {
+ 
+        const userData = {
+            username: username,
+            password: password
+        };
+
+        fetchData(userData);
+ 
+    };
+
+    if (isLoading) {
+        // Si isLoading es true, la página está cargando
+        return (
+            <div className="cargando">
+                    <img src="/images/cargando.gif" alt="Cargando" />
             </div>
-            
+        );
+    }
+
+    return (
+        <div className="container">
+            <div className="login-form">
+                <h1>Iniciar Sesión</h1>
+                <input type="text" placeholder="Usuario" value={username} onChange={(e) => setUsername(e.target.value)} />
+                <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <button onClick={handleLogin}>Iniciar Sesión</button>
+                {error && <div className="error-message">{error}</div>}
+                {exito && <div className="exito-message">{exito}</div>}
+            </div>
+            <Pie />
+        </div>
     );
 };
 
