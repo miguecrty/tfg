@@ -1,5 +1,7 @@
 const express = require('express');
 const cassandra = require('cassandra-driver');
+const axios = require('axios');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const client = new cassandra.Client({
@@ -48,14 +50,61 @@ wss.on('connection', ws => {
   });
 
   ws.on('message', message => {
-    try {
+
       const mensaje = JSON.parse(message.toString());
-      console.log('Mensaje parseado:', mensaje.nombre_corto);
-    } catch (error) {
-      console.error('Error al parsear el mensaje JSON:', error);
-    }
+      const latitud = mensaje.geometry.location.lat;
+      const longitud = mensaje.geometry.location.lng;
+      const usuario = 'usuario';
+      iniciarSondeo(usuario,latitud,longitud);
   });
 });
+
+
+
+async function iniciarSondeo(usuario, latitud, longitud) {
+  try {
+      const url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid=fd10b0dcb392959b10aa51f78462f9fd&lang=es';
+      console.log("iniciando sondeo para usuario");
+      console.log(url);
+      setInterval(async () => {
+          try {
+              const response = await axios.get(url);
+              const nombre_lugar = response.data.name;
+              const tiempo = response.data.weather[0].main;
+              const tiempo_descripcion = response.data.weather[0].description;
+              const temperatura = response.data.main;
+              const viento = response.data.wind;
+              const nubes = response.data.clouds;
+
+              const uuid = uuidv4();
+
+              const result = await client.execute(
+                  "INSERT INTO datos_usuario (id_dato, nombre_lugar, nubes, temperatura, tiempo, tiempo_descripcion, viento) VALUES (?, ?, ?, ?, ?, ?, ?);",
+                  [uuid, nombre_lugar, nubes, temperatura, tiempo, tiempo_descripcion, viento],
+                  { prepare: true }
+              );
+
+          } catch (error) {
+              //console.error('Error al realizar la petición:', error);
+          }
+      }, 1000); // Intervalo de 2000 milisegundos (2 segundos)
+  } catch (error) {
+  }
+}
+
+
+async function crearTabla(usu)
+{
+  try {
+    const result = await client.execute('CREATE TABLE IF NOT EXISTS tfg.datos_'+usu+' (id_dato UUID PRIMARY KEY,dato list<TEXT>);');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error al obtener datos de la tabla:', error);
+    res.status(500).json({ error: 'Error al obtener datos de la tabla' });
+  }
+}
+
+
 
 // Ruta para obtener los datos de la tabla
 app.get('/api/tabla', async (req, res) => {
@@ -118,4 +167,3 @@ app.post('/api/insertar', async (req, res) => {
 app.post('/notificar', (req, res) => {
   console.log('Notificación recibida de la base de datos');
 });
-

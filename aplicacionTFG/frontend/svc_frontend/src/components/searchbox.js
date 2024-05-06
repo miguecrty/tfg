@@ -12,8 +12,7 @@ const SearchBox = ({ onPlaceSelected }) => {
             const nombre_corto = place.address_components[0].long_name;
             let confirmar=confirm("¿Estás seguro que quieres seleccionar: "+nombre_corto+" ?");
             if(confirmar){
-            console.log(place);
-            onPlaceSelected(nombre_corto);
+            onPlaceSelected(place);
             }
         }
     };

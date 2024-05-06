@@ -27,13 +27,14 @@ const Hola = () => {
             console.error(error);
         }
     };
-    const handlePlaceSelected = (nombre_corto) => {
-        setSelectedPlace(nombre_corto);
+    const handlePlaceSelected = (place) => {
+        console.log(place);
+        setSelectedPlace(place);
         // Enviar nombre_corto al servidor a través de WebSocket
         const ws = new WebSocket('ws://'+server);
         ws.onopen = () => {
             // Enviar un mensaje al servidor con el nombre_corto seleccionado
-            ws.send(JSON.stringify({ nombre_corto }));
+            ws.send(JSON.stringify(place));
             ws.close(); // Cerrar la conexión después de enviar el mensaje
         };
         
@@ -65,31 +66,6 @@ const Hola = () => {
             <p>Hola! Bienvenido a esta página de saludo.</p>
             <h1>SearchBox</h1>
             <SearchBox onPlaceSelected={handlePlaceSelected} />
-            {/* Muestra selectedPlace en tu aplicación si lo deseas */}
-            {selectedPlace && <p>Selected Place: {selectedPlace}</p>}
-            {responseData && (
-                <div>
-                    <h2>Tabla de la base de datos:</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Edad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {responseData.map(row => (
-                                <tr key={row.id}>
-                                    <td>{row.id}</td>
-                                    <td>{row.nombre}</td>
-                                    <td>{row.edad}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
             <Pie/>
         </div>
     );
