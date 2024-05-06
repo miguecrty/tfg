@@ -17,15 +17,12 @@ const SeleccionLugar = () => {
     const handlePlaceSelected = (place) => {
         console.log(place);
         setSelectedPlace(place);
+        place.username = username;
         // Enviar nombre_corto al servidor a través de WebSocket
         const ws = new WebSocket('ws://'+server);
         ws.onopen = () => {
-            const json = {
-                "usuario": username,
-                "lista": JSON.stringify(place)
-            }
             // Enviar un mensaje al servidor con el nombre_corto seleccionado
-            ws.send(json);
+            ws.send(JSON.stringify(place));
             ws.close(); // Cerrar la conexión después de enviar el mensaje
         };
         

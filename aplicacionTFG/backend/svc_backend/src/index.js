@@ -23,7 +23,8 @@ app.use((req, res, next) => {
 
 // Array para almacenar los clientes conectados
 const clients = [];
-
+//ms
+const TIEMPO_SONDEO=10000
 // Iniciar el servidor
 const PORT = 3000;
 const server = app.listen(PORT, () => {
@@ -50,14 +51,12 @@ wss.on('connection', ws => {
   });
 
   ws.on('message', message => {
-      console.log(message.toString().usuario);
-      /*
+
       const mensaje = JSON.parse(message.toString());
       const latitud = mensaje.geometry.location.lat;
       const longitud = mensaje.geometry.location.lng;
-      const usuario = 'usuario';
+      const usuario = mensaje.username;
       iniciarSondeo(usuario,latitud,longitud);
-      */
   });
 });
 
@@ -66,8 +65,7 @@ wss.on('connection', ws => {
 async function iniciarSondeo(usuario, latitud, longitud) {
   try {
       const url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid=fd10b0dcb392959b10aa51f78462f9fd&lang=es';
-      console.log("iniciando sondeo para usuario");
-      console.log(url);
+      console.log("...........................\nIniciando sondeo para el usuario: "+usuario+"\n...........................");
       setInterval(async () => {
           try {
               const response = await axios.get(url);
@@ -81,7 +79,7 @@ async function iniciarSondeo(usuario, latitud, longitud) {
               const uuid = uuidv4();
 
               const result = await client.execute(
-                  "INSERT INTO datos_usuario (id_dato, nombre_lugar, nubes, temperatura, tiempo, tiempo_descripcion, viento) VALUES (?, ?, ?, ?, ?, ?, ?);",
+                  "INSERT INTO datos_"+usuario+"(id_dato, nombre_lugar, nubes, temperatura, tiempo, tiempo_descripcion, viento) VALUES (?, ?, ?, ?, ?, ?, ?);",
                   [uuid, nombre_lugar, nubes, temperatura, tiempo, tiempo_descripcion, viento],
                   { prepare: true }
               );
@@ -89,7 +87,7 @@ async function iniciarSondeo(usuario, latitud, longitud) {
           } catch (error) {
               //console.error('Error al realizar la petición:', error);
           }
-      }, 1000); // Intervalo de 2000 milisegundos (2 segundos)
+      }, TIEMPO_SONDEO); // Intervalo de 2000 milisegundos (2 segundos)
   } catch (error) {
   }
 }
