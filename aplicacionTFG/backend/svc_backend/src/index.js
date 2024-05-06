@@ -50,12 +50,14 @@ wss.on('connection', ws => {
   });
 
   ws.on('message', message => {
-
+      console.log(message.toString().usuario);
+      /*
       const mensaje = JSON.parse(message.toString());
       const latitud = mensaje.geometry.location.lat;
       const longitud = mensaje.geometry.location.lng;
       const usuario = 'usuario';
       iniciarSondeo(usuario,latitud,longitud);
+      */
   });
 });
 
@@ -96,26 +98,20 @@ async function iniciarSondeo(usuario, latitud, longitud) {
 async function crearTabla(usu)
 {
   try {
-    const result = await client.execute('CREATE TABLE IF NOT EXISTS tfg.datos_'+usu+' (id_dato UUID PRIMARY KEY,dato list<TEXT>);');
-    res.json(result.rows);
+    const result = await client.execute("CREATE TABLE IF NOT EXISTS tfg.datos_"+usu+
+      "(id_dato UUID PRIMARY KEY," +
+      "nombre_lugar TEXT," +
+      "tiempo TEXT," +
+      "tiempo_descripcion TEXT," +
+      "temperatura map<text,float>," +
+      "viento map<text,float>," +
+      "nubes map<text,float>);"
+    );
+    console.log("TABLA datos_"+usu+" CREADA CORRECTAMENTE");
   } catch (error) {
     console.error('Error al obtener datos de la tabla:', error);
-    res.status(500).json({ error: 'Error al obtener datos de la tabla' });
   }
 }
-
-
-
-// Ruta para obtener los datos de la tabla
-app.get('/api/tabla', async (req, res) => {
-  try {
-    const result = await client.execute('SELECT * FROM ejemplo1');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error al obtener datos de la tabla:', error);
-    res.status(500).json({ error: 'Error al obtener datos de la tabla' });
-  }
-});
 
 app.post('/login', async (req, res) => {
   try {
@@ -141,9 +137,50 @@ app.post('/login', async (req, res) => {
     console.error('Error al procesar la solicitud de inicio de sesión:', error);
     res.status(500).json({ error: 'Error al procesar la solicitud de inicio de sesión' });
   }
+});
+
+
+app.post('/compruebausu', async (req, res) => {
+  try {
+    const username = req.body;
+    console.log(username.usuario);
+    try {
+      const result = await client.execute("SELECT * FROM usuarios WHERE nombre_usu='"+username.usuario+"' ALLOW FILTERING;");
+      if(result.rows.length == 0)
+      {
+      res.sendStatus(200); 
+      }
+      else{
+        res.status(401).json({ error: 'Usuario existe en BBDD' });
+      }
+    } catch (error) {
+      console.log(error);
+
+    }
+  
+  } catch (error) {
+    console.error('Error al procesar la solicitud de inicio de sesión:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud de inicio de sesión' });
+  }
 
 
 });
+
+
+app.post('/registrar', async (req, res) => {
+    const { username, password } = req.body;
+    try {
+      const result = await client.execute("INSERT INTO usuarios (nombre_usu,clave,lugares) VALUES (?,?,{})",[username,password]);
+      console.log("USUARIO "+username+" INSERTADO CORRECTAMENTE");
+      crearTabla(username);
+      res.sendStatus(200); 
+    } catch (error) {
+      res.status(401).json({ error: 'Usuario existe en BBDD' });
+      console.log(error);
+    }
+
+});
+
 
 
 // Ruta para insertar datos en la tabla

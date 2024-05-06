@@ -22,12 +22,16 @@ const Home = () => {
     
             if (response.status == 200) {
                 // Si las credenciales son correctas, muestra un mensaje y luego redirige a la página de menú
+                setTimeout(() => {
+                setIsLoading(true);
+                },1100);
                 setExito('Credenciales correctas, redirigiendo a menú...');
                 setTimeout(() => {
                     Cookies.set('isLoggedIn', 'true');
-                    Cookies.set('username', userData.username);
+                    Cookies.set('username', userData.username);                    
                     router.push('/menu');
-                }, 1000); // Espera 2 segundos antes de redirigir
+                }, 1500);
+                 // Espera 2 segundos antes de redirigir
                         } else {
                 const responseData = await response.json();
                 setError(responseData.error);
@@ -51,19 +55,25 @@ const Home = () => {
                 setIsLoading(false);
                 router.push('/');
             }
-        }, 500);
+        }, 300);
 
         return () => clearTimeout(timer); // Limpia el temporizador al desmontar el componente
     }, []);
 
     const handleLogin = () => {
- 
         const userData = {
             username: username,
             password: password
         };
-
+        
         fetchData(userData);
+ 
+    };
+    const handleRegistro = () => {
+ 
+        // Si el usuario no está logueado, se ha completado la carga
+        setIsLoading(false);
+        router.push('/registro');
  
     };
 
@@ -83,6 +93,7 @@ const Home = () => {
                 <input type="text" placeholder="Usuario" value={username} onChange={(e) => setUsername(e.target.value)} />
                 <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <button onClick={handleLogin}>Iniciar Sesión</button>
+                <button onClick={handleRegistro}>Registrarse</button>
                 {error && <div className="error-message">{error}</div>}
                 {exito && <div className="exito-message">{exito}</div>}
             </div>

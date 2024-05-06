@@ -4,57 +4,33 @@ import Cabecera from '../components/cabecera';
 import Pie from '../components/pie';
 import SearchBox from '../components/searchbox';
 import {server} from './_app';
+import Cookies from 'js-cookie';
 
 
-const Hola = () => {
+const SeleccionLugar = () => {
     const [responseData, setResponseData] = useState(null); // Estado para almacenar la respuesta
     const [selectedPlace, setSelectedPlace] = useState(null);
     const router = useRouter();
-    const location = [51.505, -0.09]; // Coordenadas de ejemplo
-    const zoom = 13;
+    const username = Cookies.get('username');
+    
 
-
-    const fetchData = async () => {
-        try {
-            const response = await fetch('http://'+server+'/api/tabla');
-            if (response.ok) {
-                const data = await response.json();
-                setResponseData(data); // Almacena la respuesta en el estado
-            } else {
-                throw new Error('Error al realizar la petición');
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
     const handlePlaceSelected = (place) => {
         console.log(place);
         setSelectedPlace(place);
         // Enviar nombre_corto al servidor a través de WebSocket
         const ws = new WebSocket('ws://'+server);
         ws.onopen = () => {
+            const json = {
+                "usuario": username,
+                "lista": JSON.stringify(place)
+            }
             // Enviar un mensaje al servidor con el nombre_corto seleccionado
-            ws.send(JSON.stringify(place));
+            ws.send(json);
             ws.close(); // Cerrar la conexión después de enviar el mensaje
         };
         
     };
 
-    useEffect(() => {
-        fetchData(); // Llama a la función fetchData cuando se monta el componente
-
-        // Establecer una conexión WebSocket
-        const ws = new WebSocket('ws://'+server);
-        ws.onmessage = () => {
-            // Si se recibe un mensaje del servidor, actualizar los datos
-            fetchData();
-        };
-
-        return () => {
-            // Cerrar la conexión WebSocket cuando el componente se desmonte
-            ws.close();
-        };
-    }, []); // El segundo argumento de useEffect vacío asegura que se ejecute solo una vez al montar el componente
 
     return (
         <div style={{ 
@@ -68,7 +44,8 @@ const Hola = () => {
             <SearchBox onPlaceSelected={handlePlaceSelected} />
             <Pie/>
         </div>
-    );
+        
+    ); 
 };
 
-export default Hola;
+export default SeleccionLugar;
