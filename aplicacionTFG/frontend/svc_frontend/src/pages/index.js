@@ -3,13 +3,18 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie'; // Importa la biblioteca para manejar cookies
 import Pie from '../components/pie';
 
+
 const Home = () => {
+    
     const router = useRouter();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
     const [exito,setExito] = useState('');
+
+    
+
     const fetchData = async (userData) => {
         try {
             const response = await fetch('http://localhost:3000/login', {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Pie from '../components/pie';
 
+
 const Registro = () => {
     const router = useRouter();
     const [username, setUsername] = useState('');

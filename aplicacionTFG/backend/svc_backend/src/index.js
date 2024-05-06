@@ -42,14 +42,13 @@ wss.on('connection', ws => {
 
   // Agregar el cliente a la lista de clientes conectados
   clients.push(client);
-
   // Manejar la desconexión del cliente
   ws.on('close', () => {
     console.log('Cliente desconectado');
     // Eliminar el cliente de la lista de clientes conectados
     clients.splice(clients.indexOf(client), 1);
   });
-
+  ws.send('¡Hola desde el servidor!');
   ws.on('message', message => {
 
       const mensaje = JSON.parse(message.toString());
@@ -59,13 +58,51 @@ wss.on('connection', ws => {
       iniciarSondeo(usuario,latitud,longitud);
   });
 });
-
+async function actualizarTablaUsu(usuario,nombre_lugar) {
+    
+    let exito=false;
+    const resultado = await client.execute("SELECT lugares FROM usuarios WHERE nombre_usu='"+usuario+"'");
+    let bandera=false;
+    let lista =resultado.rows[0].lugares;
+    if(lista == null)
+    {
+    lista = []
+    }
+    else
+    {
+      for(let i =0;i<lista.length;i++)
+      {
+        if(lista[i] ==nombre_lugar)
+        {
+          bandera = true;
+        }  
+      }
+    }
+    lista.push(nombre_lugar);
+    if(bandera==false)
+    {
+      try {
+      const query = 'UPDATE usuarios SET lugares = ? WHERE nombre_usu = ?';
+      const parametros = [lista, usuario];
+      const resultado = await client.execute(query, parametros);
+      exito=true;
+      }catch (error) {
+        console.log("Error al realizar el update");
+    }
+    }
+    return exito;
+}
 
 
 async function iniciarSondeo(usuario, latitud, longitud) {
   try {
+
       const url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid=fd10b0dcb392959b10aa51f78462f9fd&lang=es';
       console.log("...........................\nIniciando sondeo para el usuario: "+usuario+"\n...........................");
+      const response = await axios.get(url);
+      const nombre_lugar = response.data.name
+     const noexiste=await actualizarTablaUsu(usuario,nombre_lugar);
+      if(noexiste){
       setInterval(async () => {
           try {
               const response = await axios.get(url);
@@ -77,17 +114,20 @@ async function iniciarSondeo(usuario, latitud, longitud) {
               const nubes = response.data.clouds;
 
               const uuid = uuidv4();
-
+              const exito=await actualizarTablaUsu(usuario,nombre_lugar)
               const result = await client.execute(
                   "INSERT INTO datos_"+usuario+"(id_dato, nombre_lugar, nubes, temperatura, tiempo, tiempo_descripcion, viento) VALUES (?, ?, ?, ?, ?, ?, ?);",
                   [uuid, nombre_lugar, nubes, temperatura, tiempo, tiempo_descripcion, viento],
                   { prepare: true }
               );
-
           } catch (error) {
               //console.error('Error al realizar la petición:', error);
           }
-      }, TIEMPO_SONDEO); // Intervalo de 2000 milisegundos (2 segundos)
+      }, TIEMPO_SONDEO);
+     } 
+     else{
+      console.log("Lugar ya existente");
+    }
   } catch (error) {
   }
 }
@@ -168,7 +208,7 @@ app.post('/compruebausu', async (req, res) => {
 app.post('/registrar', async (req, res) => {
     const { username, password } = req.body;
     try {
-      const result = await client.execute("INSERT INTO usuarios (nombre_usu,clave,lugares) VALUES (?,?,{})",[username,password]);
+      const result = await client.execute("INSERT INTO usuarios (nombre_usu,clave,lugares) VALUES (?,?,[])",[username,password]);
       console.log("USUARIO "+username+" INSERTADO CORRECTAMENTE");
       crearTabla(username);
       res.sendStatus(200); 

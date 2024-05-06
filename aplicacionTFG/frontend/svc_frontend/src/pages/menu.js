@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 
 const Menu = () => {
-
+    
     const router = useRouter();
     const handleItemClick = (url) => {
         router.push(url);
