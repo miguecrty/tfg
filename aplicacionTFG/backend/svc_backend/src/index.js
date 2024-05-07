@@ -20,7 +20,7 @@ app.use((req, res, next) => {
   next();
 });
 
-
+console.log(new Date().toLocaleDateString());
 // Array para almacenar los clientes conectados
 const clients = [];
 //ms
@@ -105,21 +105,25 @@ async function iniciarSondeo(usuario, latitud, longitud) {
           try {
               const response = await axios.get(url);
               const nombre_lugar = response.data.name;
-              const tiempo = response.data.weather[0].main;
-              const tiempo_descripcion = response.data.weather[0].description;
+              const tiempo = response.data.weather[0];
+              delete tiempo.id;
               const temperatura = response.data.main;
               const viento = response.data.wind;
               const nubes = response.data.clouds;
-
-              const uuid = uuidv4();
-              const exito=await actualizarTablaUsu(usuario,nombre_lugar,latitud,longitud)
+              const exito=await actualizarTablaUsu(usuario,nombre_lugar,latitud,longitud);
+              try{
               const result = await client.execute(
-                  "INSERT INTO datos_"+usuario+"(id_dato, nombre_lugar, nubes, temperatura, tiempo, tiempo_descripcion, viento) VALUES (?, ?, ?, ?, ?, ?, ?);",
-                  [uuid, nombre_lugar, nubes, temperatura, tiempo, tiempo_descripcion, viento],
+                  "INSERT INTO datos_"+usuario+"(nombre_lugar, nubes, temperatura, tiempo, viento, toma) VALUES (?, ?, ?, ?, ?, toTimeStamp(now()));",
+                  [nombre_lugar, nubes, temperatura, tiempo, viento],
                   { prepare: true }
               );
+            }
+            catch(error){
+              console.error(error);
+            }
+              
           } catch (error) {
-              //console.error('Error al realizar la petición:', error);
+              console.error(error);
           }
       }, TIEMPO_SONDEO);
      } 
@@ -135,7 +139,7 @@ async function crearTabla(usu)
 {
   try {
     const result = await client.execute("CREATE TABLE IF NOT EXISTS tfg.datos_"+usu+
-      "(id_dato UUID PRIMARY KEY," +
+      "(id_dato BIGINT PRIMARY KEY," +
       "nombre_lugar TEXT," +
       "tiempo TEXT," +
       "tiempo_descripcion TEXT," +
@@ -148,6 +152,7 @@ async function crearTabla(usu)
     console.error('Error al obtener datos de la tabla:', error);
   }
 }
+
 
 app.post('/login', async (req, res) => {
   try {
@@ -178,7 +183,6 @@ app.post('/login', async (req, res) => {
 app.post('/obtenerlista', async (req, res) => {
   try {
     const username = req.body;
-    console.log(username.usuario);
     try {
       const result = await client.execute("SELECT lugares FROM usuarios WHERE nombre_usu='"+username.usuario+"' ALLOW FILTERING;");
       if(result.rows.length > 0) {
@@ -239,26 +243,22 @@ app.post('/registrar', async (req, res) => {
 
 });
 
-
-
-// Ruta para insertar datos en la tabla
-app.post('/api/insertar', async (req, res) => {
+app.post('/obtenerdatosgraficatemperatura', async (req, res) => {
   try {
-    // Realizar la inserción en la base de datos
-
-    // Notificar a todos los clientes conectados sobre la nueva inserción
-    clients.forEach(client => {
-      client.res.json({ message: 'Nueva inserción realizada' });
-    });
-
-    res.json({ message: 'Datos insertados correctamente' });
+    const {username,lugar} = req.body;
+    try {
+      const result = await client.execute("SELECT toma,temperatura FROM datos_"+username+" WHERE nombre_lugar='"+lugar+"' ORDER BY toma ALLOW FILTERING;");
+      if(result.rows.length > 0) {
+        res.status(200).json(result.rows); // Enviar la lista de lugares como respuesta
+      } else {
+        res.status(401).json({ error: 'Usuario no existe en la BBDD' });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Error al consultar la base de datos' });
+    }
   } catch (error) {
-    console.error('Error al insertar datos:', error);
-    res.status(500).json({ error: 'Error al insertar datos' });
+    console.error('Error al procesar la solicitud:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
   }
-});
-
-// Ruta para recibir notificaciones de la base de datos
-app.post('/notificar', (req, res) => {
-  console.log('Notificación recibida de la base de datos');
 });

@@ -19,7 +19,7 @@ const ListaLugares = () => {
             width: '100vw',
             height: '100vh',
           }}>
-            <Cabecera mostrarBotonHome={true}/> 
+      <Cabecera mostrarBotonHome={true}/>  
                     <SelectPersonalizado/>
 
             <Pie/>

@@ -203,3 +203,15 @@ body {
   width: 100%;
   flex-direction: column
 }
+.contenedores .contenedor2 {
+  display: flex;
+  width: 100%;
+  flex-direction: column
+}
+
+ /* Canvas */
+ .monitorizar .temperatura canvas{
+  width:723px !important;
+  height:414px !important;
+ }
+ 
