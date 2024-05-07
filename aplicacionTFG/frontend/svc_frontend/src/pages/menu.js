@@ -19,7 +19,7 @@ const Menu = () => {
                         <span className="menu-item">Seleccionar lugar para monitorizar</span>
                         <img src="./images/map.png" alt="Imagen 1" /> 
                     </li>
-                    <li className="menu-item-container" onClick={() => handleItemClick('/tiempo')}>
+                    <li className="menu-item-container" onClick={() => handleItemClick('/lista')}>
                     <span className="menu-item">Lista de lugares monitorizados</span> 
                         <img src="./images/lista.png" alt="Imagen 2" /> 
                     </li>

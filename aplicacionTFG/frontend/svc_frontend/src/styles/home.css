@@ -148,3 +148,58 @@ body {
   background: #f44336;
   color: rgb(78, 15, 15);
 }
+
+.opcion {
+  padding: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.opcion:hover {
+  background-color: #f0f0f0;
+}
+
+.opcion span {
+  margin-left: 10px;
+}
+
+.contenedores {
+  display: flex;
+}
+
+.contenedor1 {
+  width: 30%;
+  align-items: center;
+}
+.contenedor2 {
+  display: flex;
+}
+
+.opcion {
+  padding: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  
+}
+
+.opcion:hover {
+  background-color: #f0f0f0;
+}
+
+.opcion span {
+  margin-left: 10px;
+}
+
+.contenedores .contenedor1 .listalugares {
+  display: flex;
+  width: 100%;
+  flex-direction: column
+}

@@ -58,7 +58,7 @@ wss.on('connection', ws => {
       iniciarSondeo(usuario,latitud,longitud);
   });
 });
-async function actualizarTablaUsu(usuario,nombre_lugar) {
+async function actualizarTablaUsu(usuario,nombre_lugar,lat,lon) {
     
     let exito=false;
     const resultado = await client.execute("SELECT lugares FROM usuarios WHERE nombre_usu='"+usuario+"'");
@@ -66,25 +66,23 @@ async function actualizarTablaUsu(usuario,nombre_lugar) {
     let lista =resultado.rows[0].lugares;
     if(lista == null)
     {
-    lista = []
+    lista = {}
     }
     else
     {
-      for(let i =0;i<lista.length;i++)
-      {
-        if(lista[i] ==nombre_lugar)
+        if(lista[nombre_lugar] ==nombre_lugar)
         {
           bandera = true;
         }  
-      }
     }
-    lista.push(nombre_lugar);
+    lista[nombre_lugar]=lat+"|"+lon;
     if(bandera==false)
     {
       try {
-      const query = 'UPDATE usuarios SET lugares = ? WHERE nombre_usu = ?';
-      const parametros = [lista, usuario];
-      const resultado = await client.execute(query, parametros);
+      const resultado = await client.execute('UPDATE usuarios SET lugares = ? WHERE nombre_usu = ?', 
+      [lista, usuario],
+      {prepare: true}
+    );
       exito=true;
       }catch (error) {
         console.log("Error al realizar el update");
@@ -101,7 +99,7 @@ async function iniciarSondeo(usuario, latitud, longitud) {
       console.log("...........................\nIniciando sondeo para el usuario: "+usuario+"\n...........................");
       const response = await axios.get(url);
       const nombre_lugar = response.data.name
-     const noexiste=await actualizarTablaUsu(usuario,nombre_lugar);
+     const noexiste=await actualizarTablaUsu(usuario,nombre_lugar,latitud,longitud);
       if(noexiste){
       setInterval(async () => {
           try {
@@ -114,7 +112,7 @@ async function iniciarSondeo(usuario, latitud, longitud) {
               const nubes = response.data.clouds;
 
               const uuid = uuidv4();
-              const exito=await actualizarTablaUsu(usuario,nombre_lugar)
+              const exito=await actualizarTablaUsu(usuario,nombre_lugar,latitud,longitud)
               const result = await client.execute(
                   "INSERT INTO datos_"+usuario+"(id_dato, nombre_lugar, nubes, temperatura, tiempo, tiempo_descripcion, viento) VALUES (?, ?, ?, ?, ?, ?, ?);",
                   [uuid, nombre_lugar, nubes, temperatura, tiempo, tiempo_descripcion, viento],
@@ -177,6 +175,28 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.post('/obtenerlista', async (req, res) => {
+  try {
+    const username = req.body;
+    console.log(username.usuario);
+    try {
+      const result = await client.execute("SELECT lugares FROM usuarios WHERE nombre_usu='"+username.usuario+"' ALLOW FILTERING;");
+      if(result.rows.length > 0) {
+        const lugares = result.rows[0].lugares;;
+        res.status(200).json(lugares); // Enviar la lista de lugares como respuesta
+      } else {
+        res.status(401).json({ error: 'Usuario no existe en la BBDD' });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Error al consultar la base de datos' });
+    }
+  } catch (error) {
+    console.error('Error al procesar la solicitud:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
+  }
+});
+
 
 app.post('/compruebausu', async (req, res) => {
   try {
@@ -208,7 +228,7 @@ app.post('/compruebausu', async (req, res) => {
 app.post('/registrar', async (req, res) => {
     const { username, password } = req.body;
     try {
-      const result = await client.execute("INSERT INTO usuarios (nombre_usu,clave,lugares) VALUES (?,?,[])",[username,password]);
+      const result = await client.execute("INSERT INTO usuarios (nombre_usu,clave,lugares) VALUES (?,?,?)",[username,password,null]);
       console.log("USUARIO "+username+" INSERTADO CORRECTAMENTE");
       crearTabla(username);
       res.sendStatus(200); 
