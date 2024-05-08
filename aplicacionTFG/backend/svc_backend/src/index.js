@@ -20,7 +20,7 @@ app.use((req, res, next) => {
   next();
 });
 
-console.log(new Date().toLocaleDateString());
+console.log(new Date(1715191200));
 // Array para almacenar los clientes conectados
 const clients = [];
 //ms
@@ -143,13 +143,13 @@ async function crearTabla(usu)
 {
   try {
     const result = await client.execute("CREATE TABLE IF NOT EXISTS tfg.datos_"+usu+
-      "(id_dato BIGINT PRIMARY KEY," +
-      "nombre_lugar TEXT," +
-      "tiempo TEXT," +
-      "tiempo_descripcion TEXT," +
+      "(nombre_lugar TEXT," +
+      "tiempo map<TEXT,TEXT>," +
       "temperatura map<text,float>," +
       "viento map<text,float>," +
-      "nubes map<text,float>);"
+      "nubes map<text,float>, "+
+      "toma TIMESTAMP, "+
+      "PRIMARY KEY(nombre_lugar,toma)) WITH CLUSTERING ORDER BY(toma DESC);"
     );
     console.log("TABLA datos_"+usu+" CREADA CORRECTAMENTE");
   } catch (error) {

@@ -8,8 +8,20 @@ import Cookies from 'js-cookie';
 
 
 const Pronostico = () => {
+    const axios = require('axios');
     const username = Cookies.get('username');
-    
+    const handlePlaceSelected = async (place) => {
+       const lugar= JSON.stringify(place);
+       const mensaje = JSON.parse(lugar.toString());
+       const lat=mensaje.geometry.location.lat;
+       const long=mensaje.geometry.location.lng;
+       const url = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + long + '&appid=854c5489c0f85d6fd1fd9a30d77eee0a&lang=es';
+       const response = await axios.get(url);
+       const lista_datos =response.data.list;
+       lista_datos.forEach(element => {
+        console.log(element.dt_txt);
+       });
+    };
 
     return (
         <div style={{ 
@@ -19,6 +31,7 @@ const Pronostico = () => {
             <Cabecera mostrarBotonHome={true}/>
             <div className="seleccion">
                 <h2>PARTE DE ARRIBA</h2>
+                <SearchBox onPlaceSelected ={handlePlaceSelected} />
             </div>
             <div className="dias">
                 <h2>PARTE DE ABAJO</h2>
