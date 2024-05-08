@@ -36,6 +36,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/menu.js"
+    ],
+    "/tiempo": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/tiempo.js"
     ]
   },
   "ampFirstPages": []

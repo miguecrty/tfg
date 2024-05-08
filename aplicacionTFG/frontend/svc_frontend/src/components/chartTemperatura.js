@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 
-const ChartTemperatura = ({ data, labels }) => {
+const ChartTemperatura = ({ datasets, labels }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -16,26 +16,20 @@ const ChartTemperatura = ({ data, labels }) => {
         type: 'line',
         data: {
           labels: labels,
-          datasets: [{
-            label: 'Datos',
-            data: data,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-          }]
+          datasets: datasets,
         },
         options: {
           scales: {
             y: {
-              beginAtZero: true
+              beginAtZero: false
             }
           }
         }
       });
     }
-  }, [data, labels]);
+  }, [datasets, labels]);
 
-  return <canvas ref={chartRef}></canvas>;
+  return <canvas ref={chartRef} style={{ width: '100%', minHeight: '600px' }}></canvas>;
 };
 
 export default ChartTemperatura;

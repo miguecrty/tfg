@@ -23,9 +23,9 @@ const Menu = () => {
                     <span className="menu-item">Lista de lugares monitorizados</span> 
                         <img src="./images/lista.png" alt="Imagen 2" /> 
                     </li>
-                    <li className="menu-item-container" onClick={() => handleItemClick('/tiempo')}>
-                    <span className="menu-item">Elemento de menú 3</span> 
-                        <img src="./images/cargando.gif" alt="Imagen 3" /> 
+                    <li className="menu-item-container" onClick={() => handleItemClick('/pronostico')}>
+                    <span className="menu-item">Pronóstico de 5 días</span> 
+                        <img src="./images/pronostico.jpg" alt="Imagen 3" /> 
                     </li>
                 </ul>
             </div>

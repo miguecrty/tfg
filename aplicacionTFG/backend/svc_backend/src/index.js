@@ -107,8 +107,12 @@ async function iniciarSondeo(usuario, latitud, longitud) {
               const nombre_lugar = response.data.name;
               const tiempo = response.data.weather[0];
               delete tiempo.id;
+              delete tiempo.main;
               const temperatura = response.data.main;
+              delete temperatura.sea_level;
+              delete temperatura.grnd_level;
               const viento = response.data.wind;
+              delete tiempo.gust;
               const nubes = response.data.clouds;
               const exito=await actualizarTablaUsu(usuario,nombre_lugar,latitud,longitud);
               try{
@@ -249,7 +253,34 @@ app.post('/obtenerdatosgraficatemperatura', async (req, res) => {
     try {
       const result = await client.execute("SELECT toma,temperatura FROM datos_"+username+" WHERE nombre_lugar='"+lugar+"' ORDER BY toma ALLOW FILTERING;");
       if(result.rows.length > 0) {
-        res.status(200).json(result.rows); // Enviar la lista de lugares como respuesta
+        const data=result.rows;
+        const listatomas = data.map(item => {
+          const fecha = new Date(item.toma);
+          const mes = fecha.getMonth() + 1;
+          const dia = fecha.getDate();
+          const horas = fecha.getHours();
+          const minutos = fecha.getMinutes();
+          return `${mes < 10 ? '0' : ''}${mes}-${dia < 10 ? '0' : ''}${dia} ${horas}:${minutos < 10 ? '0' : ''}${minutos}`;
+      });
+      
+      const listahumedad = data.map(item => item.temperatura.humidity);
+      const sensacionTermica = data.map(item => item.temperatura.feels_like-273.15);
+      const presion = data.map(item => item.temperatura.pressure);
+      const temperaturas = data.map(item => (item.temperatura.temp-273.15));
+      const maxTemperaturas = data.map(item => (item.temperatura.temp_max-273.15));
+      const minTemperaturas = data.map(item => (item.temperatura.temp_min-273.15));
+
+      
+      const datos ={
+        humedad:listahumedad,
+        sensacionTermica:sensacionTermica,
+        presion:presion,
+        temperaturas:temperaturas,
+        maxTemperaturas:maxTemperaturas,
+        minTemperaturas:minTemperaturas,
+        tomas:listatomas
+      }
+        res.status(200).json(datos); // Enviar la lista de lugares como respuesta
       } else {
         res.status(401).json({ error: 'Usuario no existe en la BBDD' });
       }

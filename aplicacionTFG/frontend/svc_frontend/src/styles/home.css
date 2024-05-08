@@ -203,15 +203,57 @@ body {
   width: 100%;
   flex-direction: column
 }
-.contenedores .contenedor2 {
-  display: flex;
-  width: 100%;
-  flex-direction: column
+.contenedores .contenedor2 canvas {
+  display: static;
 }
 
- /* Canvas */
- .monitorizar .temperatura canvas{
-  width:723px !important;
-  height:414px !important;
+ 
+.seleccion {
+  display: fixed;
+  border: 10px #007bff;
+  width:100% !important;
+  height:50%;
+}
+.dias {
+  height:50% !important;
+  position:static;
+}
+
+.dia1{
+  position:static;
+  height:50%;
+  width:251px;
+  transform:translatex(17px) translatey(-22px);
  }
+ 
+ /* Dia2 */
+.dia2{
+  position:static;
+  height:50%;
+  width:251px;
+  transform:translatex(300px);
+ }
+ 
+ /* Dia3 */
+.dia3{
+  position:static;
+  height:50%;
+  width:251px;
+  transform:translatex(580px) translatey(-314px);
+ }
+ 
+ /* Dia4 */
+.dia4{
+  position:static;
+  height:50%;
+  width:251px;
+  transform:translatex(700px) translatey(-314px);
+ }
+ .dia5{
+  position:static;
+  height:50%;
+  width:251px;
+  transform:translatex(900px) translatey(-314px);
+ }
+ 
  
