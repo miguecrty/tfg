@@ -4,5 +4,6 @@
   "/_document": "pages/_document.js",
   "/menu": "pages/menu.js",
   "/pronostico": "pages/pronostico.js",
+  "/lista": "pages/lista.js",
   "/": "pages/index.js"
 }

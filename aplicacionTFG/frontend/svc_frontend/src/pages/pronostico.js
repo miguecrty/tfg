@@ -37,10 +37,9 @@ const Pronostico = () => {
             </div>
             <div className="eltiempo">
             <div class="dias">
-            <div class="icono"></div>
-            <div class="infolugar">
-            <h1>22 ºC en Cartaya</h1>
-            </div>
+            <img class="icono" src={`http://openweathermap.org/img/w/01d.png`} alt="Icono del clima"></img>
+            <p><strong>22 ºC</strong> en <strong>Cartaya</strong></p>
+
     <div class="info">
         <p class="parrafo"><strong>Precipitaciones:</strong>valor3</p>
         <p class="parrafo"><strong>Humedad:</strong>valor2</p>
