@@ -5,6 +5,8 @@ import Pie from '../components/pie';
 import SearchBox from '../components/searchbox';
 import {server} from './_app';
 import Cookies from 'js-cookie';
+import ChartTemperatura from '@/components/chartTemperatura';
+import ChartNubes from '@/components/chartNubes';
 
 
 const Pronostico = () => {
@@ -33,24 +35,54 @@ const Pronostico = () => {
                 <h2>PARTE DE ARRIBA</h2>
                 <SearchBox onPlaceSelected ={handlePlaceSelected} />
             </div>
-            <div className="dias">
-                <h2>PARTE DE ABAJO</h2>
-                <div className="dia1">
-                    DIA1
-                </div>
-                <div className="dia2">
-                DIA2
-                </div>
-                <div className="dia3">
-                DIA3
-                </div>
-                <div className="dia4">
-                DIA4
-                </div>
-                <div className="dia5">
-                DIA5
-                </div>
+            <div className="eltiempo">
+            <div class="dias">
+            <div class="icono"></div>
+            <div class="infolugar">
+            <h1>22 ºC en Cartaya</h1>
             </div>
+    <div class="info">
+        <p class="parrafo"><strong>Precipitaciones:</strong>valor3</p>
+        <p class="parrafo"><strong>Humedad:</strong>valor2</p>
+        <p class="parrafo"><strong>Viento:</strong>valor1.</p>
+    </div>
+    
+</div>
+    <div class="grafica">
+        <ChartNubes></ChartNubes>
+    </div>
+    <div class="selecciondias">
+    <div class="infodias">
+        <div class="dia1">
+          <p>lunes
+        <img src={`http://openweathermap.org/img/w/01n.png`} alt="Icono del clima"/>
+        </p>
+            </div>
+        <div class="dia2">
+        <p>lunes
+        <img src={`http://openweathermap.org/img/w/01n.png`} alt="Icono del clima"/>
+        </p>
+            </div>
+        <div class="dia3">
+        <p>lunes
+        <img src={`http://openweathermap.org/img/w/01n.png`} alt="Icono del clima"/>
+        </p>
+            </div>
+        <div class="dia4">
+        <p>lunes
+        <img src={`http://openweathermap.org/img/w/01n.png`} alt="Icono del clima"/>
+        </p>
+            </div>
+        <div class="dia5">
+        <p>lunes
+        <img src={`http://openweathermap.org/img/w/01n.png`} alt="Icono del clima"/>
+        </p>
+            </div>
+    </div>
+
+    </div>
+    </div>
+
             <Pie/>
         </div>
         

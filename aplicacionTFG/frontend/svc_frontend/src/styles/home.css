@@ -212,48 +212,77 @@ body {
   display: fixed;
   border: 10px #007bff;
   width:100% !important;
-  height:50%;
+  height:20%;
+}
+.eltiempo {
+  display: fixed;
+  border: 10px #007bff;
+  width:30% !important;
+  height:60%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 .dias {
-  height:50% !important;
-  position:static;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+
 }
 
-.dia1{
-  position:static;
+.icono {
+  width: 50px;
+  height: 50px;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.info {
+  margin-left: 20px;
+  display: flex;
+  align-items: left;
+  flex-direction: column;
+}
+
+.texto {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.parrafo {
+  margin: 0;
+  margin-left: 200px;
+}
+
+.grafica {
+  display: fixed;
+  border: 10px #007bff;
+  width:100% !important;
   height:50%;
-  width:251px;
-  transform:translatex(17px) translatey(-22px);
- }
- 
- /* Dia2 */
-.dia2{
-  position:static;
-  height:50%;
-  width:251px;
-  transform:translatex(300px);
- }
- 
- /* Dia3 */
-.dia3{
-  position:static;
-  height:50%;
-  width:251px;
-  transform:translatex(580px) translatey(-314px);
- }
- 
- /* Dia4 */
-.dia4{
-  position:static;
-  height:50%;
-  width:251px;
-  transform:translatex(700px) translatey(-314px);
- }
- .dia5{
-  position:static;
-  height:50%;
-  width:251px;
-  transform:translatex(900px) translatey(-314px);
- }
- 
- 
+  align-items: center;
+}
+
+.infodias {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+}
+.infolugar {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: row;
+}
+.infodias > div {
+  width: 100px;
+  height: 100px;
+  background-color: #ccc;
+  border: 1px solid #000;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.infodias > div >p{
+  text-align: center;
+}
