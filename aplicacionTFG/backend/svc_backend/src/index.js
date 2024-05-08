@@ -251,9 +251,10 @@ app.post('/obtenerdatosgraficatemperatura', async (req, res) => {
   try {
     const {username,lugar} = req.body;
     try {
-      const result = await client.execute("SELECT toma,temperatura FROM datos_"+username+" WHERE nombre_lugar='"+lugar+"' ORDER BY toma ALLOW FILTERING;");
+      const result = await client.execute("SELECT toma,temperatura,nubes,viento,tiempo FROM datos_"+username+" WHERE nombre_lugar='"+lugar+"' ORDER BY toma ALLOW FILTERING;");
       if(result.rows.length > 0) {
         const data=result.rows;
+        
         const listatomas = data.map(item => {
           const fecha = new Date(item.toma);
           const mes = fecha.getMonth() + 1;
@@ -262,7 +263,11 @@ app.post('/obtenerdatosgraficatemperatura', async (req, res) => {
           const minutos = fecha.getMinutes();
           return `${mes < 10 ? '0' : ''}${mes}-${dia < 10 ? '0' : ''}${dia} ${horas}:${minutos < 10 ? '0' : ''}${minutos}`;
       });
-      
+      const tiempo_actual =data[(data.length-1)].tiempo.description;
+      const icono_tiempo = data[(data.length-1)].tiempo.icon;
+      const viento_direccion = data[(data.length-1)].viento.deg;
+      const viento_velocidad = data[(data.length-1)].viento.speed;
+      const nubes_actual = data[(data.length-1)].nubes.all;
       const listahumedad = data.map(item => item.temperatura.humidity);
       const sensacionTermica = data.map(item => item.temperatura.feels_like-273.15);
       const presion = data.map(item => item.temperatura.pressure);
@@ -272,6 +277,7 @@ app.post('/obtenerdatosgraficatemperatura', async (req, res) => {
 
       
       const datos ={
+        datosClimaticos:{
         humedad:listahumedad,
         sensacionTermica:sensacionTermica,
         presion:presion,
@@ -279,6 +285,14 @@ app.post('/obtenerdatosgraficatemperatura', async (req, res) => {
         maxTemperaturas:maxTemperaturas,
         minTemperaturas:minTemperaturas,
         tomas:listatomas
+        },
+        datosActuales:{
+          viento_direccion:viento_direccion,
+          viento_velocidad:viento_velocidad,
+          nubes_actual:nubes_actual,
+          tiempo_actual:tiempo_actual,
+          icono:icono_tiempo
+        }
       }
         res.status(200).json(datos); // Enviar la lista de lugares como respuesta
       } else {

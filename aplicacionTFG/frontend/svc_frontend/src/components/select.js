@@ -10,6 +10,7 @@ const SelectPersonalizado = () => {
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
     const [datasets, setDatasets] = useState([]);
     const [labels, setLabels] = useState([]);
+    const [datosActuales, setDatosActuales] = useState(null);
     const center = { lat: 40.7128, lng: -74.006 };
     const zoom = 15;
     const username = Cookies.get('username');
@@ -59,11 +60,12 @@ const SelectPersonalizado = () => {
       
           if (response.ok) {
             const data = await response.json();
+            console.log(data.datosClimaticos);
             const colores = ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'];
             const nombresPersonalizados = ['Humedad (%)', 'Sensación térmica (ºC)', 'Presión (hPa)', 'Temperatura (ºC)', 'Temperatura máxima (ºC)', 'Temperatura mínima (ºC)'];
-            const newDatasets = Object.keys(data).filter(key => key !== 'tomas').map((key,index)=> ({
+            const newDatasets = Object.keys(data.datosClimaticos).filter(key => key !== 'tomas').map((key,index)=> ({
               label: nombresPersonalizados[index],
-              data: data[key],
+              data: data.datosClimaticos[key],
               backgroundColor: colores[index % colores.length], // Asigna un color único a cada dataset
                 borderColor: colores[index % colores.length].replace('0.2', '1'),
               borderWidth: 1,
@@ -71,7 +73,8 @@ const SelectPersonalizado = () => {
             }));
             
             setDatasets(newDatasets);
-            setLabels(data.tomas);
+            setLabels(data.datosClimaticos.tomas);
+            setDatosActuales(data.datosActuales);
           } else {
             console.error('Error al obtener los datos para el gráfico');
           }
@@ -133,10 +136,20 @@ const SelectPersonalizado = () => {
                
               </div>
               <div className="nubes">
-                {/* Componente para mostrar datos de nubes */}
+              {datosActuales ? (
+                 <>
+                 <p>Descripcion: <strong>{datosActuales.tiempo_actual}</strong>
+                 <img src={`http://openweathermap.org/img/w/${datosActuales.icono}.png`} alt="Icono del clima"/>
+                 </p> 
+                <p>Dirección del viento: <strong>{datosActuales.viento_direccion}º</strong></p>
+                <p>Velocidad del viento: <strong>{datosActuales.viento_velocidad.toFixed(2)}m/s</strong></p>
+                <p>Nubes: <strong>{datosActuales.nubes_actual}%</strong></p>
+              </>
+            ): (<></>)
+              }
               </div>
               <div className="viento">
-                {/* Componente para mostrar datos de viento */}
+                
               </div>
             </div>
           </div>

@@ -29,7 +29,7 @@ const ChartTemperatura = ({ datasets, labels }) => {
     }
   }, [datasets, labels]);
 
-  return <canvas ref={chartRef} style={{ width: '100%', minHeight: '600px' }}></canvas>;
+  return <canvas ref={chartRef} style={{ width: '100%', minHeight: '300px' }}></canvas>;
 };
 
 export default ChartTemperatura;

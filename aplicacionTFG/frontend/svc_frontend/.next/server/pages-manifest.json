@@ -3,7 +3,8 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/lista": "pages/lista.js",
-  "/tiempo": "pages/tiempo.js",
   "/menu": "pages/menu.js",
+  "/tiempo": "pages/tiempo.js",
+  "/pronostico": "pages/pronostico.js",
   "/": "pages/index.js"
 }
