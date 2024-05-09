@@ -30,18 +30,20 @@ const SearchBox = ({ onPlaceSelected }) => {
                     style={{
                         boxSizing: `border-box`,
                         border: `1px solid transparent`,
-                        width: `900px`,
-                        height: `50px`,
+                        width: `400px`,
+                        height: `40px`,
                         padding: `0 12px`,
                         borderRadius: `3px`,
                         boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                        fontSize: `20px`,
+                        fontSize: `16px`,
                         outline: `none`,
                         textOverflow: `ellipses`,
                         position: "absolute",
-                        left: "30%",
+                        left: "1%",
                         marginLeft: "0px"
-                      }}
+                      }
+                    
+                    }
                     />
                     </StandaloneSearchBox>
                     </LoadScript>

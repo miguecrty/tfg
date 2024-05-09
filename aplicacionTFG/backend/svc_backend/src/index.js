@@ -322,7 +322,7 @@ app.post('/obtenerpronostico', async (req, res) => {
        const viento ={}
        lista_datos.forEach(element => {
         temperaturas[element.dt_txt]={temp:element.main.temp,temp_min:element.main.temp_min,temp_max:element.main.temp_max}; 
-        descripcion_tiempo[element.dt_txt]={description:element.weather[0].description,icon:element.weather[0].icon};
+        descripcion_tiempo[element.dt_txt]={description:element.weather[0].description,icon:element.weather[0].icon,sunrise:element.};
         nubes[element.dt_txt]=element.clouds.all;
         viento[element.dt_txt]={speed:element.wind.speed,deg:element.wind.deg};
        });
@@ -353,6 +353,7 @@ app.post('/obtenerpronostico', async (req, res) => {
     const nubesData = separarDatos(nubes, "nubes");
     const vientoData = separarDatos(viento, "viento");
     const temperaturaData = separarDatos(temperaturas, "temperatura");
+    const descripcion_tiempoData = separarDatos(descripcion_tiempo, "temperatura");
 
 
     function formatearDatos(datos) {
@@ -368,11 +369,29 @@ app.post('/obtenerpronostico', async (req, res) => {
   const nubesFormateadas = formatearDatos(nubesData);
   const vientoFormateado = formatearDatos(vientoData);
   const temperaturaFormateada = formatearDatos(temperaturaData);
+  const descripcion_tiempoFormateado = formatearDatos(descripcion_tiempoData);
+  const url_datos = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid=854c5489c0f85d6fd1fd9a30d77eee0a&lang=es';
+  const response_datos = await axios.get(url_datos);
+  const lista_datos_actuales =response_datos.data;
 
+  const atardecer = new Date(lista_datos_actuales.sys.sunset * 1000);
+  const atardecer_f = atardecer.getHours()+":"+atardecer.getMinutes();
+  const amanecer = new Date(lista_datos_actuales.sys.sunrise * 1000); // Convertir a milisegundos
+  const amanecer_f = "0"+amanecer.getHours()+":"+amanecer.getMinutes();
+
+  const datos_actuales = {
+    description:lista_datos_actuales.weather[0].description,
+    icon: lista_datos_actuales.weather[0].icon,
+    temperatura: (lista_datos_actuales.main.temp-273.15).toFixed(2),
+    amanecer:amanecer_f,
+    atardecer:atardecer_f
+  }
   const datos = {
     nubes: nubesFormateadas,
     viento: vientoFormateado,
-    temperatura: temperaturaFormateada
+    temperatura: temperaturaFormateada,
+    descripcion_tiempo: descripcion_tiempoFormateado,
+    datos_actuales: datos_actuales
 };
       if(response.data.list != null){
         res.status(200).json(datos); // Enviar la lista de lugares como respuesta
