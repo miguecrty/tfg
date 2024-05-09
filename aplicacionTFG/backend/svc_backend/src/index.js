@@ -307,3 +307,65 @@ app.post('/obtenerdatosgraficatemperatura', async (req, res) => {
     res.status(500).json({ error: 'Error al procesar la solicitud' });
   }
 });
+
+
+app.post('/obtenerpronostico', async (req, res) => {
+  try {
+    const {latitud,longitud} = req.body;
+    const url = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + latitud + '&lon=' + longitud + '&appid=854c5489c0f85d6fd1fd9a30d77eee0a&lang=es';
+       const response = await axios.get(url);
+       const lista_datos =response.data.list;
+       const temperaturas = {}
+       const descripcion_tiempo = {}
+       //const valores_actuales = {}
+       const nubes = {}
+       const viento ={}
+       lista_datos.forEach(element => {
+        temperaturas[element.dt_txt]={temp:element.main.temp,temp_min:element.main.temp_min,temp_max:element.main.temp_max}; 
+        descripcion_tiempo[element.dt_txt]={description:element.weather[0].description,icon:element.weather[0].icon};
+        nubes[element.dt_txt]=element.clouds.all;
+        viento[element.dt_txt]={speed:element.wind.speed,deg:element.wind.deg};
+       });
+       function obtenerDiaSemana(fecha) {
+        const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const fechaObj = new Date(fecha);
+        const diaSemanaNum = fechaObj.getDay();
+        return diasSemana[diaSemanaNum];
+    }
+    function separarDatos(data, type) {
+        const separatedData = {};
+        for (const [dateTime,value] of Object.entries(data)) {
+            const [date,hora] = dateTime.split(" ");
+            const horaf=hora.slice(0, -3);
+            // Extraer la fecha (día) de la clave
+            const diaSemana = obtenerDiaSemana(date);
+            if (!separatedData[diaSemana]) {
+                separatedData[diaSemana] = {};
+                // Si el día no existe en el objeto, inicializarlo
+            }
+            separatedData[diaSemana][horaf] = value;
+            // Agregar el valor al día correspondiente
+        }
+        return separatedData;
+    }
+    // Separar los datos por tipo
+    const nubesData = separarDatos(nubes, "nubes");
+    const vientoData = separarDatos(viento, "viento");
+    const temperaturaData = separarDatos(temperaturas, "temperatura");
+    // Crear un objeto contenedor para los datos separados por tipo
+    const datos = {
+        nubes: nubesData,
+        viento: vientoData,
+        temperatura: temperaturaData
+    };
+      if(response.data.list != null){
+        res.status(200).json(datos); // Enviar la lista de lugares como respuesta
+      } else {
+        res.status(401).json({ error: 'Error al obtener los datos' });
+      }
+    } 
+    catch (error) {
+    console.error('Error al procesar la solicitud:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
+  }
+});

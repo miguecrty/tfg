@@ -10,51 +10,36 @@ import ChartNubes from '@/components/chartNubes';
 
 
 const Pronostico = () => {
-    const axios = require('axios');
-    const username = Cookies.get('username');
+
     const handlePlaceSelected = async (place) => {
-       const lugar= JSON.stringify(place);
-       const mensaje = JSON.parse(lugar.toString());
-       const lat=mensaje.geometry.location.lat;
-       const long=mensaje.geometry.location.lng;
-       const url = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + long + '&appid=854c5489c0f85d6fd1fd9a30d77eee0a&lang=es';
-       const response = await axios.get(url);
-       const lista_datos =response.data.list;
-       const temperaturas = {}
-       const descripcion_tiempo = {}
-       //const valores_actuales = {}
-       const nubes = {}
-       const viento ={}
-       lista_datos.forEach(element => {
-        temperaturas[element.dt_txt]={temp:element.main.temp,temp_min:element.main.temp_min,temp_max:element.main.temp_max}; 
-        descripcion_tiempo[element.dt_txt]={description:element.weather[0].description,icon:element.weather[0].icon};
-        nubes[element.dt_txt]=element.clouds.all;
-        viento[element.dt_txt]={speed:element.wind.speed,deg:element.wind.deg};
-       });
-       function separateDataByType(data, type) {
-        const separatedData = {};
-        for (const [dateTime, value] of Object.entries(data)) {
-            const [date] = dateTime.split(' '); // Extraer la fecha (día) de la clave
-            if (!separatedData[date]) {
-                separatedData[date] = {}; // Si el día no existe en el objeto, inicializarlo
+        const lugar= JSON.stringify(place);
+        const mensaje = JSON.parse(lugar.toString());
+        const lat=mensaje.geometry.location.lat;
+        const long=mensaje.geometry.location.lng;
+        try {
+            const datos = {
+              latitud: lat,
+              longitud: long,
+            };
+        
+        const response = await fetch('http://localhost:3000/obtenerpronostico', {
+                method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(datos)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.nubes);
             }
-            separatedData[date][dateTime] = value; // Agregar el valor al día correspondiente
         }
-        return separatedData;
-    }
+         catch(error){
+            console.log(error);
+         }
+        
     
-    // Separar los datos por tipo
-    const nubesData = separateDataByType(nubes, 'nubes');
-    const vientoData = separateDataByType(viento, 'viento');
-    const temperaturaData = separateDataByType(temperaturas, 'temperatura');
-    
-    // Crear un objeto contenedor para los datos separados por tipo
-    const separatedDataByType = {
-        nubes: nubesData,
-        viento: vientoData,
-        temperatura: temperaturaData
-    };
-    console.log(separatedDataByType);
 
 }
     return (
