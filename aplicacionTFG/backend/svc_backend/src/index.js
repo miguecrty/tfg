@@ -343,6 +343,7 @@ app.post('/obtenerpronostico', async (req, res) => {
                 separatedData[diaSemana] = {};
                 // Si el día no existe en el objeto, inicializarlo
             }
+            
             separatedData[diaSemana][horaf] = value;
             // Agregar el valor al día correspondiente
         }
@@ -352,12 +353,27 @@ app.post('/obtenerpronostico', async (req, res) => {
     const nubesData = separarDatos(nubes, "nubes");
     const vientoData = separarDatos(viento, "viento");
     const temperaturaData = separarDatos(temperaturas, "temperatura");
-    // Crear un objeto contenedor para los datos separados por tipo
-    const datos = {
-        nubes: nubesData,
-        viento: vientoData,
-        temperatura: temperaturaData
-    };
+
+
+    function formatearDatos(datos) {
+      const resultado = {};
+      for (const dia in datos) {
+          resultado[dia] = {
+              horas: Object.keys(datos[dia]),
+              valores: Object.values(datos[dia])
+          };
+      }
+      return resultado;
+  }
+  const nubesFormateadas = formatearDatos(nubesData);
+  const vientoFormateado = formatearDatos(vientoData);
+  const temperaturaFormateada = formatearDatos(temperaturaData);
+
+  const datos = {
+    nubes: nubesFormateadas,
+    viento: vientoFormateado,
+    temperatura: temperaturaFormateada
+};
       if(response.data.list != null){
         res.status(200).json(datos); // Enviar la lista de lugares como respuesta
       } else {

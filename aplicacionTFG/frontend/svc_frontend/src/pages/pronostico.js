@@ -32,7 +32,11 @@ const Pronostico = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.nubes);
+                for (const dia in data.nubes) {
+                    console.log(dia + ":");
+                    console.log("  Horas: " + data.nubes[dia].horas);
+                    console.log("  Valores: " + data.nubes[dia].valores);
+                }
             }
         }
          catch(error){
