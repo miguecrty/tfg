@@ -22,12 +22,23 @@ const Pronostico = () => {
         let icono;
         let descripcion;
         let temperatura;
+        let a = valoresActuales;
         if(datos.descripcion_tiempo[dia].valores.length == 8)
         {
             icono = datos.descripcion_tiempo[dia].valores[3].icon;
             descripcion = datos.descripcion_tiempo[dia].valores[3].description;
             temperatura = datos.temperatura[dia].valores[3].temp;
+            const nuevosValores={
+                icon:icono,
+                temperatura:temperatura,
+                description:descripcion,
+                amanecer:valoresActuales.amanecer,
+                atardecer:valoresActuales.atardecer
+            }
+            a=nuevosValores;
         }
+        setValoresActuales(a);
+        /*
         else{
             let tamanio =datos.descripcion_tiempo[dia].valores.length;
             let tamanio2 =datos.temperatura[dia].valores.length;
@@ -35,15 +46,9 @@ const Pronostico = () => {
             icono = valoresActuales.icon;
             descripcion = valoresActuales.description;
             temperatura= valoresActuales.temperatura;
-        }
-       const nuevosValores={
-            icon:icono,
-            temperatura:temperatura,
-            description:descripcion,
-            amanecer:valoresActuales.amanecer,
-            atardecer:valoresActuales.atardecer
-        }
-        setValoresActuales(nuevosValores);
+        }*/
+       
+        
     }
 
     const handlePlaceSelected = async (place) => {
