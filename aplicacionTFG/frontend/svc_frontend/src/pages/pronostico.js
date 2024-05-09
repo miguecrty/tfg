@@ -20,16 +20,49 @@ const Pronostico = () => {
        const url = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + long + '&appid=854c5489c0f85d6fd1fd9a30d77eee0a&lang=es';
        const response = await axios.get(url);
        const lista_datos =response.data.list;
+       const temperaturas = {}
+       const descripcion_tiempo = {}
+       //const valores_actuales = {}
+       const nubes = {}
+       const viento ={}
        lista_datos.forEach(element => {
-        console.log(element.dt_txt);
+        temperaturas[element.dt_txt]={temp:element.main.temp,temp_min:element.main.temp_min,temp_max:element.main.temp_max}; 
+        descripcion_tiempo[element.dt_txt]={description:element.weather[0].description,icon:element.weather[0].icon};
+        nubes[element.dt_txt]=element.clouds.all;
+        viento[element.dt_txt]={speed:element.wind.speed,deg:element.wind.deg};
        });
+       function separateDataByType(data, type) {
+        const separatedData = {};
+        for (const [dateTime, value] of Object.entries(data)) {
+            const [date] = dateTime.split(' '); // Extraer la fecha (día) de la clave
+            if (!separatedData[date]) {
+                separatedData[date] = {}; // Si el día no existe en el objeto, inicializarlo
+            }
+            separatedData[date][dateTime] = value; // Agregar el valor al día correspondiente
+        }
+        return separatedData;
+    }
+    
+    // Separar los datos por tipo
+    const nubesData = separateDataByType(nubes, 'nubes');
+    const vientoData = separateDataByType(viento, 'viento');
+    const temperaturaData = separateDataByType(temperaturas, 'temperatura');
+    
+    // Crear un objeto contenedor para los datos separados por tipo
+    const separatedDataByType = {
+        nubes: nubesData,
+        viento: vientoData,
+        temperatura: temperaturaData
     };
+    console.log(separatedDataByType);
 
+}
     return (
         <div style={{ 
             width: '100vw',
             height: '100vh',
           }}>
+            
             <Cabecera mostrarBotonHome={true}/>
             <div className="seleccion">
                 <h2>PARTE DE ARRIBA</h2>

@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const client = new cassandra.Client({
-  contactPoints: ['10.88.0.17'],
+  contactPoints: ['10.88.0.22'],
   localDataCenter: 'datacenter1',
   protocolOptions: { port: 9042 },
   keyspace: 'tfg'
