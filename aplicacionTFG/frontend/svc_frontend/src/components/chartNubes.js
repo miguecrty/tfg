@@ -18,16 +18,15 @@ const ChartNubes = ({data, labels}) => {
           labels: labels,
           datasets: [
           {
-            label: 'Temperatura',
+            label: 'Nubosidad (%)',
             data: data,
-            backgroundColor: 'rgba(200, 100, 0, 0.2)',
-            borderColor: 'rgba(200, 100, 0, 1)',
+            backgroundColor: 'rgba(0, 0, 255, 0.2)',
+            borderColor: 'rgba(0, 0, 255, 1)',
             borderWidth: 1,
             fill: {
               target: 'origin',
               below: 'rgba(0, 255, 0, 0.1)'
             },
-            tension: 0.2
           }
         ]
         },

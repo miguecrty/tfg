@@ -317,12 +317,11 @@ app.post('/obtenerpronostico', async (req, res) => {
        const lista_datos =response.data.list;
        const temperaturas = {}
        const descripcion_tiempo = {}
-       //const valores_actuales = {}
        const nubes = {}
        const viento ={}
        lista_datos.forEach(element => {
-        temperaturas[element.dt_txt]={temp:element.main.temp,temp_min:element.main.temp_min,temp_max:element.main.temp_max}; 
-        descripcion_tiempo[element.dt_txt]={description:element.weather[0].description,icon:element.weather[0].icon,sunrise:element.};
+        temperaturas[element.dt_txt]={temp:(element.main.temp-273.15).toFixed(2),temp_min:(element.main.temp_min-273.15).toFixed(2),temp_max:(element.main.temp_max-273.15).toFixed(2)}; 
+        descripcion_tiempo[element.dt_txt]={description:element.weather[0].description,icon:element.weather[0].icon,sunrise:element};
         nubes[element.dt_txt]=element.clouds.all;
         viento[element.dt_txt]={speed:element.wind.speed,deg:element.wind.deg};
        });
@@ -354,7 +353,7 @@ app.post('/obtenerpronostico', async (req, res) => {
     const vientoData = separarDatos(viento, "viento");
     const temperaturaData = separarDatos(temperaturas, "temperatura");
     const descripcion_tiempoData = separarDatos(descripcion_tiempo, "temperatura");
-
+    
 
     function formatearDatos(datos) {
       const resultado = {};
@@ -374,6 +373,38 @@ app.post('/obtenerpronostico', async (req, res) => {
   const response_datos = await axios.get(url_datos);
   const lista_datos_actuales =response_datos.data;
 
+  // Después de obtener los datos de temperatura
+const temp = {};
+
+// Itera sobre cada día en temperaturaFormateada
+for (const dia in temperaturaFormateada) {
+  const horas = temperaturaFormateada[dia].horas;
+  const valores = temperaturaFormateada[dia].valores;
+
+  // Inicializa arrays vacíos para los valores de temperatura
+  const temps = [];
+  const temps_min = [];
+  const temps_max = [];
+
+  // Itera sobre cada objeto de valores
+  for (const valor of valores) {
+    // Agrega los valores de temperatura a los arrays correspondientes
+    temps.push(parseFloat(valor.temp));
+    temps_min.push(parseFloat(valor.temp_min));
+    temps_max.push(parseFloat(valor.temp_max));
+  }
+
+  // Crea un nuevo objeto con los arrays de valores de temperatura
+  temp[dia] = {
+    horas: horas,
+    valores: {
+      temp: temps,
+      temp_min: temps_min,
+      temp_max: temps_max
+    }
+  };
+}
+
   const atardecer = new Date(lista_datos_actuales.sys.sunset * 1000);
   const atardecer_f = atardecer.getHours()+":"+atardecer.getMinutes();
   const amanecer = new Date(lista_datos_actuales.sys.sunrise * 1000); // Convertir a milisegundos
@@ -389,7 +420,7 @@ app.post('/obtenerpronostico', async (req, res) => {
   const datos = {
     nubes: nubesFormateadas,
     viento: vientoFormateado,
-    temperatura: temperaturaFormateada,
+    temperatura: temp,
     descripcion_tiempo: descripcion_tiempoFormateado,
     datos_actuales: datos_actuales
 };

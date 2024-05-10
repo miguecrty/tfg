@@ -273,13 +273,13 @@ body {
   margin-top: 50px;
   display: flex;
   flex-direction: row;
-  margin-left: 33%;
-  margin-right: 33%;
+  margin-left: 20%;
+  margin-right: 20%;
 }
 
 .infodias > div {
-  width: 100px;
-  height: 100px;
+  width: 400px;
+  height: 180px;
   background-color: #ccc;
   border: 1px solid #000;
   margin-right: 10px;
@@ -288,6 +288,50 @@ body {
   align-items: center;
   cursor: pointer;
 }
-.infodias > div >p{
-  text-align: center;
+.dia1.seleccionado {
+  background-color: #eb7474 !important; /* Cambia el color de fondo al seleccionado */
+  border: 2px solid #964545; /* Cambia el borde al seleccionado */
+}
+.dia2.seleccionado {
+  background-color: #eb7474 !important; /* Cambia el color de fondo al seleccionado */
+  border: 2px solid #964545; /* Cambia el borde al seleccionado */
+}
+.dia3.seleccionado {
+  background-color: #eb7474 !important; /* Cambia el color de fondo al seleccionado */
+  border: 2px solid #964545; /* Cambia el borde al seleccionado */
+}
+.dia4.seleccionado {
+  background-color: #eb7474 !important; /* Cambia el color de fondo al seleccionado */
+  border: 2px solid #964545; /* Cambia el borde al seleccionado */
+}
+.dia5.seleccionado {
+  background-color: #eb7474 !important; /* Cambia el color de fondo al seleccionado */
+  border: 2px solid #964545; /* Cambia el borde al seleccionado */
+}
+
+.dia1:hover {
+background-color: rgba(255,255,0,0.5);
+}
+.dia2:hover {
+  background-color: rgba(255,255,0,0.5);
+}
+.dia3:hover {
+    background-color: rgba(255,255,0,0.5);
+}
+.dia4:hover {
+      background-color: rgba(255,255,0,0.5);
+}
+.dia5:hover {
+        background-color: rgba(255,255,0,0.5);
+}
+
+.textodia {
+  margin-left: 20px; /* Ajusta el margen izquierdo según sea necesario */
+  text-align: center; /* Centra el texto horizontalmente */
+  font-size: 20px; /* Tamaño de fuente ajustado */
+}
+
+.imagendia {
+  margin-right: 20px; /* Ajusta el margen derecho según sea necesario */
+  vertical-align: middle; /* Alinea verticalmente la imagen */
 }
