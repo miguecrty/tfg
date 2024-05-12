@@ -30,7 +30,7 @@ const ListaLugares = () => {
     return (
         <div>
       <Cabecera mostrarBotonHome={true}/> 
-        <SearchBox onPlaceSelected={handlePlaceSelected} /> 
+        <SearchBox onPlaceSelected={handlePlaceSelected} mostrarMapa={true}/> 
         <SelectPersonalizado/>
     
             <Pie/>

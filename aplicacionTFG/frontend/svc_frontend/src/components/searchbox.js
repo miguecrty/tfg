@@ -5,7 +5,7 @@ import { GoogleMap, Marker } from '@react-google-maps/api';
 import { server } from '@/pages/_app';
 import Cookies from 'js-cookie';
 
-const SearchBox = ({ onPlaceSelected }) => {
+const SearchBox = ({ onPlaceSelected, mostrarMapa }) => {
     const username = Cookies.get('username');
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
     const [marcador, setMarcador] = useState(null);
@@ -84,7 +84,7 @@ const SearchBox = ({ onPlaceSelected }) => {
                     
                     </StandaloneSearchBox>
                     </div>
-                    
+                    {mostrarMapa && (
                     <div className='map' >
                     <GoogleMap
                         mapContainerStyle={{ height: '400px', width: '30%' }}
@@ -96,7 +96,7 @@ const SearchBox = ({ onPlaceSelected }) => {
                     </GoogleMap>
                     
                         </div>
-                        
+                    )}
                     </LoadScript>
                     
                     
