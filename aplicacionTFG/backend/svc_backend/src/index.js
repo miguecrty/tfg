@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const client = new cassandra.Client({
-  contactPoints: ['10.88.0.3'],
+  contactPoints: ['10.88.0.2'],
   localDataCenter: 'datacenter1',
   protocolOptions: { port: 9042 },
   keyspace: 'tfg'
@@ -20,7 +20,6 @@ app.use((req, res, next) => {
   next();
 });
 
-console.log(new Date(1715191200));
 // Array para almacenar los clientes conectados
 const clients = [];
 //ms
@@ -30,7 +29,7 @@ const PORT = 3000;
 const server = app.listen(PORT, () => {
   console.log(`Servidor Express en funcionamiento en el puerto ${PORT}`);
 });
-
+let intervalos ={}
 // Establecer una conexión WebSocket
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server });
@@ -55,7 +54,6 @@ wss.on('connection', ws => {
       const latitud = mensaje.geometry.location.lat;
       const longitud = mensaje.geometry.location.lng;
       const usuario = mensaje.username;
-      iniciarSondeo(usuario,latitud,longitud);
   });
 });
 async function actualizarTablaUsu(usuario,nombre_lugar,lat,lon) {
@@ -70,14 +68,15 @@ async function actualizarTablaUsu(usuario,nombre_lugar,lat,lon) {
     }
     else
     {
-        if(lista[nombre_lugar] ==nombre_lugar)
+      const nombresEnLista = Object.keys(lista);
+      if (nombresEnLista.includes(nombre_lugar))
         {
           bandera = true;
         }  
     }
-    lista[nombre_lugar]=lat+"|"+lon;
     if(bandera==false)
     {
+      lista[nombre_lugar]=lat+"|"+lon;
       try {
       const resultado = await client.execute('UPDATE usuarios SET lugares = ? WHERE nombre_usu = ?', 
       [lista, usuario],
@@ -91,52 +90,60 @@ async function actualizarTablaUsu(usuario,nombre_lugar,lat,lon) {
     return exito;
 }
 
-
-async function iniciarSondeo(usuario, latitud, longitud) {
+app.post('/iniciarsondeo', async (req, res) => {
   try {
-
-      const url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid=fd10b0dcb392959b10aa51f78462f9fd&lang=es';
-      console.log("...........................\nIniciando sondeo para el usuario: "+usuario+"\n...........................");
-      const response = await axios.get(url);
-      const nombre_lugar = response.data.name
-     const noexiste=await actualizarTablaUsu(usuario,nombre_lugar,latitud,longitud);
-      if(noexiste){
-      setInterval(async () => {
-          try {
-              const response = await axios.get(url);
-              const nombre_lugar = response.data.name;
-              const tiempo = response.data.weather[0];
-              delete tiempo.id;
-              delete tiempo.main;
-              const temperatura = response.data.main;
-              delete temperatura.sea_level;
-              delete temperatura.grnd_level;
-              const viento = response.data.wind;
-              delete tiempo.gust;
-              const nubes = response.data.clouds;
-              const exito=await actualizarTablaUsu(usuario,nombre_lugar,latitud,longitud);
-              try{
-              const result = await client.execute(
-                  "INSERT INTO datos_"+usuario+"(nombre_lugar, nubes, temperatura, tiempo, viento, toma) VALUES (?, ?, ?, ?, ?, toTimeStamp(now()));",
-                  [nombre_lugar, nubes, temperatura, tiempo, viento],
-                  { prepare: true }
-              );
-            }
-            catch(error){
-              console.error(error);
-            }
-              
-          } catch (error) {
-              console.error(error);
+    const usuario = req.body.usuario;
+    let nombre_lugar= req.body.nombre_lugar;
+    const latitud= req.body.lat.toString();
+    const longitud= req.body.lng.toString();
+    const url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid=fd10b0dcb392959b10aa51f78462f9fd&lang=es';
+    const response = await axios.get(url);
+    nombre_lugar = response.data.name;
+    const noexiste=await actualizarTablaUsu(usuario,nombre_lugar,latitud,longitud);
+    if(noexiste){
+    console.log("...........................\nIniciando sondeo para el usuario: "+usuario);
+    let intervaloID=setInterval(async () => {
+        try {
+            const response = await axios.get(url);
+            const nombre_lugar = response.data.name;
+            const tiempo = response.data.weather[0];
+            delete tiempo.id;
+            delete tiempo.main;
+            const temperatura = response.data.main;
+            delete temperatura.sea_level;
+            delete temperatura.grnd_level;
+            const viento = response.data.wind;
+            delete tiempo.gust;
+            const nubes = response.data.clouds;
+            try{
+            const result = await client.execute(
+                "INSERT INTO datos_"+usuario+"(nombre_lugar, nubes, temperatura, tiempo, viento, toma) VALUES (?, ?, ?, ?, ?, toTimeStamp(now()));",
+                [nombre_lugar, nubes, temperatura, tiempo, viento],
+                { prepare: true }
+            );
           }
-      }, TIEMPO_SONDEO);
-     } 
-     else{
-      console.log("Lugar ya existente");
-    }
-  } catch (error) {
+          catch(error){
+            console.error(error);
+          }
+            
+        } catch (error) {
+            console.error(error);
+        }
+    }, TIEMPO_SONDEO);
+    console.log("Sondeo iniciado con exito\n...........................");
+    intervalos[usuario][nombre_lugar]=intervaloID;
+    res.sendStatus(200).json({exito: "Sondeo iniciado con exito"});
+   } 
+   else{
+    console.log("Lugar ya existente");
+    res.sendStatus(401).json({error:"Lugar ya existente"});
   }
+} catch (error) { 
 }
+});
+
+  
+
 
 
 async function crearTabla(usu)
@@ -239,6 +246,8 @@ app.post('/registrar', async (req, res) => {
       const result = await client.execute("INSERT INTO usuarios (nombre_usu,clave,lugares) VALUES (?,?,?)",[username,password,null]);
       console.log("USUARIO "+username+" INSERTADO CORRECTAMENTE");
       crearTabla(username);
+      intervalos[username]={};
+      console.log(intervalos);
       res.sendStatus(200); 
     } catch (error) {
       res.status(401).json({ error: 'Usuario existe en BBDD' });

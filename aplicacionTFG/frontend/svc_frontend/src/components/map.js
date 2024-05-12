@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-
+import { googleApiKey } from '@/pages/_app';
 const Map = ({ center, zoom , markerPosition}) => {
   return (
     <LoadScript
-      googleMapsApiKey="AIzaSyBsZnTlM4g1LCqmg4u74pouNXE3mlQF6Uk"
+      googleMapsApiKey={googleApiKey}
     >
       <GoogleMap
         mapContainerStyle={{ height: '300px', width: '100%' }}

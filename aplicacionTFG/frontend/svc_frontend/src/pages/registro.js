@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Pie from '../components/pie';
-
+import { server } from './_app';
 
 const Registro = () => {
     const router = useRouter();
@@ -12,7 +12,7 @@ const Registro = () => {
     const [error, setError] = useState('');
     const registrarUsuario = async (userData) => {
         try {
-            const response = await fetch('http://localhost:3000/registrar', {
+            const response = await fetch('http://'+server+'/registrar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -35,7 +35,7 @@ const Registro = () => {
 
     async function compruebaUsu (usuario) {
         try {
-            const response = await fetch('http://localhost:3000/compruebausu', {
+            const response = await fetch('http://'+server+'/compruebausu', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

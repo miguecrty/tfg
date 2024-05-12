@@ -52,7 +52,7 @@ const Pronostico = () => {
                 longitud: long,
             };
 
-            const response = await fetch('http://localhost:3000/obtenerpronostico', {
+            const response = await fetch('http://'+server+'/obtenerpronostico', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

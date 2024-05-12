@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie'; // Importa la biblioteca para manejar cookies
 import Pie from '../components/pie';
-
+import { server } from './_app';
 
 const Home = () => {
     
@@ -17,7 +17,7 @@ const Home = () => {
 
     const fetchData = async (userData) => {
         try {
-            const response = await fetch('http://localhost:3000/login', {
+            const response = await fetch('http://'+server+'/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

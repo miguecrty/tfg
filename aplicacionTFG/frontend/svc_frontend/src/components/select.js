@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Map from './map';
-import ChartComponent from './chartTemperatura';
 import ChartTemperatura from './chartTemperatura';
+import { server } from '@/pages/_app';
 
 const SelectPersonalizado = () => {
+  
     const [opciones, setOpciones] = useState([]);
     const [opcionSeleccionada, setOpcionSeleccionada] = useState(null);
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
@@ -19,7 +20,7 @@ const SelectPersonalizado = () => {
     const obtenerLista = async (usuario) => {
         let lista ={};
         try {
-            const response = await fetch('http://localhost:3000/obtenerlista', {
+            const response = await fetch('http://'+server+'/obtenerlista', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -50,7 +51,7 @@ const SelectPersonalizado = () => {
             lugar: lugar,
           };
       
-          const response = await fetch('http://localhost:3000/obtenerdatosgraficatemperatura', {
+          const response = await fetch('http://'+server+'/obtenerdatosgraficatemperatura', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
