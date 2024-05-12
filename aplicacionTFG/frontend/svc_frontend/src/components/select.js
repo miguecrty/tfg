@@ -116,10 +116,6 @@ const SelectPersonalizado = () => {
                     </div>
                 ))}
                 </div>
-                <div className="mapalugares">
-                {/* Pasar la ubicación seleccionada al componente Map */}
-                <Map center={ubicacionSeleccionada} zoom={zoom} markerPosition={ubicacionSeleccionada}/> 
-                </div>
           </div>
           <div className="contenedor2">
             <div className="monitorizar">

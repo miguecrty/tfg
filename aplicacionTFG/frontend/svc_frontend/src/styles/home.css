@@ -172,8 +172,9 @@ body {
 }
 
 .contenedor1 {
-  width: 30%;
   align-items: center;
+  transform:translatex(21px) translatey(50px);
+  width:461px;
 }
 .contenedor2 {
   display: flex;
@@ -340,4 +341,13 @@ background-color: rgba(255,255,0,0.5);
 .imagendia {
   margin-right: 20px; /* Ajusta el margen derecho según sea necesario */
   vertical-align: middle; /* Alinea verticalmente la imagen */
+}
+.map{
+transform:translatey(40px);
+height: 30%;
+}
+.monitorizar{
+  transform:translatex(218px) translatey(-260px);
+  min-height:672px;
+  min-width:957px;
 }

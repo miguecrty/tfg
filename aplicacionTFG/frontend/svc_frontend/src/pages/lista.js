@@ -28,14 +28,11 @@ const ListaLugares = () => {
         
     };
     return (
-        <div style={{ 
-            width: '100vw',
-            height: '100vh',
-          }}>
+        <div>
       <Cabecera mostrarBotonHome={true}/> 
-      <SearchBox onPlaceSelected={handlePlaceSelected} /> 
-        {/*<SelectPersonalizado/>*/}
-
+        <SearchBox onPlaceSelected={handlePlaceSelected} /> 
+        <SelectPersonalizado/>
+    
             <Pie/>
         </div>
         

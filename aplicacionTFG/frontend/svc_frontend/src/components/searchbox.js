@@ -49,20 +49,24 @@ const SearchBox = ({ onPlaceSelected }) => {
     };
     return (
         <div>
+            
             <LoadScript
                 googleMapsApiKey={googleApiKey}
                 libraries={["places"]}
             >
+            
                 <div className='searchbox'>
+                    
                 <StandaloneSearchBox
                 onLoad = {ref => (inputRef.current = ref)}
                 onPlacesChanged={handlePlaceChanged}
                 >
-                    <input type="text" className="form-control" placeholder="Enter Location" 
+                    
+                    <input type="text" className="form-control" placeholder="Introduce lugar a monitorizar" 
                     style={{
                         boxSizing: `border-box`,
                         border: `1px solid transparent`,
-                        width: `50%`,
+                        width: `400px`,
                         height: `40px`,
                         padding: `0 12px`,
                         borderRadius: `3px`,
@@ -77,19 +81,25 @@ const SearchBox = ({ onPlaceSelected }) => {
                     
                     }
                     />
+                    
                     </StandaloneSearchBox>
                     </div>
-                    <div className='map'>
+                    
+                    <div className='map' >
                     <GoogleMap
-                        mapContainerStyle={{ height: '300px', width: '30%' }}
+                        mapContainerStyle={{ height: '400px', width: '30%' }}
                         center={ubicacionSeleccionada}
                         zoom={zoom}>
                     {marcador && (
                     <Marker position={marcador} />
                     )}
                     </GoogleMap>
+                    
                         </div>
+                        
                     </LoadScript>
+                    
+                    
         </div>
     );
 };

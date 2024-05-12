@@ -30,6 +30,7 @@ const server = app.listen(PORT, () => {
   console.log(`Servidor Express en funcionamiento en el puerto ${PORT}`);
 });
 let intervalos ={}
+intervalos['usuario']={}
 // Establecer una conexión WebSocket
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server });

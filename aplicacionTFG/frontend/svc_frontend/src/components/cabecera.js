@@ -24,7 +24,7 @@ const Cabecera = ({ mostrarBotonHome }) => {
     };
 
     return (
-        <header style={{ backgroundColor: 'rgba(0, 80, 255, 0.5)', color: 'white', padding: '0.5px', textAlign: 'center' }}>
+        <header style={{ backgroundColor: 'rgba(0, 80, 255, 0.5)', color: 'white', paddingTop: '0.5px', paddingBottom:'0.5px', textAlign: 'center', width: '100%' }}>
             <nav>
                 <ul style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', listStyleType: 'none' }}>
                     <li id="boton-home">
