@@ -24,7 +24,7 @@ const Pronostico = () => {
         setLabels(datos.nubes[dia].horas);
         setValoresN(datos.nubes[dia].valores);
         setValoresT(datos.temperatura[dia].valores);
-        setValoresV(datos.temperatura[dia].valores);
+        //setValoresV(datos.temperatura[dia].valores);
         const temperatura = datos.descripcion_tiempo[dia].valores.length == 8 ?
             datos.temperatura[dia].valores.temp[3] :
             valoresActuales.temperatura;
@@ -69,7 +69,7 @@ const Pronostico = () => {
                 setValoresActuales(data.datos_actuales);
                 setValoresN(data.nubes[dias_semana[0]].valores);
                 setValoresT(data.temperatura[dias_semana[0]].valores);
-                setValoresV(data.viento[dias_semana[0]].valores);
+                //setValoresV(data.viento[dias_semana[0]].valores);
             }
 
         } catch (error) {

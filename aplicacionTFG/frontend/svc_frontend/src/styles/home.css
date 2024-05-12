@@ -308,6 +308,10 @@ body {
   background-color: #eb7474 !important; /* Cambia el color de fondo al seleccionado */
   border: 2px solid #964545; /* Cambia el borde al seleccionado */
 }
+.dia6.seleccionado {
+  background-color: #eb7474 !important; /* Cambia el color de fondo al seleccionado */
+  border: 2px solid #964545; /* Cambia el borde al seleccionado */
+}
 
 .dia1:hover {
 background-color: rgba(255,255,0,0.5);
@@ -324,7 +328,9 @@ background-color: rgba(255,255,0,0.5);
 .dia5:hover {
         background-color: rgba(255,255,0,0.5);
 }
-
+.dia6:hover {
+  background-color: rgba(255,255,0,0.5);
+}
 .textodia {
   margin-left: 20px; /* Ajusta el margen izquierdo según sea necesario */
   text-align: center; /* Centra el texto horizontalmente */
