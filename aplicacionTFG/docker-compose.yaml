@@ -23,7 +23,16 @@ services:
       - SERVIDOR=10.88.0.2
     networks:
       - red
-
+  cassandra:
+      image: cassandra:latest
+      container_name: cassandra
+      ports:
+        - "9042:9042"
+      volumes:
+        - ./bbdd/inicio.cql:/inicio.cql 
+      command: /bin/bash -c "sleep 60 && echo loading cassandra keyspace && cqlsh cassandra -f /inicio.cql"
+      networks:
+        - red
 networks:
   red:
     driver: bridge
