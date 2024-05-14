@@ -5,7 +5,6 @@ import Pie from '../components/pie';
 import { server } from './_app';
 
 const Home = () => {
-    
     const router = useRouter();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -17,7 +16,7 @@ const Home = () => {
 
     const fetchData = async (userData) => {
         try {
-            const response = await fetch('http://'+server+'/login', {
+            const response = await fetch('/api/login', { // Cambia la URL a '/api/login'
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -25,19 +24,16 @@ const Home = () => {
                 body: JSON.stringify(userData)
             });
     
-            if (response.status == 200) {
+            if (response.ok) {
                 // Si las credenciales son correctas, muestra un mensaje y luego redirige a la página de menú
-                setTimeout(() => {
                 setIsLoading(true);
-                },1100);
                 setExito('Credenciales correctas, redirigiendo a menú...');
                 setTimeout(() => {
                     Cookies.set('isLoggedIn', 'true');
                     Cookies.set('username', userData.username);                    
                     router.push('/menu');
                 }, 1500);
-                 // Espera 2 segundos antes de redirigir
-                        } else {
+            } else {
                 const responseData = await response.json();
                 setError(responseData.error);
             }

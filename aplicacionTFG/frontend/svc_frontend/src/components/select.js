@@ -20,7 +20,7 @@ const SelectPersonalizado = () => {
     const obtenerLista = async (usuario) => {
         let lista ={};
         try {
-            const response = await fetch('http://'+server+'/obtenerlista', {
+            const response = await fetch('/api/obtenerlista', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ const SelectPersonalizado = () => {
             lugar: lugar,
           };
       
-          const response = await fetch('http://'+server+'/obtenerdatosgraficatemperatura', {
+          const response = await fetch('/api/obtenerdatosgraficatemperatura', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

@@ -52,7 +52,7 @@ const Pronostico = () => {
                 longitud: long,
             };
 
-            const response = await fetch('http://'+server+'/obtenerpronostico', {
+            const response = await fetch('/api/obtenerpronostico', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

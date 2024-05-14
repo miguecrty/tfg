@@ -12,7 +12,7 @@ const Registro = () => {
     const [error, setError] = useState('');
     const registrarUsuario = async (userData) => {
         try {
-            const response = await fetch('http://'+server+'/registrar', {
+            const response = await fetch('/api/registrar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -35,7 +35,7 @@ const Registro = () => {
 
     async function compruebaUsu (usuario) {
         try {
-            const response = await fetch('http://'+server+'/compruebausu', {
+            const response = await fetch('/api/compruebausu', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -1,6 +1,7 @@
 # Etapa de construcción
 FROM node:22
 
+# ENV SERVIDOR=10.88.0.2
 # Establecer el directorio de trabajo
 WORKDIR /app/svc_frontend
 

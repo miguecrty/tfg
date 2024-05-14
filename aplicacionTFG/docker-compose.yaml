@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      - CASSANDRA=10.88.0.46
+      - DATACENTER=datacenter1
+      - PORT=9042
+      - KEYSPACE=tfg
+    networks:
+      - red
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVIDOR=10.88.0.2
+    networks:
+      - red
+
+networks:
+  red:
+    driver: bridge

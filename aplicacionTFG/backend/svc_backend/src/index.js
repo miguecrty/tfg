@@ -5,10 +5,10 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const client = new cassandra.Client({
-  contactPoints: ['10.88.0.2'],
-  localDataCenter: 'datacenter1',
-  protocolOptions: { port: 9042 },
-  keyspace: 'tfg'
+  contactPoints: [process.env.CASSANDRA],
+  localDataCenter: process.env.DATACENTER,
+  protocolOptions: { port: process.env.PORT },
+  keyspace: process.env.KEYSPACE
 });
 
 app.use(express.json());
@@ -166,7 +166,7 @@ async function crearTabla(usu)
 }
 
 
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     console.log("Usuario:", username);
@@ -213,6 +213,42 @@ app.post('/obtenerlista', async (req, res) => {
   }
 });
 
+app.post('/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    console.log("Usuario:", username);
+    console.log("Contraseña:", password);
+
+    try {
+      const result = await client.execute("SELECT * FROM usuarios WHERE nombre_usu=? AND clave=? ALLOW FILTERING",[username,password]);
+      if(result.rows.length > 0)
+      {
+      res.sendStatus(200); 
+      }
+      else{
+        res.status(401).json({ error: 'Credenciales incorrectas' });
+      }
+    } catch (error) {
+      console.log(error);
+
+    }
+  
+  } catch (error) {
+    console.error('Error al procesar la solicitud de inicio de sesión:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud de inicio de sesión' });
+  }
+});
+
+app.get('/prueba', async (req, res) => {
+  try {
+    const username = req.usuario;
+    console.log(username);
+
+  } catch (error) {
+    console.error('Error al procesar la solicitud:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
+  }
+});
 
 app.post('/compruebausu', async (req, res) => {
   try {

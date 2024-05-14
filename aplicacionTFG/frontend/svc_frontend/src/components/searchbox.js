@@ -14,7 +14,7 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa }) => {
 
     const iniciarSondeo = async (coordenadas) =>{
         try {
-            const response = await fetch('http://'+server+'/iniciarsondeo', {
+            const response = await fetch('/api/iniciarsondeo', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
