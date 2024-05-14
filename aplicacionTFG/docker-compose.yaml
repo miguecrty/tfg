@@ -7,13 +7,12 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - CASSANDRA=10.88.0.46
+      - CASSANDRA=cassandra
       - DATACENTER=datacenter1
       - PORT=9042
       - KEYSPACE=tfg
     networks:
       - red
-
   frontend:
     build:
       context: ./frontend
@@ -24,15 +23,13 @@ services:
     networks:
       - red
   cassandra:
-      image: cassandra:latest
-      container_name: cassandra
-      ports:
-        - "9042:9042"
-      volumes:
-        - ./bbdd/inicio.cql:/inicio.cql 
-      command: /bin/bash -c "sleep 60 && echo loading cassandra keyspace && cqlsh cassandra -f /inicio.cql"
-      networks:
-        - red
+    image: bitnami/cassandra:4.0.7
+    networks:
+      - red
+    ports:
+      - "9042:9042"
+    volumes:
+       - "./bbdd/cassandra:/docker-entrypoint-initdb.d/"
 networks:
   red:
     driver: bridge

@@ -8,7 +8,11 @@ const client = new cassandra.Client({
   contactPoints: [process.env.CASSANDRA],
   localDataCenter: process.env.DATACENTER,
   protocolOptions: { port: process.env.PORT },
-  keyspace: process.env.KEYSPACE
+  keyspace: process.env.KEYSPACE,
+  credentials: {
+    username: 'cassandra',
+    password: 'cassandra'
+  }
 });
 
 app.use(express.json());

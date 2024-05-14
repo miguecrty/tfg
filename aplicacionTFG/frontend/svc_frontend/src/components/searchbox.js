@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 const SearchBox = ({ onPlaceSelected, mostrarMapa }) => {
     const username = Cookies.get('username');
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
-    const [marcador, setMarcador] = useState(null);
+    const [marcador, setMarcador] = useState({ lat: 40.7128, lng: -74.006 });
     const zoom = 15;
     const inputRef = useRef();
 
