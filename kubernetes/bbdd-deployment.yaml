@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: cassandra
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: cassandra
   template:
     metadata:
       labels:
-        app: postgres
+        app: cassandra
     spec:
       containers:
       - name: postgres

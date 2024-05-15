@@ -16,7 +16,7 @@ const Home = () => {
 
     const fetchData = async (userData) => {
         try {
-            const response = await fetch('/api/login', { // Cambia la URL a '/api/login'
+            const response = await fetch('/api/login', { // La solicitud se envía a la ruta del middleware
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -41,6 +41,7 @@ const Home = () => {
             console.error(error);
         }
     };
+    
     
 
     useEffect(() => {
