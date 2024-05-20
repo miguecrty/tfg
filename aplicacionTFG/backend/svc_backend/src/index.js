@@ -4,6 +4,7 @@ const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
+/* CLUSTER
 const client = new cassandra.Client({
   contactPoints: [process.env.CASSANDRA],
   localDataCenter: process.env.DATACENTER,
@@ -14,6 +15,20 @@ const client = new cassandra.Client({
     password: 'cassandra'
   }
 });
+*/
+//   LOCAL
+const client = new cassandra.Client({
+  contactPoints: ['10.88.0.11'],
+  localDataCenter: 'datacenter1',
+  protocolOptions: { port: 9042 },
+  keyspace: 'tfg',
+  credentials: {
+    username: 'cassandra',
+    password: 'cassandra'
+  }
+});
+
+
 
 app.use(express.json());
 
@@ -170,37 +185,12 @@ async function crearTabla(usu)
 }
 
 
-app.post('/api/login', async (req, res) => {
+
+app.get('/obtenerlista', async (req, res) => {
   try {
-    const { username, password } = req.body;
-    console.log("Usuario:", username);
-    console.log("Contraseña:", password);
-
+    const username = req.query.usuario;
     try {
-      const result = await client.execute("SELECT * FROM usuarios WHERE nombre_usu=? AND clave=? ALLOW FILTERING",[username,password]);
-      if(result.rows.length > 0)
-      {
-      res.sendStatus(200); 
-      }
-      else{
-        res.status(401).json({ error: 'Credenciales incorrectas' });
-      }
-    } catch (error) {
-      console.log(error);
-
-    }
-  
-  } catch (error) {
-    console.error('Error al procesar la solicitud de inicio de sesión:', error);
-    res.status(500).json({ error: 'Error al procesar la solicitud de inicio de sesión' });
-  }
-});
-
-app.post('/obtenerlista', async (req, res) => {
-  try {
-    const username = req.body;
-    try {
-      const result = await client.execute("SELECT lugares FROM usuarios WHERE nombre_usu='"+username.usuario+"' ALLOW FILTERING;");
+      const result = await client.execute("SELECT lugares FROM usuarios WHERE nombre_usu='"+username+"' ALLOW FILTERING;");
       if(result.rows.length > 0) {
         const lugares = result.rows[0].lugares;;
         res.status(200).json(lugares); // Enviar la lista de lugares como respuesta
@@ -297,9 +287,10 @@ app.post('/registrar', async (req, res) => {
 
 });
 
-app.post('/obtenerdatosgraficatemperatura', async (req, res) => {
+app.get('/obtenerdatosgraficatemperatura', async (req, res) => {
   try {
-    const {username,lugar} = req.body;
+    const username= req.query.usuario;
+    const lugar = req.query.lugar;
     try {
       const result = await client.execute("SELECT toma,temperatura,nubes,viento,tiempo FROM datos_"+username+" WHERE nombre_lugar='"+lugar+"' ORDER BY toma ALLOW FILTERING;");
       if(result.rows.length > 0) {

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    kubernetes.io/ingress.class: traefik
+  name: frontend-ingress
+spec:
+  rules:
+    - host: chat.etsisevilla.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 8080
+  tls:
+  - hosts:
+    - chat.etsisevilla.me
+    secretName: chat-etsisevilla-me-tls

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Map from './map';
 import ChartTemperatura from './chartTemperatura';
-import { server } from '@/pages/_app';
+import SearchBox from '../components/searchbox';
+import { resolve } from 'styled-jsx/css';
 
 const SelectPersonalizado = () => {
   
@@ -16,25 +17,46 @@ const SelectPersonalizado = () => {
     const zoom = 15;
     const username = Cookies.get('username');
 
+
+    const handlePlaceSelected = async (place, resolve) => {
+      alert("Has seleccionado " + place.address_components[0].long_name);
+      await obtenerLista(username,true);
+      resolve();
+  };
+  
+  const handleOpcionSeleccionada = async (opcion, index) => {
+    console.log(opcion);
+    setOpcionSeleccionada(opcion);
+    const lista = await obtenerLista(username,false);
+    const [latitud, longitud] = lista[opcion].split("|").map(parseFloat);
+    setUbicacionSeleccionada({ lat: latitud, lng: longitud });
+    await obtenerDatosParaGrafico(opcion);
+};
+
+
+
  
-    const obtenerLista = async (usuario) => {
+    const obtenerLista = async (usuario,actualizar) => {
         let lista ={};
         try {
-            const response = await fetch('/api/obtenerlista', {
-                method: 'POST',
+            const response = await fetch('/api/obtenerlista?usuario='+usuario, {
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ "usuario": usuario })
             });
-
-            if (response.status === 200) {
+            
+            if (response.ok) {
                 lista = await response.json();
+                console.log(lista);
                 const lugares =[];
                 for (let lugar in lista) {
                     lugares.push(lugar);
                   }
+                if(actualizar)
+                  {
                 setOpciones(lugares);
+                  }
             } else {
                 console.error('Error al obtener la lista');
             }
@@ -45,18 +67,12 @@ const SelectPersonalizado = () => {
     };
 
     const obtenerDatosParaGrafico = async (lugar) => {
-        try {
-          const datos = {
-            username: username,
-            lugar: lugar,
-          };
-      
-          const response = await fetch('/api/obtenerdatosgraficatemperatura', {
-            method: 'POST',
+        try {      
+          const response = await fetch('/api/obtenerdatosgraficatemperatura?usuario='+username+"&lugar="+lugar, {
+            method: 'GET',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(datos)
           });
       
           if (response.ok) {
@@ -86,22 +102,23 @@ const SelectPersonalizado = () => {
 
 
     useEffect(() => {
-        obtenerLista(username);
+        obtenerLista(username,true);
     }, []);
 
     
     
 
-    const handleOpcionSeleccionada = async (opcion, index) => {
-        setOpcionSeleccionada(opcion);
-        const lista = await obtenerLista(username);
-        const [latitud, longitud] = lista[opcion].split("|").map(parseFloat);
-      
-        setUbicacionSeleccionada({ lat: latitud, lng: longitud });
-        await obtenerDatosParaGrafico(opcion);
-      };
-
+    
     return (
+      <>
+     <SearchBox
+            onPlaceSelected={handlePlaceSelected}
+            mostrarMapa={true}
+            ubicacionSeleccionada={ubicacionSeleccionada}
+            setUbicacionSeleccionada={setUbicacionSeleccionada}
+            opciones={opciones}
+            setOpciones={setOpciones}
+        />
         <div className="contenedores">        
           <div className="contenedor1"> 
             <h2>Lista de lugares</h2>
@@ -110,9 +127,9 @@ const SelectPersonalizado = () => {
                     <div
                         key={index}
                         className="opcion"
-                        onClick={() => handleOpcionSeleccionada(opcion, index)} // Pasar la opción y su índice al manejador de clics
+                        onClick={() => handleOpcionSeleccionada(opcion, index)}
                     >
-                        <span>{opcion}</span> {/* Suponiendo que cada opción tiene un nombre */}
+                        <span>{opcion}</span>
                     </div>
                 ))}
                 </div>
@@ -151,8 +168,8 @@ const SelectPersonalizado = () => {
             </div>
           </div>
         </div>
+        </>
       );
 };
 
 export default SelectPersonalizado;
-

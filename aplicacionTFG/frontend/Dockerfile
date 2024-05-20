@@ -1,5 +1,5 @@
 # Etapa de construcción
-FROM node:22
+FROM node:22-alpine
 
 # ENV SERVIDOR=10.88.0.2
 # Establecer el directorio de trabajo
