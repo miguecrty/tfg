@@ -44,13 +44,14 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
                 const json = JSON.stringify(place);
                 const lugar = JSON.parse(json.toString());
                 await new Promise(async (resolve) => {
+                    //console.log(place.address_components[0].long_name);
                     onPlaceSelected(place, resolve);
                     setUbicacionSeleccionada({ lat: lugar.geometry.location.lat, lng: lugar.geometry.location.lng });
                     setMarcador({ lat: lugar.geometry.location.lat, lng: lugar.geometry.location.lng });
     
                     const datos = { usuario: username, nombre_lugar: place.address_components[0].long_name, lat: lugar.geometry.location.lat, lng: lugar.geometry.location.lng };
                     await iniciarSondeo(datos);
-                    setOpciones(prevOpciones => [...prevOpciones, nombre_corto]);
+                    setOpciones(prevOpciones => [...prevOpciones, place.address_components[0].long_name]);
                 });
             }
         }
