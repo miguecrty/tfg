@@ -23,7 +23,7 @@ const Menu = () => {
             </Head>
             <Cabecera showHomeButton={false} />
             <h1 className='display-2 text-center mt-2'>Menú principal</h1>
-            <div className="containerP d-flex flex-wrap justify-content-around mt-4">
+            <div className="containerP d-flex flex-wrap justify-content-around mt-4 mb-5">
                 <div  className="bg-white bg-opacity-50 card"  onClick={() => handleItemClick('/lista')}>
                 <h1 className="title text-center mt-4">Lista de lugares</h1>
                     <img className="card-img" src="./images/lista.png" alt="" />
