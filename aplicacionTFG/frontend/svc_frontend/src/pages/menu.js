@@ -16,19 +16,17 @@ const Menu = () => {
         <div className='fondo'>
             <Script src="./js/menu.js" />
             <Head>
-                <title>Chat</title>
+                <title>Menú principal</title>
                 <link rel="icon" href="./images/map.png" />
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
                 <link rel="stylesheet" href="./styles/menu.css" />
             </Head>
             <Cabecera showHomeButton={false} />
-            <h1 className='display-2 text-center mt-3'>Menú principal</h1>
+            <h1 className='display-2 text-center mt-2'>Menú principal</h1>
             <div className="containerP d-flex flex-wrap justify-content-around mt-4">
-                <div className="card" onClick={() => handleItemClick('/lista')}>
+                <div  className="bg-white bg-opacity-50 card  "  onClick={() => handleItemClick('/lista')}>
                 <h1 className="title text-center mt-4">Lista de lugares</h1>
                     <img className="card-img" src="./images/lista.png" alt="" />
-                    <div className="card-img-overlay d-flex flex-column justify-content-center align-items-center text-white">
-                    </div>
                 </div>
 
                 <div className="card" onClick={() => handleItemClick('/pronostico')}>
