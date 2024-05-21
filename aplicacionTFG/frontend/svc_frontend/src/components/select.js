@@ -106,17 +106,22 @@ const SelectPersonalizado = () => {
             <div className="card">
               <div className="card-body">
             <h4>Lista de lugares</h4>
-            <div className="list-group"  style={{ maxHeight: '160px', overflowY: 'auto' }}>
-              {opciones.map((opcion, index) => (
-                <button
-                  key={index}
-                  className="list-group-item list-group-item-action"
-                  onClick={() => handleOpcionSeleccionada(opcion, index)}
-                >
-                  {opcion}
-                </button>
-              ))}
-              </div>
+            {opciones.length ? (
+                  <div className="list-group"  style={{ maxHeight: '160px', overflowY: 'auto' }}>
+                  {opciones.map((opcion, index) => (
+                    <button
+                      key={index}
+                      className="list-group-item list-group-item-action"
+                      onClick={() => handleOpcionSeleccionada(opcion, index)}
+                    >
+                      {opcion}
+                    </button>
+                  ))}
+                  </div>
+                ) : (
+                <p>No hay ningun lugar monitorizándose</p>
+                )}
+            
               </div>
             </div>
           </div>

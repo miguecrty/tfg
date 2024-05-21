@@ -4,9 +4,8 @@
   "/_document": "pages/_document.js",
   "/lista": "pages/lista.js",
   "/menu": "pages/menu.js",
-  "/api/obtenerlista": "pages/api/obtenerlista.js",
-  "/pronostico": "pages/pronostico.js",
-  "/api/obtenerdatosgraficatemperatura": "pages/api/obtenerdatosgraficatemperatura.js",
   "/": "pages/index.js",
-  "/api/login": "pages/api/login.js"
+  "/api/obtenerlista": "pages/api/obtenerlista.js",
+  "/api/iniciarsondeo": "pages/api/iniciarsondeo.js",
+  "/api/obtenerdatosgraficatemperatura": "pages/api/obtenerdatosgraficatemperatura.js"
 }
