@@ -2,8 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/menu": "pages/menu.js",
   "/lista": "pages/lista.js",
   "/": "pages/index.js",
-  "/api/obtenerlista": "pages/api/obtenerlista.js"
+  "/menu": "pages/menu.js",
+  "/api/obtenerlista": "pages/api/obtenerlista.js",
+  "/api/obtenerdatosgraficatemperatura": "pages/api/obtenerdatosgraficatemperatura.js"
 }

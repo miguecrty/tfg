@@ -12,8 +12,10 @@
 }
 
 .home-button img {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    max-width: 35px;
+    height: 35px;
+    max-height: 35px;
 }
 
 .profile-container {

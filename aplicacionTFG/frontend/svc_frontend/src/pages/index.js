@@ -96,7 +96,7 @@ const Home = () => {
             <h1 className="card-title text-center ">Iniciar Sesión</h1>
             <form>
                 <div className="form-group ml-5 mr-5">
-                    <label htmlFor="username">Usuario</label>
+                    <label htmlFor="username"><strong>Usuario</strong></label>
                     <input
                         type="text"
                         id="username"
@@ -107,7 +107,7 @@ const Home = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="password">Contraseña</label>
+                    <label htmlFor="password"><strong>Contraseña</strong></label>
                     <input
                         type="password"
                         id="password"

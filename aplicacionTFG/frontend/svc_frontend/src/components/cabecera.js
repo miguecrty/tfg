@@ -33,7 +33,7 @@ const Cabecera = ({ mostrarBotonHome }) => {
             <nav className="nav-container container-fluid px-3">
                 <div>
                     {mostrarBotonHome && (
-                        <button onClick={handleHome} className="home p-2 home-button">
+                        <button onClick={handleHome} className="home p-1.5 home-button">
                             <img src="./images/home.png" alt="Inicio" className="home-button" />
                         </button>
                     )}

@@ -58,51 +58,44 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
     };
     
     return (
-        <div>
-            <LoadScript
-                googleMapsApiKey={googleApiKey}
-                libraries={["places"]}
-            >
-                <div className='searchbox'>
-                    <StandaloneSearchBox
-                        onLoad={ref => (inputRef.current = ref)}
-                        onPlacesChanged={handlePlaceChanged}
-                    >
-                        <input type="text" className="form-control" placeholder="Introduce lugar a monitorizar"
-                            style={{
-                                boxSizing: `border-box`,
-                                border: `1px solid transparent`,
-                                width: `400px`,
-                                height: `40px`,
-                                padding: `0 12px`,
-                                borderRadius: `3px`,
-                                boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                                fontSize: `16px`,
-                                outline: `none`,
-                                textOverflow: `ellipses`,
-                                position: "absolute",
-                                left: "1%",
-                                marginLeft: "0px"
-                            }}
-                        />
-                    </StandaloneSearchBox>
-                </div>
-                {mostrarMapa && (
-                    <div className='map'>
-                        <GoogleMap
-                            mapContainerStyle={{ height: '400px', width: '30%' }}
-                            center={ubicacionSeleccionada}
-                            zoom={zoom}
-                        >
-                            {marcador && (
-                                <Marker position={marcador} />
-                            )}
-                        </GoogleMap>
-                    </div>
+        <div style={{ height: '300px', maxHeight:'300px', width: '100%', position: 'relative' }}>
+          <LoadScript googleMapsApiKey={googleApiKey} libraries={["places"]}>
+            <div className='searchbox' style={{ position: 'absolute', zIndex: 1}}>
+              <StandaloneSearchBox
+                onLoad={ref => (inputRef.current = ref)}
+                onPlacesChanged={handlePlaceChanged}
+              >
+                <input type="text" className="form-control" placeholder="Introduce lugar a monitorizar"
+                  style={{
+                    boxSizing: `border-box`,
+                    border: `1px solid transparent`,
+                    width: `auto`,
+                    height: `auto`,
+                    padding: `0 12px`,
+                    borderRadius: `3px`,
+                    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                    fontSize: `16px`,
+                    outline: `none`,
+                    textOverflow: `ellipses`,
+                  }}
+                />
+              </StandaloneSearchBox>
+            </div>
+            {mostrarMapa && (
+              <GoogleMap
+                mapContainerStyle={{ height: '90%', width: '100%', position: 'relative', zIndex: 0,top:'30px',bottom:'30px' }}
+                center={ubicacionSeleccionada}
+                zoom={zoom}
+              >
+                {marcador && (
+                  <Marker position={marcador} />
                 )}
-            </LoadScript>
+              </GoogleMap>
+            )}
+          </LoadScript>
         </div>
-    );
-};
+      );
+    }      
+      
 
 export default SearchBox;
