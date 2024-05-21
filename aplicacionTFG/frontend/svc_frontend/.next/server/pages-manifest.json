@@ -3,8 +3,10 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/lista": "pages/lista.js",
-  "/": "pages/index.js",
   "/menu": "pages/menu.js",
   "/api/obtenerlista": "pages/api/obtenerlista.js",
-  "/api/obtenerdatosgraficatemperatura": "pages/api/obtenerdatosgraficatemperatura.js"
+  "/pronostico": "pages/pronostico.js",
+  "/api/obtenerdatosgraficatemperatura": "pages/api/obtenerdatosgraficatemperatura.js",
+  "/": "pages/index.js",
+  "/api/login": "pages/api/login.js"
 }

@@ -154,7 +154,7 @@ const SelectPersonalizado = () => {
                   {opcionSeleccionada ? (
                     <ChartTemperatura datasets={datasets} labels={labels} />
                   ) : (
-                    <strong>Selecciona un lugar para monitorizar</strong>
+                    <strong className='text-center pt-3 pb-3'> ⬅ ⬅ Selecciona un lugar para monitorizar</strong>
                   )}
                 </div>
                 </div>
