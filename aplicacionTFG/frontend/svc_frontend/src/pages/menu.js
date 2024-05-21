@@ -34,7 +34,7 @@ const Menu = () => {
                     <img className="card-img" src="./images/pronostico.png" alt="" />
                 </div>
                 <div  className="bg-white bg-opacity-50 card" onClick={() => handleItemClick('/configuracion')}>
-                <h1 className="title text-center mt-4">Configuración</h1>
+                <h1 className="title text-center mt-4">Mi cuenta</h1>
                     <img className="card-img" src="./images/configuracion.png" alt="" />
                 </div>
             </div>

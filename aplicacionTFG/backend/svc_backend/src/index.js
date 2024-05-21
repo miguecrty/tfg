@@ -350,9 +350,10 @@ app.get('/obtenerdatosgraficatemperatura', async (req, res) => {
 });
 
 
-app.post('/obtenerpronostico', async (req, res) => {
+app.get('/obtenerpronostico', async (req, res) => {
   try {
-    const {latitud,longitud} = req.body;
+    const latitud=req.query.lat;
+    const longitud = req.query.lon;
     const url = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + latitud + '&lon=' + longitud + '&appid=854c5489c0f85d6fd1fd9a30d77eee0a&lang=es';
        const response = await axios.get(url);
        const lista_datos =response.data.list;

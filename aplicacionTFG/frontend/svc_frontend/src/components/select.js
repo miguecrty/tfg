@@ -98,7 +98,8 @@ const SelectPersonalizado = () => {
   }, []);
 
   return (
-     <div className="row">
+    <>
+     <div className="row pr-0">
      <div className="col-md-4">
        {/*Primera fila de la primera columna*/}
       <div className="row-md-4 mt-3 ml-3">
@@ -107,11 +108,11 @@ const SelectPersonalizado = () => {
               <div className="card-body">
             <h4>Lista de lugares</h4>
             {opciones.length ? (
-                  <div className="list-group"  style={{ maxHeight: '160px', overflowY: 'auto' }}>
+                  <div className="list-group"  style={{ minHeight:'160px',maxHeight: '160px', overflowY: 'auto' }}>
                   {opciones.map((opcion, index) => (
                     <button
                       key={index}
-                      className="list-group-item list-group-item-action"
+                      className="list-group-item mb-2 border-2 list-group-item-action"
                       onClick={() => handleOpcionSeleccionada(opcion, index)}
                     >
                       {opcion}
@@ -145,8 +146,8 @@ const SelectPersonalizado = () => {
       </div>
 
         </div>
-      <div className="col mt-4  mr-3">
-            <div className="card pb-5">
+      <div className="col mt-3  mr-3">
+            <div className="card" style={{ minHeight:'620px',maxHeight: '620px'}}>
               <div className="card-body">
                 {opcionSeleccionada ? (
                   <h4>Monitorizando {opcionSeleccionada}</h4>
@@ -155,7 +156,7 @@ const SelectPersonalizado = () => {
                 )}
                 <div className="row">
                   <div className='col'>
-                <div className="card mt-4">
+                <div className="card mt-4" style={{ minHeight:'500px',maxHeight: '500px'}}>
                   {opcionSeleccionada ? (
                     <ChartTemperatura datasets={datasets} labels={labels} />
                   ) : (
@@ -168,13 +169,16 @@ const SelectPersonalizado = () => {
                     
                     <>
                     <div className='col-md-3'>
-                <div className="card mt-5">
+                      <div className='mt-5'>
+                    <h5 className='text-center'>Informe climático ({new Date().toLocaleTimeString('en-GB', { hour12: false, hour: '2-digit', minute: '2-digit'})})</h5>
+                <div className="card">
                       <p className='text-center'>Descripción: <strong>{datosActuales.tiempo_actual}</strong>
                         <img src={`http://openweathermap.org/img/w/${datosActuales.icono}.png`} alt="Icono del clima" />
                       </p>
                       <p className='text-center'>Dirección del viento: <strong>{datosActuales.viento_direccion}º</strong></p>
                       <p className='text-center'>Velocidad del viento: <strong>{datosActuales.viento_velocidad.toFixed(2)}m/s</strong></p>
                       <p className='text-center'>Nubes: <strong>{datosActuales.nubes_actual}%</strong></p>
+                      </div>
                       </div>
                 </div>
                     </>
@@ -187,7 +191,7 @@ const SelectPersonalizado = () => {
             </div>
           </div>
           </div>
-      
+          </>
   );
 };
 

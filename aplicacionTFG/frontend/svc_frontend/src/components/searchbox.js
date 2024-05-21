@@ -5,7 +5,7 @@ import { GoogleMap, Marker } from '@react-google-maps/api';
 import { server } from '@/pages/_app';
 import Cookies from 'js-cookie';
 
-const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbicacionSeleccionada, setOpciones, opciones }) => {
+const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbicacionSeleccionada, setOpciones, opciones, pronostico }) => {
     const username = Cookies.get('username');
     const [marcador, setMarcador] = useState(ubicacionSeleccionada);
     const zoom = 15;
@@ -47,17 +47,20 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
                     //console.log(place.address_components[0].long_name);
                     onPlaceSelected(place, resolve);
                     setUbicacionSeleccionada({ lat: lugar.geometry.location.lat, lng: lugar.geometry.location.lng });
+                    if (setOpciones != null || opciones != null){
                     setMarcador({ lat: lugar.geometry.location.lat, lng: lugar.geometry.location.lng });
-    
                     const datos = { usuario: username, nombre_lugar: place.address_components[0].long_name, lat: lugar.geometry.location.lat, lng: lugar.geometry.location.lng };
                     await iniciarSondeo(datos);
                     setOpciones(prevOpciones => [...prevOpciones, place.address_components[0].long_name]);
+                    }
                 });
             }
         }
     };
     
     return (
+      <>
+        {!pronostico && (
         <div style={{ height: '300px', maxHeight:'300px', width: '100%', position: 'relative' }}>
           <LoadScript googleMapsApiKey={googleApiKey} libraries={["places"]}>
             <div className='searchbox' style={{ position: 'absolute', zIndex: 1}}>
@@ -94,7 +97,41 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
             )}
           </LoadScript>
         </div>
+          )
+        }
+
+        {pronostico && (
+          <>
+          <LoadScript googleMapsApiKey={googleApiKey} libraries={["places"]}>
+              <StandaloneSearchBox
+                onLoad={ref => (inputRef.current = ref)}
+                onPlacesChanged={handlePlaceChanged}
+              >
+                <input type="text" className="form-control" placeholder="Introduce lugar a monitorizar"
+                  style={{
+                    boxSizing: `border-box`,
+                    border: `1px solid transparent`,
+                    width: `auto`,
+                    height: `auto`,
+                    padding: `0 12px`,
+                    borderRadius: `3px`,
+                    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                    fontSize: `16px`,
+                    outline: `none`,
+                    textOverflow: `ellipses`,
+                    width:`100%`
+                  }}
+                />
+              </StandaloneSearchBox>
+            </LoadScript>
+        </>
+        )}
+
+
+
+        </>
       );
+      
     }      
       
 
