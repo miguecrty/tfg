@@ -1,5 +1,5 @@
 body {
-    background-image: url('../images/fondo-menu.jpg') !important;
+    /*background-image: url('../images/fondo-menu.jpg') !important;*/
     background-size: cover; /* Escala la imagen para cubrir todo el fondo */
     background-position: center; /* Centra la imagen */
     background-repeat: no-repeat; /* Evita que la imagen se repita */

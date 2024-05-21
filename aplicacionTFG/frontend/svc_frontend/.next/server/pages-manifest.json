@@ -3,5 +3,9 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/menu": "pages/menu.js",
-  "/": "pages/index.js"
+  "/": "pages/index.js",
+  "/lista": "pages/lista.js",
+  "/api/obtenerlista": "pages/api/obtenerlista.js",
+  "/api/obtenerdatosgraficatemperatura": "pages/api/obtenerdatosgraficatemperatura.js",
+  "/api/login": "pages/api/login.js"
 }
