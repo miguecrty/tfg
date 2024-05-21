@@ -1,0 +1,40 @@
+.header {
+    background-image: linear-gradient(135deg, #fdcaa8, #f79322); /* Degradado de color */
+    color: white;
+    padding: 0.5rem 1rem; /* Ajuste de padding */
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home-button img {
+    width: 30px;
+    height: 30px;
+}
+
+.profile-container {
+    display: flex;
+    align-items: center;
+}
+
+.profile-img {
+    width: 25px;
+    height: 25px;
+    margin-right: 0.5rem;
+}
+
+.username {
+    margin-right: 1rem;
+}
+
+.logout-button {
+    font-size: 0.875rem; /* Tamaño de fuente más pequeño */
+    padding: 0.25rem 0.5rem; /* Ajuste de padding */
+}
+.logout-button:hover {
+    background-color: red;
+}

@@ -2,11 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/lista": "pages/lista.js",
   "/menu": "pages/menu.js",
-  "/api/login": "pages/api/login.js",
-  "/api/obtenerlista": "pages/api/obtenerlista.js",
-  "/api/iniciarsondeo": "pages/api/iniciarsondeo.js",
+  "/lista": "pages/lista.js",
   "/": "pages/index.js",
-  "/api/obtenerdatosgraficatemperatura": "pages/api/obtenerdatosgraficatemperatura.js"
+  "/api/obtenerlista": "pages/api/obtenerlista.js"
 }

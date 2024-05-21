@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Cookies from 'js-cookie'; // Importa la biblioteca para manejar cookies
+import Cookies from 'js-cookie';
 import Pie from '../components/pie';
-import { server } from './_app';
+import Head from 'next/head';
 
 const Home = () => {
     const router = useRouter();
@@ -10,27 +10,24 @@ const Home = () => {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
-    const [exito,setExito] = useState('');
-
-    
+    const [exito, setExito] = useState('');
 
     const fetchData = async (userData) => {
         try {
-            const response = await fetch('/api/login', { // La solicitud se envía a la ruta del middleware
+            const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(userData)
             });
-    
+
             if (response.ok) {
-                // Si las credenciales son correctas, muestra un mensaje y luego redirige a la página de menú
                 setIsLoading(true);
                 setExito('Credenciales correctas, redirigiendo a menú...');
                 setTimeout(() => {
                     Cookies.set('isLoggedIn', 'true');
-                    Cookies.set('username', userData.username);                    
+                    Cookies.set('username', userData.username);
                     router.push('/menu');
                 }, 1500);
             } else {
@@ -41,25 +38,19 @@ const Home = () => {
             console.error(error);
         }
     };
-    
-    
 
     useEffect(() => {
         const isLoggedIn = Cookies.get('isLoggedIn');
 
-        // Simular una carga durante 2 segundos
         const timer = setTimeout(() => {
             if (isLoggedIn === 'true') {
-                // Si el usuario está logueado, redirecciona a la página de menú
                 router.push('/menu');
             } else {
-                // Si el usuario no está logueado, se ha completado la carga
                 setIsLoading(false);
-                router.push('/');
             }
         }, 300);
 
-        return () => clearTimeout(timer); // Limpia el temporizador al desmontar el componente
+        return () => clearTimeout(timer);
     }, []);
 
     const handleLogin = () => {
@@ -67,41 +58,79 @@ const Home = () => {
             username: username,
             password: password
         };
-        
+
         fetchData(userData);
- 
     };
+
     const handleRegistro = () => {
- 
-        // Si el usuario no está logueado, se ha completado la carga
         setIsLoading(false);
         router.push('/registro');
- 
     };
 
     if (isLoading) {
-        // Si isLoading es true, la página está cargando
         return (
-            <div className="cargando">
-                    <img src="/images/cargando.gif" alt="Cargando" />
+            <>
+            <Head>
+                <title>Cargando...</title>
+                <link rel="icon" href="./images/map.png" />
+            </Head>
+            <div className="d-flex justify-content-center align-items-center vh-100">
+                <img src="/images/cargando.gif" alt="Cargando" />
             </div>
+            </>
         );
     }
 
     return (
-        <div className="container">
-            <div className="login-form">
-                <h1>Iniciar Sesión</h1>
-                <input type="text" placeholder="Usuario" value={username} onChange={(e) => setUsername(e.target.value)} />
-                <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} />
-                <button onClick={handleLogin}>Iniciar Sesión</button>
-                <button onClick={handleRegistro}>Registrarse</button>
-                {error && <div className="error-message">{error}</div>}
-                {exito && <div className="exito-message">{exito}</div>}
+        <>
+            <Head>
+                <title>Chat</title>
+                <link rel="icon" href="./images/map.png" />
+                <link rel="stylesheet" href="./styles/login.css" />
+            </Head>
+        <div className="container-fluid">
+            <div className="row justify-content-center align-items-center vh-100">
+                <div className="col-md-6">
+    <div className="card">
+        <div className="card-body ">
+            <h1 className="card-title text-center ">Iniciar Sesión</h1>
+            <form>
+                <div className="form-group">
+                    <label htmlFor="username">Usuario</label>
+                    <input
+                        type="text"
+                        id="username"
+                        className="form-control"
+                        placeholder="Usuario"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="password">Contraseña</label>
+                    <input
+                        type="password"
+                        id="password"
+                        className="form-control"
+                        placeholder="Contraseña"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+                <button type="button" onClick={handleLogin} className="btn btn-primary btn-block mb-2">Iniciar Sesión</button>
+                <button type="button" onClick={handleRegistro} className="btn btn-secondary btn-block">Registrarse</button>
+            </form>
+            {error && <div className="alert alert-danger mt-3">{error}</div>}
+            {exito && <div className="alert alert-success mt-3">{exito}</div>}
+        </div>
+    </div>
+</div>
             </div>
             <Pie />
         </div>
+        </>
     );
 };
 
 export default Home;
+

@@ -1,0 +1,75 @@
+body {
+    background-image: url('../images/fondo-menu.jpg') !important;
+    background-size: cover; /* Escala la imagen para cubrir todo el fondo */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-attachment: fixed; /* Hace que la imagen de fondo se mantenga fija al hacer scroll */
+}
+.containerP {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.puuu {
+background-color: rgba(0, 0, 0, 0.5);
+}
+.card {
+    position: relative;
+    width: 450px;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.card-img-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+   
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5) !important;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.card:hover .card-img-overlay {
+    opacity: 0;
+}
+
+.card:hover .card-img {
+    opacity: 1;
+}
+
+
+.title {
+    font-size: 2em;
+    font-weight: bold;
+}
+.backdrop {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}

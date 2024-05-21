@@ -1,0 +1,35 @@
+/* Estilos para el formulario de inicio de sesión */
+
+body {
+    background-image: url('../images/fondo.gif');
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .card {
+        width: 500px;
+        margin: 50px auto; /* Centra el formulario horizontalmente */
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    
+    }
+    .formulario
+    {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+  
+  .card-title {
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .btn-block {
+    margin-bottom: 10px;
+  }
+  
+  .alert {
+    margin-top: 20px;
+  }
+  
