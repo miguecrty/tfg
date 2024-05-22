@@ -29,7 +29,9 @@ const ChartTemperatura = ({ datasets, labels }) => {
     }
   }, [datasets, labels]);
 
-  return <canvas ref={chartRef}></canvas>;
+  return( 
+  <canvas ref={chartRef} style={{height:'auto'}}></canvas>
+  );
 };
 
 export default ChartTemperatura;

@@ -158,7 +158,9 @@ const SelectPersonalizado = () => {
                   <div className='col'>
                 <div className="card mt-4" style={{ minHeight:'500px',maxHeight: '500px'}}>
                   {opcionSeleccionada ? (
+                    <div className='card-body'>
                     <ChartTemperatura datasets={datasets} labels={labels} />
+                    </div>
                   ) : (
                     <strong className='text-center pt-3 pb-3'> ⬅ ⬅ Selecciona un lugar para monitorizar</strong>
                   )}

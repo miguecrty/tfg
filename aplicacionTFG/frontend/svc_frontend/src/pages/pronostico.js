@@ -256,6 +256,7 @@ const Pronostico = () => {
                    </div>
             
                </div>
+               {/* 
                <div className="col d-flex justify-content-center align-items-center vh-90 mt-2 p-0 ">
             <div className="card rounded shadow mx-4 mb-5">
                 <div className="card-body">
@@ -272,9 +273,11 @@ const Pronostico = () => {
                     </div>
                 </div>
             </div>
+            
         </div>
+        */}
 
-               </div>
+             </div>
                
 
            </>
