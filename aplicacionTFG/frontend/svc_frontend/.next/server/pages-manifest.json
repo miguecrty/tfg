@@ -2,9 +2,11 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/pronostico": "pages/pronostico.js",
-  "/lista": "pages/lista.js",
-  "/api/obtenerpronostico": "pages/api/obtenerpronostico.js",
   "/menu": "pages/menu.js",
+  "/api/obtenerpronostico": "pages/api/obtenerpronostico.js",
+  "/": "pages/index.js",
+  "/lista": "pages/lista.js",
+  "/pronostico": "pages/pronostico.js",
+  "/api/obtenerdatosgraficatemperatura": "pages/api/obtenerdatosgraficatemperatura.js",
   "/api/obtenerlista": "pages/api/obtenerlista.js"
 }

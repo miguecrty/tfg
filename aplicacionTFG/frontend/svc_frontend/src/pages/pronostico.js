@@ -13,15 +13,16 @@ const Pronostico = () => {
     const [diasSemana, setDiasSemana] = useState(null);
     const [bandera, setBandera] = useState(false);
     const [datos, setDatos] = useState(null);
-    const [nombrelugar, setNombreLugar] = useState(null);
+    const [datoslugar, setDatosLugar] = useState(null);
     const [labels, setLabels] = useState([]);
     const [valoresN, setValoresN] = useState([]);
     const [valoresT, setValoresT] = useState([]);
     const [valoresV, setValoresv] = useState([]);
     const [valoresActuales, setValoresActuales] = useState(null);
     const [diaSeleccionado, setDiaSeleccionado] = useState(null);
-    const windSpeedData = [10, 15, 8, 12, 20, 18, 13, 9];
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
+    const [backgroundColor, setBackgroundColor] = useState('rgba(255,0,0,0.7)');
+
 
     const handleDiaSeleccionado = (dia) => {
         
@@ -45,11 +46,13 @@ const Pronostico = () => {
     };
 
     const handlePlaceSelected = async (place, resolve) => {
+        console.log(place);
         resolve();
         setBandera(true);
         const lugar = JSON.stringify(place);
         const mensaje = JSON.parse(lugar.toString());
-        setNombreLugar(mensaje.address_components[0].long_name);
+        setDatosLugar(mensaje);
+        console.log(mensaje);
         const lat = mensaje.geometry.location.lat;
         const long = mensaje.geometry.location.lng;
         try {
@@ -69,6 +72,7 @@ const Pronostico = () => {
                 setValoresActuales(data.datos_actuales);
                 setValoresN(data.nubes[dias_semana[0]].valores);
                 setValoresT(data.temperatura[dias_semana[0]].valores);
+                setDiaSeleccionado(dias_semana[0]);
                 //setValoresV(data.viento[dias_semana[0]].valores);
             }
 
@@ -90,74 +94,147 @@ const Pronostico = () => {
             {bandera && (
                 <>
             <div className="row">
-                <div className='col mt-3'>
-                    <div className='card align-items-center border-2 ml-3' style={{height:'200px'}}>
-                    <h5 className='text-center'>PRUEBAAAA</h5>
-                    <SearchBox onPlaceSelected={handlePlaceSelected}
+                <div className='col-3 mt-1'>
+
+                <div className="p-4 rounded shadow bg-warning text-dark bg-opacity-50 ml-3 mt-3" style={{ maxWidth: '400px', width: '100%' }}>
+                       <h2 className="mb-4 text-center">Buscar Ubicación</h2>
+                       <SearchBox onPlaceSelected={handlePlaceSelected}
                     pronostico={true}
                     mostrarMapa={false}
                     ubicacionSeleccionada={ubicacionSeleccionada}
                     setUbicacionSeleccionada={setUbicacionSeleccionada} 
-                />
+                    />
+                   </div>
+                   
+                
+                </div>
+                {datoslugar &&(
+                <div className='col-4 mt-1'>
+                    <div className='card text-center border-0 shadow-lg ml-3 mt-3 mb-2'>
+                    <div class="card-header" style={{background:'rgba(0,0,255,0.1)'}}>
+                    <h1>{datoslugar.address_components[0].long_name}</h1>
+                        </div>
+                <div className='row'>
+                     <div className='col ml-2'>
+                        {datoslugar.address_components[1] && (
+                        <p>Ciudad: <strong>{datoslugar.address_components[1].long_name}</strong></p>
+                        )}
+                        {datoslugar.address_components[2] && (
+                        <p>Comunidad Autónoma: <strong>{datoslugar.address_components[2].long_name}</strong></p>
+                        )}
+                    </div>
+                    <div className='col ml-2 mr-2'>
+                    {datoslugar.address_components[4] && (
+                        <p>Código postal: <strong>{datoslugar.address_components[4].long_name}</strong></p>
+                    )}
+                    {datoslugar.address_components[3] && (
+                        <p>País: <strong>{datoslugar.address_components[3].long_name}</strong></p>
+                    )}
+                    </div>
                 </div>
                 </div>
-                <div className='col-md-3 mt-3'>
-                {nombrelugar && valoresActuales && (
-                        <>
-                        <div className="d-flex card border-2 text-center mb-5 mr-3">
+                </div>
+                )}
+                <div className='col mt-1'>
+                <div className='card border-0 shadow-lg ml-3 mt-3 mr-3 mb-2 text-center'>
+                {valoresActuales && diaSeleccionado &&(
+                       <>
+                       
+                       <div class="card-header" style={{background:'rgba(0,0,255,0.1)'}}>
+                       <h1 >Previsión para el {diaSeleccionado}</h1>
+                        </div>
+                             
+
+                        <div className="row">
+                             <div className="col">
+                                <p><strong>Descripción: </strong>{valoresActuales.description}</p>
+                                </div>
+                                <div className="col">
+                                <img className="icono" src={getIconUrl(diasSemana[0])} alt="Icono del clima"></img>   
+                              </div>
+                              <div className="col">
+                              <p><strong>Amanecer: </strong>{valoresActuales.amanecer}</p>   
+                              </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">                    
+                             <p><strong>Temperatura máx: </strong>{valoresActuales.amanecer}</p>
+                             </div>
+                             <div className="col">  
+                                <p><strong>Temperatura min: </strong>{valoresActuales.atardecer}</p>
+                                </div> 
+                                <div className="col">
+                               
+                               <p><strong>Atardecer: </strong>{valoresActuales.atardecer}</p>
+                               </div>
+                        </div>
+                                
+                                
+                                
                             
-                            <h1 ><strong>{valoresActuales.temperatura}ºC</strong> en <strong>{nombrelugar}</strong></h1>
-                                <p><strong>Descripción: </strong>{valoresActuales.description}
-                                <img className="icono" src={getIconUrl(diasSemana[0])} alt="Icono del clima"></img>
-                                </p>
-                                <p><strong>Amanecer: </strong>{valoresActuales.amanecer}</p>
-                                <p><strong>Atardecer: </strong>{valoresActuales.atardecer}</p>
-                            </div>
-                        </>
+                      </>
                     )}
                 </div>
+                
+                </div>
+               
             </div>
-            <div className="row-2">
+            <div className="row-1" style={{marginBottom:'10vh'}}>
+                <div className='card border-0 shadow-lg ml-2 mr-2 mb-2'>
                 <div className="row">
-            {diasSemana && (
+            {diasSemana && diaSeleccionado &&(
                 <>
-                <div className="row mr-2">
-                    <h3 className='text-center mb-3'>Pronóstico de los siguientes días</h3>
-                            <div className="col">
-                                {valoresT && labels && (
-                                    <ChartTemp data={valoresT} labels={labels} /> 
-                                )}
-                            </div>
-                            <div className="col">
-                                {valoresN && labels && (
-                                   <ChartNubes data={valoresN} labels={labels} />
-                                )}
-                            </div>
-                            <div className="col">
-                                    <ChartTemp data={valoresT} labels={labels} /> 
-                            </div>
-                        </div>               
+                <div className="row mr-2 ml-2 mt-2">
                 <div className="row mb-3">
                                 {diasSemana.map((dia, index) => (
                                     <div className='col'>
                                     <div
                                         key={index}
-                                        className={`card`}
-                                        style={{cursor:'pointer'}}
+                                        className={`card border-0 shadow`}
                                         onClick={() => handleDiaSeleccionado(dia)}
+                                        style={{
+                                        background: diaSeleccionado === dia ? backgroundColor : 'rgba(255,125,0,0.5)',
+                                        cursor:'pointer'
+                                        }}
                                     >
-                                        <p className="text-center">
-                                        {dia}
-                                        <img src={getIconUrl(dia)} alt="Icono del clima" className="imagen"/>
-                                        </p>
-                                            
-                                       
+                                        <h4 className="text-center">{dia}<img src={getIconUrl(dia)} alt="Icono del clima" className="img-fluid"/></h4>
                                     </div>
                                     </div>
                                 ))}
-                            </div>    
+                            </div>                    
+                    <div className="col text-center">
+                        <div className='card border-0 shadow mb-2 ml-2'>
+                        <div class="card-header" style={{background:'rgba(0,150,150,0.2)'}}>
+                        <h6>Temperatura</h6>
+                        </div>
+                                {valoresT && labels && (
+                                    <ChartTemp data={valoresT} labels={labels} /> 
+                                )}
+                            </div>
+                            </div>
+                            <div className="col text-center">
+                        <div className='card border-0 shadow mb-2 ml-2'>
+                        <div class="card-header" style={{background:'rgba(255,100,0,0.2)'}}>
+                        <h6>Nubes</h6>
+                        </div>
+                                {valoresN && labels && (
+                                   <ChartNubes data={valoresN} labels={labels} />
+                                )}
+                            </div>
+                            </div>
+                            <div className="col text-center">
+                        <div className='card border-0 shadow mb-2 ml-2'>
+                        <div class="card-header" style={{background:'rgba(55,30,50,0.2)'}}>
+                        <h6>Viento</h6>
+                        </div>
+                                    <ChartTemp data={valoresT} labels={labels} /> 
+                            </div>
+                            </div>
+                </div>               
+               
                 </>
             )}
+            </div>
             </div>
             </div>
             
@@ -166,8 +243,8 @@ const Pronostico = () => {
             {!bandera && (
                <>
                <div className='row'>
-               <div className="col d-flex justify-content-center align-items-center" style={{height:'500px'}}>
-                   <div className="p-4 rounded shadow bg-white" style={{ maxWidth: '400px', width: '100%' }}>
+               <div className="col-4 mt-3 mr-3 ml-3 d-flex justify-content-center align-items-center">
+                   <div className="p-4 rounded shadow bg-white" style={{width: '100%' }}>
                        <h2 className="mb-4 text-center">Buscar Ubicación</h2>
                        <SearchBox 
                            onPlaceSelected={handlePlaceSelected}
@@ -179,8 +256,8 @@ const Pronostico = () => {
                    </div>
             
                </div>
-               <div className="col-12 col-md-6 d-flex justify-content-center align-items-center vh-90 mt-2">
-            <div className="card rounded shadow mx-4 mb-5" style={{ width: '100%' }}>
+               <div className="col d-flex justify-content-center align-items-center vh-90 mt-2 p-0 ">
+            <div className="card rounded shadow mx-4 mb-5">
                 <div className="card-body">
                     <h2 className="card-title text-center mb-4">Información de la Sección Pronóstico</h2>
                     <p className="card-text">En esta sección se podrá seleccionar un lugar para observar el pronóstico del tiempo en los 5 siguientes días:</p>
@@ -191,7 +268,7 @@ const Pronostico = () => {
                     </ul>
                     <h3 className='text-center'>Ejemplo</h3>
                     <div className="text-center">
-                        <img src='./images/pronosticoj.png' className='img-fluid' alt='Pronóstico Ejemplo' />
+                        <img src='./images/pronost.png' className='img-fluid' alt='Pronóstico Ejemplo' />
                     </div>
                 </div>
             </div>
