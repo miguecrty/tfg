@@ -18,7 +18,7 @@ const client = new cassandra.Client({
 */
 //   LOCAL
 const client = new cassandra.Client({
-  contactPoints: ['10.88.0.12'],
+  contactPoints: ['10.88.0.2'],
   localDataCenter: 'datacenter1',
   protocolOptions: { port: 9042 },
   keyspace: 'tfg',
