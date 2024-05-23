@@ -10,6 +10,7 @@ export default async function handler(req, res) {
 
         if (response.ok) {
             const respuesta = await response.json();
+            console.log(respuesta.temperatura['Jueves']);
             res.status(200).json(respuesta);
         }
         else{

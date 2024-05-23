@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Map from './map';
-import ChartTemperatura from './chartTemperatura';
+import ChartTodas from './chartTodas';
 import SearchBox from '../components/searchbox';
 
 const SelectPersonalizado = () => {
@@ -159,7 +159,7 @@ const SelectPersonalizado = () => {
                 <div className="card mt-4" style={{ minHeight:'500px',maxHeight: '500px'}}>
                   {opcionSeleccionada ? (
                     <div className='card-body'>
-                    <ChartTemperatura datasets={datasets} labels={labels} />
+                    <ChartTodas datasets={datasets} labels={labels} />
                     </div>
                   ) : (
                     <strong className='text-center pt-3 pb-3'> ⬅ ⬅ Selecciona un lugar para monitorizar</strong>

@@ -362,7 +362,7 @@ app.get('/obtenerpronostico', async (req, res) => {
        const nubes = {}
        const viento ={}
        lista_datos.forEach(element => {
-        temperaturas[element.dt_txt]={temp:(element.main.temp-273.15).toFixed(2),temp_min:(element.main.temp_min-273.15).toFixed(2),temp_max:(element.main.temp_max-273.15).toFixed(2)}; 
+        temperaturas[element.dt_txt]={temp:(element.main.temp-273.15).toFixed(2)}; 
         descripcion_tiempo[element.dt_txt]={description:element.weather[0].description,icon:element.weather[0].icon,sunrise:element};
         nubes[element.dt_txt]=element.clouds.all;
         viento[element.dt_txt]={speed:element.wind.speed,deg:element.wind.deg};
@@ -425,15 +425,12 @@ for (const dia in temperaturaFormateada) {
 
   // Inicializa arrays vacíos para los valores de temperatura
   const temps = [];
-  const temps_min = [];
-  const temps_max = [];
 
+  const max_min = [];
   // Itera sobre cada objeto de valores
   for (const valor of valores) {
-    // Agrega los valores de temperatura a los arrays correspondientes
+    max_min.push(parseFloat(valor.temp));
     temps.push(parseFloat(valor.temp));
-    temps_min.push(parseFloat(valor.temp_min));
-    temps_max.push(parseFloat(valor.temp_max));
   }
 
   // Crea un nuevo objeto con los arrays de valores de temperatura
@@ -441,9 +438,9 @@ for (const dia in temperaturaFormateada) {
     horas: horas,
     valores: {
       temp: temps,
-      temp_min: temps_min,
-      temp_max: temps_max
-    }
+    },
+    temp_min:Math.min(...max_min),
+    temp_max:Math.max(...max_min)
   };
 }
 
@@ -466,6 +463,7 @@ for (const dia in temperaturaFormateada) {
     descripcion_tiempo: descripcion_tiempoFormateado,
     datos_actuales: datos_actuales
 };
+console.log(datos.temperatura);
       if(response.data.list != null){
         res.status(200).json(datos); // Enviar la lista de lugares como respuesta
       } else {

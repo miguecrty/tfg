@@ -1,15 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import Cabecera from '../components/cabecera';
 import Pie from '../components/pie';
 import SearchBox from '../components/searchbox';
-import { server } from './_app';
-import Cookies from 'js-cookie';
-import ChartTemp from '@/components/chartTemp';
 import ChartNubes from '@/components/chartNubes';
 import Head from 'next/head';
-
+import ChartTemperatura from '@/components/chartTemperatura';
+import generatePDF, { Resolution, Margin } from 'react-to-pdf';
+import { useRef } from 'react';
+const getTargetElement = () => document.getElementById('content-id');
 const Pronostico = () => {
+
+    const options = {
+        // default is `save`
+        method: 'open',
+        // default is Resolution.MEDIUM = 3, which should be enough, higher values
+        // increases the image quality but also the size of the PDF, so be careful
+        // using values higher than 10 when having multiple pages generated, it
+        // might cause the page to crash or hang.
+        resolution: Resolution.HIGH,
+        page: {
+           // margin is in MM, default is Margin.NONE = 0
+           margin: Margin.SMALL,
+           // default is 'A4'
+           format: 'letter',
+           // default is 'portrait'
+           orientation: 'landscape',
+        },
+        canvas: {
+           // default is 'image/jpeg' for better size performance
+           mimeType: 'image/png',
+           qualityRatio: 1
+        },
+        // Customize any value passed to the jsPDF instance and html2canvas
+        // function. You probably will not need this and things can break, 
+        // so use with caution.
+        overrides: {
+           // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
+           pdf: {
+              compress: true
+           },
+           // see https://html2canvas.hertzen.com/configuration for more options
+           canvas: {
+              useCORS: true
+           }
+        },
+     };
+
+
     const [diasSemana, setDiasSemana] = useState(null);
     const [bandera, setBandera] = useState(false);
     const [datos, setDatos] = useState(null);
@@ -22,13 +59,11 @@ const Pronostico = () => {
     const [diaSeleccionado, setDiaSeleccionado] = useState(null);
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
     const [backgroundColor, setBackgroundColor] = useState('rgba(255,0,0,0.7)');
-
-
     const handleDiaSeleccionado = (dia) => {
         
         setLabels(datos.nubes[dia].horas);
         setValoresN(datos.nubes[dia].valores);
-        setValoresT(datos.temperatura[dia].valores);
+        setValoresT(datos.temperatura[dia]);
         //setValoresV(datos.temperatura[dia].valores);
         const temperatura = datos.descripcion_tiempo[dia].valores.length == 8 ?
             datos.temperatura[dia].valores.temp[3] :
@@ -42,11 +77,12 @@ const Pronostico = () => {
             atardecer: valoresActuales.atardecer
         };
         setValoresActuales(nuevosValores);
-        setDiaSeleccionado(dia); // Guardar el día seleccionado
+        
+        setDiaSeleccionado(dia);
+        
     };
 
     const handlePlaceSelected = async (place, resolve) => {
-        console.log(place);
         resolve();
         setBandera(true);
         const lugar = JSON.stringify(place);
@@ -71,7 +107,7 @@ const Pronostico = () => {
                 setLabels(data.nubes[dias_semana[0]].horas);
                 setValoresActuales(data.datos_actuales);
                 setValoresN(data.nubes[dias_semana[0]].valores);
-                setValoresT(data.temperatura[dias_semana[0]].valores);
+                setValoresT(data.temperatura[dias_semana[0]]);
                 setDiaSeleccionado(dias_semana[0]);
                 //setValoresV(data.viento[dias_semana[0]].valores);
             }
@@ -81,8 +117,24 @@ const Pronostico = () => {
         }
     };
 
-    const getIconUrl= (dia) =>`http://openweathermap.org/img/w/${datos.descripcion_tiempo[dia].valores[0].icon}.png`;
-
+    function getIconUrl(dia){
+        const frecuencia = datos.descripcion_tiempo[dia].valores.reduce((acc, val) => {
+            acc[val.icon] = (acc[val.icon] || 0) + 1;
+            return acc;
+        }, {});
+    
+        let maxFrecuencia = 0;
+        let iconoMasComun;
+    
+        for (const [icon, count] of Object.entries(frecuencia)) {
+            if (count > maxFrecuencia) {
+                maxFrecuencia = count;
+                iconoMasComun = icon;
+            }
+        }
+            return `http://openweathermap.org/img/w/${iconoMasComun}.png`;
+    }
+    const targetRef = useRef();
     return (
             <>
              <Head>
@@ -91,6 +143,13 @@ const Pronostico = () => {
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
             </Head>
             <Cabecera mostrarBotonHome={true} />
+            <button onClick={() => generatePDF(targetRef,{page: {
+           margin: Margin.SMALL,
+           format: 'A4',
+           orientation: 'landscape',
+        }},{filename: 'page.pdf'})}>Generate PDF</button>
+            
+         <div ref={targetRef}>
             {bandera && (
                 <>
             <div className="row">
@@ -137,41 +196,34 @@ const Pronostico = () => {
                 )}
                 <div className='col mt-1'>
                 <div className='card border-0 shadow-lg ml-3 mt-3 mr-3 mb-2 text-center'>
-                {valoresActuales && diaSeleccionado &&(
+                {valoresActuales && diaSeleccionado && valoresT &&(
                        <>
                        
                        <div class="card-header" style={{background:'rgba(0,0,255,0.1)'}}>
                        <h1 >Previsión para el {diaSeleccionado}</h1>
                         </div>
-                             
-
                         <div className="row">
                              <div className="col">
-                                <p><strong>Descripción: </strong>{valoresActuales.description}</p>
+                             <strong>Descripción:</strong><p >{valoresActuales.description}</p> 
                                 </div>
                                 <div className="col">
-                                <img className="icono" src={getIconUrl(diasSemana[0])} alt="Icono del clima"></img>   
+                                <img className="icono" src={getIconUrl(diaSeleccionado)} alt="Icono del clima"></img>   
                               </div>
                               <div className="col">
-                              <p><strong>Amanecer: </strong>{valoresActuales.amanecer}</p>   
+                             <strong>Amanecer: </strong><p>{valoresActuales.amanecer}</p>   
                               </div>
                         </div>
                         <div className="row">
                             <div className="col">                    
-                             <p><strong>Temperatura máx: </strong>{valoresActuales.amanecer}</p>
+                            <strong>Temperatura máx:<p className='text-danger'>{valoresT.temp_max} ºC</p> </strong>
                              </div>
                              <div className="col">  
-                                <p><strong>Temperatura min: </strong>{valoresActuales.atardecer}</p>
+                             <strong>Temperatura mín: <p className='text-primary'>{valoresT.temp_min} ºC</p></strong>
                                 </div> 
-                                <div className="col">
-                               
-                               <p><strong>Atardecer: </strong>{valoresActuales.atardecer}</p>
+                                <div className="col"> 
+                              <strong>Atardecer: </strong> <p>{valoresActuales.atardecer}</p>
                                </div>
-                        </div>
-                                
-                                
-                                
-                            
+                        </div>     
                       </>
                     )}
                 </div>
@@ -179,6 +231,7 @@ const Pronostico = () => {
                 </div>
                
             </div>
+          
             <div className="row-1" style={{marginBottom:'10vh'}}>
                 <div className='card border-0 shadow-lg ml-2 mr-2 mb-2'>
                 <div className="row">
@@ -208,7 +261,7 @@ const Pronostico = () => {
                         <h6>Temperatura</h6>
                         </div>
                                 {valoresT && labels && (
-                                    <ChartTemp data={valoresT} labels={labels} /> 
+                                    <ChartTemperatura data={valoresT.valores} labels={labels} /> 
                                 )}
                             </div>
                             </div>
@@ -227,7 +280,7 @@ const Pronostico = () => {
                         <div class="card-header" style={{background:'rgba(55,30,50,0.2)'}}>
                         <h6>Viento</h6>
                         </div>
-                                    <ChartTemp data={valoresT} labels={labels} /> 
+                                    <ChartTemperatura data={valoresT} labels={labels} /> 
                             </div>
                             </div>
                 </div>               
@@ -239,7 +292,10 @@ const Pronostico = () => {
             </div>
             
         </>)
-            }
+       
+        }
+            </div>
+            
             {!bandera && (
                <>
                <div className='row'>

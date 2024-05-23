@@ -2,10 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/pronostico": "pages/pronostico.js",
   "/menu": "pages/menu.js",
-  "/lista": "pages/lista.js",
-  "/api/obtenerlista": "pages/api/obtenerlista.js",
-  "/api/obtenerdatosgraficatemperatura": "pages/api/obtenerdatosgraficatemperatura.js",
-  "/api/obtenerpronostico": "pages/api/obtenerpronostico.js"
+  "/pronostico": "pages/pronostico.js"
 }
