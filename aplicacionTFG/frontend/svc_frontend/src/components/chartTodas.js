@@ -3,8 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearchMinus } from '@fortawesome/free-solid-svg-icons';
 import 'chart.js/auto'; // Importar Chart.js directamente aquí
 
-const ChartTodas = ({ datasets, labels }) => {
-  console.log(datasets);
+const ChartTodas = ({ datasets, labels, tipo }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -23,7 +22,7 @@ const ChartTodas = ({ datasets, labels }) => {
 
           const ctx = chartRef.current.getContext('2d');
           chartInstance.current = new Chart(ctx, {
-            type: 'line',
+            type: tipo,
             data: {
               labels: labels,
               datasets: [
@@ -35,7 +34,6 @@ const ChartTodas = ({ datasets, labels }) => {
                   borderWidth: 1,
                   pointRadius: 2,
                   pointHoverRadius: 7,
-                  tension: 0.8,
                   fill: {
                     target: 'origin',
                     below: 'rgba(255, 255, 0, 0.5)'

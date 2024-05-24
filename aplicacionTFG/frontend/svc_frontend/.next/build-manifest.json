@@ -27,15 +27,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/lista": [
+    "/pronostico": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/lista.js"
-    ],
-    "/menu": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/menu.js"
+      "static/chunks/pages/pronostico.js"
     ]
   },
   "ampFirstPages": []

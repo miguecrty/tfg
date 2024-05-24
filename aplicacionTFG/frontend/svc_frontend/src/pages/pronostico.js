@@ -2,29 +2,31 @@ import React, { useState, useEffect } from 'react';
 import Cabecera from '../components/cabecera';
 import Pie from '../components/pie';
 import SearchBox from '../components/searchbox';
-import ChartNubes from '@/components/chartNubes';
 import Head from 'next/head';
-import ChartTemperatura from '@/components/chartTemperatura';
 import { useRef } from 'react';
+import ChartTodas from '@/components/chartTodas';
 const Pronostico = () => {
     const [diasSemana, setDiasSemana] = useState(null);
     const [bandera, setBandera] = useState(false);
     const [datos, setDatos] = useState(null);
     const [datoslugar, setDatosLugar] = useState(null);
     const [labels, setLabels] = useState([]);
-    const [valoresN, setValoresN] = useState([]);
     const [valoresT, setValoresT] = useState([]);
-    const [valoresV, setValoresv] = useState([]);
+    const [datasetsT, setDatasetsT] = useState([]);
+    const [datasetsN, setDatasetsN] = useState([]);
+    const [datasetsV, setDatasetsV] = useState([]);
     const [valoresActuales, setValoresActuales] = useState(null);
     const [diaSeleccionado, setDiaSeleccionado] = useState(null);
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
     const [backgroundColor, setBackgroundColor] = useState('rgba(255,0,0,0.7)');
     const handleDiaSeleccionado = (dia) => {
-        
-        setLabels(datos.nubes[dia].horas);
-        setValoresN(datos.nubes[dia].valores);
+        setLabels(datos.temperatura[dia].horas);
         setValoresT(datos.temperatura[dia]);
-        //setValoresV(datos.temperatura[dia].valores);
+        datasetsN.data = datos.nubes[dia].valores;
+        datasetsT.data = datos.temperatura[dia].valores.temp;
+        setDatasetsN(datasetsN);
+        setDatasetsT(datasetsT);
+
         const temperatura = datos.descripcion_tiempo[dia].valores.length == 8 ?
             datos.temperatura[dia].valores.temp[3] :
             valoresActuales.temperatura;
@@ -64,10 +66,33 @@ const Pronostico = () => {
                 const dias_semana = Object.keys(data.nubes);
                 setDiasSemana(dias_semana);
                 setDatos(data);
-                setLabels(data.nubes[dias_semana[0]].horas);
+                setLabels(data.temperatura[dias_semana[0]].horas);
+                console.log(data.temperatura[dias_semana[0]])
                 setValoresActuales(data.datos_actuales);
-                setValoresN(data.nubes[dias_semana[0]].valores);
+                
+                //Datasets chartTemp
+                const datasetsTemperatura = {
+                    label: 'Temperatura (ºC)',
+                    data: data.temperatura[dias_semana[0]].valores.temp,
+                    backgroundColor: 'rgba(0,0,255,0.8)',
+                    borderColor:'rgba(0,0,255,0.8)',
+                    borderWidth:1
+                }
+                //Datasets chartNubes
+                const datasetsNubes = {
+                    label: 'Nubes (%)',
+                    data: data.nubes[dias_semana[0]].valores,
+                    backgroundColor: 'rgba(0,0,255,0.8)',
+                    borderColor:'rgba(0,0,255,0.8)',
+                    borderWidth:1
+                }
+                //Datasets chartViento       
+                setDatasetsN(datasetsNubes);
+                setDatasetsT(datasetsTemperatura);
                 setValoresT(data.temperatura[dias_semana[0]]);
+
+                
+
                 setDiaSeleccionado(dias_semana[0]);
                 //setValoresV(data.viento[dias_semana[0]].valores);
             }
@@ -213,8 +238,8 @@ const Pronostico = () => {
                         <div class="card-header" style={{background:'rgba(0,150,150,0.2)'}}>
                         <h6>Temperatura</h6>
                         </div>
-                                {valoresT && labels && (
-                                    <ChartTemperatura data={valoresT.valores} labels={labels} /> 
+                                {datasetsT && labels && (
+                                    <ChartTodas datasets={datasetsT} labels={labels} tipo={'line'}/> 
                                 )}
                             </div>
                             </div>
@@ -223,8 +248,8 @@ const Pronostico = () => {
                         <div class="card-header" style={{background:'rgba(255,100,0,0.2)'}}>
                         <h6>Nubes</h6>
                         </div>
-                                {valoresN && labels && (
-                                   <ChartNubes data={valoresN} labels={labels} />
+                                {datasetsN && labels && (
+                                   <ChartTodas datasets={datasetsN} labels={labels} tipo={'bar'} />
                                 )}
                             </div>
                             </div>
@@ -233,7 +258,7 @@ const Pronostico = () => {
                         <div class="card-header" style={{background:'rgba(55,30,50,0.2)'}}>
                         <h6>Viento</h6>
                         </div>
-                                    <ChartTemperatura data={valoresT} labels={labels} /> 
+                                    {/*<ChartTodas data={valoresT} labels={labels} /> */}
                             </div>
                             </div>
                 </div>               

@@ -219,7 +219,7 @@ if (index === 0) {
                   </div>
                   <div className='row mb-5'>
                     {datasets && labels &&(
-                    <ChartTodas datasets={datasets} labels={labels} />
+                    <ChartTodas datasets={datasets} labels={labels} tipo={'line'} />
                     )}
                   </div>
                   </>
