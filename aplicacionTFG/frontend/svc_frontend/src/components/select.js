@@ -99,7 +99,7 @@ const SelectPersonalizado = () => {
 
   return (
     <>
-     <div className="row pr-0">
+     <div className="row mr-0 ml-0">
      <div className="col-md-4">
        {/*Primera fila de la primera columna*/}
       <div className="row-md-4 mt-3 ml-3">
@@ -156,11 +156,11 @@ const SelectPersonalizado = () => {
                 )}
                 <div className="row">
                   <div className='col'>
-                <div className="card mt-4" style={{ minHeight:'500px',maxHeight: '500px'}}>
+                <div className="card mt-4">
                   {opcionSeleccionada ? (
-                    <div className='card-body'>
+                    
                     <ChartTodas datasets={datasets} labels={labels} />
-                    </div>
+                    
                   ) : (
                     <strong className='text-center pt-3 pb-3'> ⬅ ⬅ Selecciona un lugar para monitorizar</strong>
                   )}

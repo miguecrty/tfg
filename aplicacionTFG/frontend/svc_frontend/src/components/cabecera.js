@@ -29,8 +29,8 @@ const Cabecera = ({ mostrarBotonHome }) => {
         <Head>
         <link rel="stylesheet" href="./styles/cabecera.css" />
         </Head>
-        <header className="header">
-            <nav className="nav-container container-fluid px-3">
+        <header className="header w-auto">
+            <nav className="nav-container container-fluid px-3 w-auto">
                 <div>
                     {mostrarBotonHome && (
                         <button onClick={handleHome} className="home p-1.5 home-button">

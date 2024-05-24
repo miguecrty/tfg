@@ -7,10 +7,11 @@ const ChartTodas = ({ datasets, labels }) => {
 
   useEffect(() => {
     if (chartRef && chartRef.current) {
+      // Destroy any previous chart instance to avoid overlapping
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
-      
+
       const ctx = chartRef.current.getContext('2d');
       chartInstance.current = new Chart(ctx, {
         type: 'line',
@@ -19,6 +20,8 @@ const ChartTodas = ({ datasets, labels }) => {
           datasets: datasets,
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: false,
           scales: {
             y: {
               beginAtZero: false
@@ -29,7 +32,11 @@ const ChartTodas = ({ datasets, labels }) => {
     }
   }, [datasets, labels]);
 
-  return <canvas ref={chartRef}></canvas>;
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '400px' }}>
+      <canvas ref={chartRef} style={{ width: '100%', height: '100%' }}></canvas>
+    </div>
+  );
 };
 
 export default ChartTodas;

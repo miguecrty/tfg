@@ -5,48 +5,8 @@ import SearchBox from '../components/searchbox';
 import ChartNubes from '@/components/chartNubes';
 import Head from 'next/head';
 import ChartTemperatura from '@/components/chartTemperatura';
-import generatePDF, { Resolution, Margin } from 'react-to-pdf';
 import { useRef } from 'react';
-const getTargetElement = () => document.getElementById('content-id');
 const Pronostico = () => {
-
-    const options = {
-        // default is `save`
-        method: 'open',
-        // default is Resolution.MEDIUM = 3, which should be enough, higher values
-        // increases the image quality but also the size of the PDF, so be careful
-        // using values higher than 10 when having multiple pages generated, it
-        // might cause the page to crash or hang.
-        resolution: Resolution.HIGH,
-        page: {
-           // margin is in MM, default is Margin.NONE = 0
-           margin: Margin.SMALL,
-           // default is 'A4'
-           format: 'letter',
-           // default is 'portrait'
-           orientation: 'landscape',
-        },
-        canvas: {
-           // default is 'image/jpeg' for better size performance
-           mimeType: 'image/png',
-           qualityRatio: 1
-        },
-        // Customize any value passed to the jsPDF instance and html2canvas
-        // function. You probably will not need this and things can break, 
-        // so use with caution.
-        overrides: {
-           // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
-           pdf: {
-              compress: true
-           },
-           // see https://html2canvas.hertzen.com/configuration for more options
-           canvas: {
-              useCORS: true
-           }
-        },
-     };
-
-
     const [diasSemana, setDiasSemana] = useState(null);
     const [bandera, setBandera] = useState(false);
     const [datos, setDatos] = useState(null);
@@ -143,19 +103,12 @@ const Pronostico = () => {
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
             </Head>
             <Cabecera mostrarBotonHome={true} />
-            <button onClick={() => generatePDF(targetRef,{page: {
-           margin: Margin.SMALL,
-           format: 'A4',
-           orientation: 'landscape',
-        }},{filename: 'page.pdf'})}>Generate PDF</button>
-            
-         <div ref={targetRef}>
             {bandera && (
                 <>
             <div className="row">
-                <div className='col-3 mt-1'>
+                <div className='col-3 mt-1 mr-3'>
 
-                <div className="p-4 rounded shadow bg-warning text-dark bg-opacity-50 ml-3 mt-3" style={{ maxWidth: '400px', width: '100%' }}>
+                <div className="p-4 rounded shadow bg-warning text-dark bg-opacity-50 ml-3 mt-3 mr-3"  style={{ minWidth:'150px',maxWidth: '400px'}}>
                        <h2 className="mb-4 text-center">Buscar Ubicación</h2>
                        <SearchBox onPlaceSelected={handlePlaceSelected}
                     pronostico={true}
@@ -168,13 +121,13 @@ const Pronostico = () => {
                 
                 </div>
                 {datoslugar &&(
-                <div className='col-4 mt-1'>
-                    <div className='card text-center border-0 shadow-lg ml-3 mt-3 mb-2'>
+                <div className='col-4 mt-1 ml-5'>
+                    <div className='card text-center border-0 shadow-lg ml-3 mt-3 mb-2' style={{minWidth:'200px'}}>
                     <div class="card-header" style={{background:'rgba(0,0,255,0.1)'}}>
                     <h1>{datoslugar.address_components[0].long_name}</h1>
                         </div>
                 <div className='row'>
-                     <div className='col ml-2'>
+                     <div className='col ml-2' >
                         {datoslugar.address_components[1] && (
                         <p>Ciudad: <strong>{datoslugar.address_components[1].long_name}</strong></p>
                         )}
@@ -194,7 +147,7 @@ const Pronostico = () => {
                 </div>
                 </div>
                 )}
-                <div className='col mt-1'>
+                <div className='col mt-1' style={{minWidth:'400px'}}>
                 <div className='card border-0 shadow-lg ml-3 mt-3 mr-3 mb-2 text-center'>
                 {valoresActuales && diaSeleccionado && valoresT &&(
                        <>
@@ -294,11 +247,10 @@ const Pronostico = () => {
         </>)
        
         }
-            </div>
             
             {!bandera && (
                <>
-               <div className='row'>
+               <div className='row mr-0 ml-0'>
                <div className="col-4 mt-3 mr-3 ml-3 d-flex justify-content-center align-items-center">
                    <div className="p-4 rounded shadow bg-white" style={{width: '100%' }}>
                        <h2 className="mb-4 text-center">Buscar Ubicación</h2>
