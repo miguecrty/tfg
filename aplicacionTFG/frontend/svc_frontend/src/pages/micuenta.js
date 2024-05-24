@@ -48,7 +48,7 @@ const Menu = () => {
                 <link rel="icon" href="./images/map.png" />
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
             </Head>
-            <Cabecera mostrarBotonHome={true} />
+            <Cabecera mostrarBotonHome={true} mostrarUser={true} />
             <div className="row mr-0 text-center mt-4">
             <h1 className='display-2 text-center mt-2'>Mi cuenta</h1>
             </div>

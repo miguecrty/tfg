@@ -102,7 +102,7 @@ const Pronostico = () => {
                 <link rel="icon" href="./images/map.png" />
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
             </Head>
-            <Cabecera mostrarBotonHome={true} />
+            <Cabecera mostrarBotonHome={true} mostrarUser={true} />
             {bandera && (
                 <>
             <div className="row">

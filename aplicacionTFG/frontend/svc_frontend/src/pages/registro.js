@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Pie from '../components/pie';
 import { server } from './_app';
+import Cabecera from '@/components/cabecera';
 
 const Registro = () => {
     const router = useRouter();
@@ -98,6 +99,8 @@ else{
     }
 
     return (
+        <>
+        <Cabecera mostrarBotonHome={true} mostrarUser={false}/>
         <div className="container">
             <div className="login-form">
                 <h1>Registro de usuario</h1>
@@ -110,6 +113,7 @@ else{
             </div>
             <Pie />
         </div>
+        </>
     );
 };
 

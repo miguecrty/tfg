@@ -1,6 +1,7 @@
 // En pages/api/login.js
 import { server } from "../_app";
 export default async function handler(req, res) {
+    console.log('http://'+server+'/login');
         const response = await fetch('http://'+server+'/login', { 
             method: 'POST',
             headers: {

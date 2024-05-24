@@ -266,8 +266,6 @@ app.post('/compruebausu', async (req, res) => {
     console.error('Error al procesar la solicitud de inicio de sesión:', error);
     res.status(500).json({ error: 'Error al procesar la solicitud de inicio de sesión' });
   }
-
-
 });
 
 

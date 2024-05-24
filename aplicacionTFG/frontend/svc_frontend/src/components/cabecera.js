@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Head from 'next/head';
-const Cabecera = ({ mostrarBotonHome }) => {
+const Cabecera = ({ mostrarBotonHome,mostrarUser}) => {
     const router = useRouter();
     const [username, setUsername] = useState('');
 
@@ -38,11 +38,13 @@ const Cabecera = ({ mostrarBotonHome }) => {
                         </button>
                     )}
                 </div>
+                {mostrarUser &&(
                 <div className="profile-container">
                     <img src="./images/perfil.png" alt="Perfil" className="profile-img" />
                     <span className="username text-black"><strong>{username}</strong></span>
                     <button onClick={handleLogout} className="cerrar p-2 logout-button">Cerrar Sesión</button>
                 </div>
+                )}
             </nav>
         </header>
         </>
