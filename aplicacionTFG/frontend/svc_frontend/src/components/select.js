@@ -8,7 +8,7 @@ const SelectPersonalizado = () => {
   const [opciones, setOpciones] = useState([]);
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(null);
   const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
-  const [datasets, setDatasets] = useState([]);
+  const [datasets, setDatasets] = useState(null);
   const [datasetslista, setDatasetsLista] = useState([]);
   const [labels, setLabels] = useState([]);
   const [datosActuales, setDatosActuales] = useState(null);
@@ -218,7 +218,9 @@ if (index === 0) {
                   </ul>
                   </div>
                   <div className='row mb-5'>
+                    {datasets && labels &&(
                     <ChartTodas datasets={datasets} labels={labels} />
+                    )}
                   </div>
                   </>
               
