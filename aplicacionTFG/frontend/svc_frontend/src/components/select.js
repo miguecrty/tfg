@@ -9,11 +9,45 @@ const SelectPersonalizado = () => {
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(null);
   const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
   const [datasets, setDatasets] = useState([]);
+  const [datasetslista, setDatasetsLista] = useState([]);
   const [labels, setLabels] = useState([]);
   const [datosActuales, setDatosActuales] = useState(null);
   const center = { lat: 40.7128, lng: -74.006 };
   const zoom = 15;
   const username = Cookies.get('username');
+  const [activeTab, setActiveTab] = useState(null);
+
+  const handleTabClick = (index) => {
+    let color, borde;
+    console.log("::::::::::::::::::");
+    console.log(datasetslista[index])
+if (index === 0) {
+  color = 'rgba(0, 0, 255, 0.5)'; // Azul
+  borde = 'rgba(0, 0, 255, 0.2)';
+} else if (index === 1) {
+  color = 'rgba(0, 255, 255, 0.5)'; // Cyan
+  borde = 'rgba(0, 255, 255, 0.2)';
+} else if (index === 2) {
+  color = 'rgba(255, 0, 255, 0.5)'; // Magenta
+  borde = 'rgba(255, 0, 255, 0.2)';
+} else if (index === 3) {
+  color = 'rgba(255, 255, 0, 0.5)'; // Amarillo
+  borde = 'rgba(255, 255, 0, 0.2)';
+} else if (index === 4) {
+  color = 'rgba(0, 0, 255, 0.5)'; // Azul
+  borde = 'rgba(0, 0, 255, 0.2)';
+} else if (index === 5) {
+  color = 'rgba(173, 216, 230, 0.5)'; // Azul claro
+  borde = 'rgba(173, 216, 230, 0.2)';
+}
+
+    
+      datasetslista[index].backgroundColor=color;
+      datasetslista[index].borderColor=borde;
+      datasetslista[index].borderWidth=1;
+      setActiveTab(index);
+      setDatasets(datasetslista[index]);
+  };
 
   const handlePlaceSelected = async (place, resolve) => {
     alert("Has seleccionado " + place.address_components[0].long_name);
@@ -28,6 +62,7 @@ const SelectPersonalizado = () => {
     const [latitud, longitud] = lista[opcion].split("|").map(parseFloat);
     setUbicacionSeleccionada({ lat: latitud, lng: longitud });
     await obtenerDatosParaGrafico(opcion);
+    
   };
 
   const obtenerLista = async (usuario, actualizar) => {
@@ -71,20 +106,17 @@ const SelectPersonalizado = () => {
       if (response.ok) {
         const data = await response.json();
         console.log(data.datosClimaticos);
-        const colores = ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'];
-        const nombresPersonalizados = ['Humedad (%)', 'Sensación térmica (ºC)', 'Presión (hPa)', 'Temperatura (ºC)', 'Temperatura máxima (ºC)', 'Temperatura mínima (ºC)'];
+       const nombresPersonalizados = ['Temperatura (ºC)', 'Temperatura máxima (ºC)', 'Temperatura mínima (ºC)', 'Sensación térmica (ºC)', 'Presión (hPa)','Humedad (%)'];
         const newDatasets = Object.keys(data.datosClimaticos).filter(key => key !== 'tomas').map((key, index) => ({
           label: nombresPersonalizados[index],
           data: data.datosClimaticos[key],
-          backgroundColor: colores[index % colores.length], // Asigna un color único a cada dataset
-          borderColor: colores[index % colores.length].replace('0.2', '1'),
-          borderWidth: 1,
-          hidden: true
         }));
-
-        setDatasets(newDatasets);
-        setLabels(data.datosClimaticos.tomas);
-        setDatosActuales(data.datosActuales);
+        await Promise.all([
+          setDatasetsLista(newDatasets),
+          setLabels(data.datosClimaticos.tomas),
+          setDatosActuales(data.datosActuales)
+        ]);
+        handleTabClick(0);
       } else {
         console.error('Error al obtener los datos para el gráfico');
       }
@@ -92,7 +124,11 @@ const SelectPersonalizado = () => {
       console.error('Error al obtener los datos para el gráfico:', error);
     }
   };
-
+  useEffect(() => {
+    if (datasetslista.length > 0 && labels.length > 0 && datosActuales !== null) {
+      handleTabClick(0);
+    }
+  }, [datasetslista, labels, datosActuales]);
   useEffect(() => {
     obtenerLista(username, true);
   }, []);
@@ -101,13 +137,13 @@ const SelectPersonalizado = () => {
     <>
      <div className="row mr-0 ml-0">
      <div className="col-md-4">
-       {/*Primera fila de la primera columna*/}
       <div className="row-md-4 mt-3 ml-3">
       
             <div className="card">
               <div className="card-body">
             <h4>Lista de lugares</h4>
             {opciones.length ? (
+
                   <div className="list-group"  style={{ minHeight:'160px',maxHeight: '160px', overflowY: 'auto' }}>
                   {opciones.map((opcion, index) => (
                     <button
@@ -147,7 +183,7 @@ const SelectPersonalizado = () => {
 
         </div>
       <div className="col mt-3  mr-3">
-            <div className="card" style={{ minHeight:'620px',maxHeight: '620px'}}>
+            <div className="card" style={{ minHeight:'670px',maxHeight: '670px'}}>
               <div className="card-body">
                 {opcionSeleccionada ? (
                   <h4>Monitorizando {opcionSeleccionada}</h4>
@@ -156,11 +192,36 @@ const SelectPersonalizado = () => {
                 )}
                 <div className="row">
                   <div className='col'>
-                <div className="card mt-4">
+                <div className="card mt-4 border-0">
                   {opcionSeleccionada ? (
-                    
+                    <>
+                    <div className='row'>
+                  <ul className="nav nav-tabs border-0">
+                  <li className="nav-item">
+                    <button className={`nav-link ml-3 ${activeTab === 0 ? 'active' : ''}`} onClick={() => handleTabClick(0)}>Temperatura</button>
+                  </li>
+                  <li className="nav-item">
+                    <button className={`nav-link ${activeTab === 1 ? 'active' : ''}`} onClick={() => handleTabClick(1)}>Temperatura Máx</button>
+                  </li>
+                  <li className="nav-item">
+                    <button className={`nav-link ${activeTab === 2 ? 'active' : ''}`} onClick={() => handleTabClick(2)}>Temperatura Mín</button>
+                  </li>
+                  <li className="nav-item">
+                    <button className={`nav-link ${activeTab === 3 ? 'active' : ''}`} onClick={() => handleTabClick(3)}>Sensación térmica</button>
+                  </li>
+                  <li className="nav-item">
+                    <button className={`nav-link ${activeTab === 4 ? 'active' : ''}`} onClick={() => handleTabClick(4)}>Presión</button>
+                  </li>
+                  <li className="nav-item">
+                    <button className={`nav-link ${activeTab === 5 ? 'active' : ''}`} onClick={() => handleTabClick(5)}>Humedad</button>
+                  </li>
+                  </ul>
+                  </div>
+                  <div className='row mb-5'>
                     <ChartTodas datasets={datasets} labels={labels} />
-                    
+                  </div>
+                  </>
+              
                   ) : (
                     <strong className='text-center pt-3 pb-3'> ⬅ ⬅ Selecciona un lugar para monitorizar</strong>
                   )}

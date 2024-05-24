@@ -317,12 +317,12 @@ app.get('/obtenerdatosgraficatemperatura', async (req, res) => {
       
       const datos ={
         datosClimaticos:{
-        humedad:listahumedad,
-        sensacionTermica:sensacionTermica,
-        presion:presion,
         temperaturas:temperaturas,
         maxTemperaturas:maxTemperaturas,
         minTemperaturas:minTemperaturas,
+        sensacionTermica:sensacionTermica,
+        presion:presion,
+        humedad:listahumedad,
         tomas:listatomas
         },
         datosActuales:{

@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Head from 'next/head';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHome,faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 const Cabecera = ({ mostrarBotonHome,mostrarUser}) => {
     const router = useRouter();
     const [username, setUsername] = useState('');
@@ -33,8 +35,8 @@ const Cabecera = ({ mostrarBotonHome,mostrarUser}) => {
             <nav className="nav-container container-fluid px-3 w-auto">
                 <div>
                     {mostrarBotonHome && (
-                        <button onClick={handleHome} className="home p-1.5 home-button">
-                            <img src="./images/home.png" alt="Inicio" className="home-button" />
+                        <button onClick={handleHome} className="btn p-1.5 home-button">
+                             <FontAwesomeIcon icon={faHome} className="home-button" style={{width:'30px',height:'30px'}} />
                         </button>
                     )}
                 </div>
@@ -42,7 +44,10 @@ const Cabecera = ({ mostrarBotonHome,mostrarUser}) => {
                 <div className="profile-container">
                     <img src="./images/perfil.png" alt="Perfil" className="profile-img" />
                     <span className="username text-black"><strong>{username}</strong></span>
-                    <button onClick={handleLogout} className="cerrar p-2 logout-button">Cerrar Sesión</button>
+                    <button onClick={handleLogout} className="cerrar p-2 logout-button">
+                    <FontAwesomeIcon icon={faSignOutAlt} className="logout-icon mr-3" style={{width:'20px',height:'20px'}} />
+                    Cerrar Sesión
+                </button>
                 </div>
                 )}
             </nav>

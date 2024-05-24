@@ -1,10 +1,4 @@
 {
-  "components/chartTodas.js -> chart.js/auto": {
-    "id": "components/chartTodas.js -> chart.js/auto",
-    "files": [
-      "static/chunks/node_modules_chart_js_auto_auto_js.js"
-    ]
-  },
   "components/chartTodas.js -> chartjs-plugin-zoom": {
     "id": "components/chartTodas.js -> chartjs-plugin-zoom",
     "files": [
