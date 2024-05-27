@@ -2,7 +2,10 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/pronostico": "pages/pronostico.js",
+  "/micuenta": "pages/micuenta.js",
   "/": "pages/index.js",
-  "/api/obtenerpronostico": "pages/api/obtenerpronostico.js"
+  "/menu": "pages/menu.js",
+  "/api/obtenerlista": "pages/api/obtenerlista.js",
+  "/api/cambiarpassword": "pages/api/cambiarpassword.js",
+  "/api/borracuenta": "pages/api/borracuenta.js"
 }

@@ -184,6 +184,15 @@ async function crearTabla(usu)
   }
 }
 
+async function eliminarTabla(usu)
+{
+  try {
+    const result = await client.execute("DROP TABLE datos_"+usu);
+    console.log("TABLA datos_"+usu+" BORRADA CORRECTAMENTE");
+  } catch (error) {
+    console.error('Error al obtener datos de la tabla:', error);
+  }
+}
 
 
 app.get('/obtenerlista', async (req, res) => {
@@ -282,6 +291,43 @@ app.post('/registrar', async (req, res) => {
       res.status(401).json({ error: 'Usuario existe en BBDD' });
       console.log(error);
     }
+
+});
+
+app.put('/cambiarpassword', async (req, res) => {
+  const username = req.body.usuario;
+  const claveAntigua = req.body.antigua;
+  const claveNueva = req.body.nueva;
+  try {
+    // Usar una consulta preparada para evitar la interpolación de cadenas
+    const query = "UPDATE tfg.usuarios SET clave = ? WHERE nombre_usu = ? IF clave = ?";
+    const result = await client.execute(query, [claveNueva, username, claveAntigua]);
+    
+    // Comprobar si la actualización fue exitosa
+    if (result.wasApplied()) {
+      res.sendStatus(200); // OK
+    } else {
+      res.status(401).json({ error: 'La contraseña antigua no coincide' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error(error);
+  } 
+});
+
+
+
+app.delete('/borracuenta', async (req, res) => {
+  const username = req.body.usuario;
+  try {
+    const result = await client.execute("DELETE FROM usuarios WHERE nombre_usu='"+username+"'");
+    console.log("USUARIO "+username+" BORRADO CORRECTAMENTE");
+    eliminarTabla(username);
+    res.sendStatus(200); 
+  } catch (error) {
+    res.status(401).json({ error: 'Usuario existe en BBDD' });
+    console.log(error);
+  }
 
 });
 

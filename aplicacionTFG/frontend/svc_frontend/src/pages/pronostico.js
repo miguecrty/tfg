@@ -74,25 +74,22 @@ const Pronostico = () => {
                 const datasetsTemperatura = {
                     label: 'Temperatura (ºC)',
                     data: data.temperatura[dias_semana[0]].valores.temp,
-                    backgroundColor: 'rgba(0,0,255,0.8)',
-                    borderColor:'rgba(0,0,255,0.8)',
+                    backgroundColor: 'rgba(255,100,0,0.3)',
+                    borderColor:'rgba(255,100,0,0.5)',
                     borderWidth:1
                 }
                 //Datasets chartNubes
                 const datasetsNubes = {
                     label: 'Nubes (%)',
                     data: data.nubes[dias_semana[0]].valores,
-                    backgroundColor: 'rgba(0,0,255,0.8)',
-                    borderColor:'rgba(0,0,255,0.8)',
+                    backgroundColor: 'rgba(0,150,150,0.3)',
+                    borderColor:'rgba(0,150,150,0.5)',
                     borderWidth:1
                 }
                 //Datasets chartViento       
                 setDatasetsN(datasetsNubes);
                 setDatasetsT(datasetsTemperatura);
                 setValoresT(data.temperatura[dias_semana[0]]);
-
-                
-
                 setDiaSeleccionado(dias_semana[0]);
                 //setValoresV(data.viento[dias_semana[0]].valores);
             }
@@ -148,7 +145,7 @@ const Pronostico = () => {
                 {datoslugar &&(
                 <div className='col-4 mt-1 ml-5'>
                     <div className='card text-center border-0 shadow-lg ml-3 mt-3 mb-2' style={{minWidth:'200px'}}>
-                    <div class="card-header" style={{background:'rgba(0,0,255,0.1)'}}>
+                    <div className="card-header" style={{background:'rgba(0,0,255,0.1)'}}>
                     <h1>{datoslugar.address_components[0].long_name}</h1>
                         </div>
                 <div className='row'>
@@ -177,7 +174,7 @@ const Pronostico = () => {
                 {valoresActuales && diaSeleccionado && valoresT &&(
                        <>
                        
-                       <div class="card-header" style={{background:'rgba(0,0,255,0.1)'}}>
+                       <div className="card-header" style={{background:'rgba(0,0,255,0.1)'}}>
                        <h1 >Previsión para el {diaSeleccionado}</h1>
                         </div>
                         <div className="row">
@@ -235,7 +232,7 @@ const Pronostico = () => {
                             </div>                    
                     <div className="col text-center">
                         <div className='card border-0 shadow mb-2 ml-2'>
-                        <div class="card-header" style={{background:'rgba(0,150,150,0.2)'}}>
+                        <div className="card-header" style={{background:'rgba(255,100,0,0.2)'}}>
                         <h6>Temperatura</h6>
                         </div>
                                 {datasetsT && labels && (
@@ -245,7 +242,7 @@ const Pronostico = () => {
                             </div>
                             <div className="col text-center">
                         <div className='card border-0 shadow mb-2 ml-2'>
-                        <div class="card-header" style={{background:'rgba(255,100,0,0.2)'}}>
+                        <div className="card-header" style={{background:'rgba(0,150,150,0.2)'}}>
                         <h6>Nubes</h6>
                         </div>
                                 {datasetsN && labels && (
@@ -255,7 +252,7 @@ const Pronostico = () => {
                             </div>
                             <div className="col text-center">
                         <div className='card border-0 shadow mb-2 ml-2'>
-                        <div class="card-header" style={{background:'rgba(55,30,50,0.2)'}}>
+                        <div className="card-header" style={{background:'rgba(55,30,50,0.2)'}}>
                         <h6>Viento</h6>
                         </div>
                                     {/*<ChartTodas data={valoresT} labels={labels} /> */}
