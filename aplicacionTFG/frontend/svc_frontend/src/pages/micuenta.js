@@ -12,12 +12,48 @@ const Menu = () => {
     const [exito, setExito] = useState(null);
     const [exitoContra, setExitoContra] = useState(null);
     const [errorContra, setErrorContra] = useState(null);
+    const [desmonitorizar, setDesmonitorizar] = useState(null);
     const [inputConfirmar, setInputConfirmar] = useState('');
     const [antiguaPassword, setAntiguaPassword] = useState('');
     const [nuevaPassword, setNuevaPassword] = useState('');
     const router = useRouter();
     const username = Cookies.get('username');
+    const [selected, setSelected] = useState([]);
+
+    const handleCheckboxChange = (index) => {
+        setSelected(prevSelected => {
+            if (prevSelected.includes(index)) {
+                return prevSelected.filter(item => item !== index);
+            } else {
+                return [...prevSelected, index];
+            }
+        });
+    };
+
+    const handleConfirmClick = async () => {
+        const selectedLugares = lista.filter((_, index) => selected.includes(index));
+        try {
+          const response = await fetch('/api/desmonitorizar', {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({"lugares":selectedLugares, "usuario":username})
+          });
+  
+          if (response.status == 200) {
+            obtenerLista(username);
+            setTimeout(() => {
+              setDesmonitorizar(false);
+           }, 5000);
+           setDesmonitorizar(true);
+          }
+      } catch (error) {
+          console.error(error);
+      }
     
+    };
+
     async function borraCuenta (usuario) {
       try {
           const response = await fetch('/api/borracuenta', {
@@ -174,20 +210,27 @@ const Menu = () => {
                                                                     type="checkbox"
                                                                     value=""
                                                                     id="defaultCheck1"
-                                                                    style={{ left: "10px", height: '20px', width: '20px' }} // Ajusta la distancia del checkbox al borde izquierdo
+                                                                    onChange={() => handleCheckboxChange(index)}
+                                                                    style={{ left: "10px", height: '20px', width: '20px' }}
                                                                 />
                                                                 <p className="mb-0 flex-grow-1 text-center" style={{ fontSize: '1.5rem' }}>{opcion}</p>
                                                             </div>
                                                         </div>
                                                     ))}
                                                 </div>
+
                                             </>
                                         ) : (
-                                            <p>No hay ningun lugar monitorizándose</p>
+                                            <p className='text-center'>No hay ningun lugar monitorizándose</p>
                                         )}
+                                        {desmonitorizar && (
+                                        <strong><p className='text-center text-success'>Lugares desmonitorizados con éxito</p></strong>
+                                        )
+                                        }
                                         <div className="d-flex justify-content-center">
-                                            <button type="button" className='btn btn-secondary btn-block mb-2 shadow mt-4' style={{ width: '25%' }}>Confirmar</button>
+                                            <button type="button" className='btn btn-secondary btn-block mb-2 shadow mt-4' style={{ width: '25%' }} onClick={handleConfirmClick} >Confirmar</button>
                                         </div>
+                                        
                                     </div>
                                 </div>
                             </div>

@@ -162,9 +162,6 @@ app.post('/iniciarsondeo', async (req, res) => {
 }
 });
 
-  
-
-
 
 async function crearTabla(usu)
 {
@@ -242,16 +239,25 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.get('/prueba', async (req, res) => {
+app.put('/desmonitorizar', async (req, res) => {
   try {
-    const username = req.usuario;
-    console.log(username);
-
+      const lugares = req.body.lugares;
+      const usuario = req.body.usuario;
+      for (const lugar of lugares) {
+          
+          await client.execute("UPDATE usuarios SET lugares = lugares - {'" + lugar + "'} WHERE nombre_usu = '" + usuario + "'");
+          clearInterval(intervalos[usuario][lugar]);
+          delete intervalos[usuario][lugar];
+          await client.execute("DELETE FROM tfg.datos_"+usuario+" WHERE nombre_lugar = '"+lugar+"'");
+      }
+      res.status(200).json({ "mensaje": "Éxito al desmonitorizar los lugares" });
   } catch (error) {
-    console.error('Error al procesar la solicitud:', error);
-    res.status(500).json({ error: 'Error al procesar la solicitud' });
+      console.log(error);
+      res.status(500).json({ "error": "Error al desmonitorizar los lugares" });
   }
 });
+
+
 
 app.post('/compruebausu', async (req, res) => {
   try {
