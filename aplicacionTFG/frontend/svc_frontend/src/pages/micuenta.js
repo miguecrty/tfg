@@ -32,6 +32,7 @@ const Menu = () => {
 
     const handleConfirmClick = async () => {
         const selectedLugares = lista.filter((_, index) => selected.includes(index));
+        if (selectedLugares.length >0){
         try {
           const response = await fetch('/api/desmonitorizar', {
               method: 'PUT',
@@ -51,6 +52,7 @@ const Menu = () => {
       } catch (error) {
           console.error(error);
       }
+    }
     
     };
 
@@ -89,7 +91,6 @@ const Menu = () => {
 
             if (response.ok) {
                 lista = await response.json();
-                console.log(lista);
                 const lugares = [];
                 for (let lugar in lista) {
                     lugares.push(lugar);
@@ -213,23 +214,32 @@ const Menu = () => {
                                                                     onChange={() => handleCheckboxChange(index)}
                                                                     style={{ left: "10px", height: '20px', width: '20px' }}
                                                                 />
-                                                                <p className="mb-0 flex-grow-1 text-center" style={{ fontSize: '1.5rem' }}>{opcion}</p>
+                                                                <p className="mb-0 flex-grow-1 text-center mr-4" style={{ fontSize: '1.5rem' }}>{opcion}</p>
                                                             </div>
                                                         </div>
                                                     ))}
                                                 </div>
-
+                                                <div className="d-flex justify-content-center">
+                                            <button type="button" className='btn btn-secondary btn-block mb-2 shadow mt-4' style={{ width: '25%' }} onClick={handleConfirmClick} >Confirmar</button>
+                                        </div>
                                             </>
                                         ) : (
+                                          <>
                                             <p className='text-center'>No hay ningun lugar monitorizándose</p>
+                                            <p className='text-center'>
+                                              <a href="/monitorizar" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                                Monitorizar
+                                                </a>
+                                            </p>
+
+                                            
+                                            </>
                                         )}
                                         {desmonitorizar && (
                                         <strong><p className='text-center text-success'>Lugares desmonitorizados con éxito</p></strong>
                                         )
                                         }
-                                        <div className="d-flex justify-content-center">
-                                            <button type="button" className='btn btn-secondary btn-block mb-2 shadow mt-4' style={{ width: '25%' }} onClick={handleConfirmClick} >Confirmar</button>
-                                        </div>
+                                        
                                         
                                     </div>
                                 </div>

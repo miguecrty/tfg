@@ -1,4 +1,3 @@
-// En pages/api/login.js
 import { server } from "../_app";
 
 export default async function handler(req, res) {

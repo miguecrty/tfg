@@ -19,8 +19,6 @@ const SelectPersonalizado = () => {
 
   const handleTabClick = (index) => {
     let color, borde;
-    console.log("::::::::::::::::::");
-    console.log(datasetslista[index])
 if (index === 0) {
   color = 'rgba(0, 0, 255, 0.5)'; // Azul
   borde = 'rgba(0, 0, 255, 0.2)';
@@ -156,7 +154,7 @@ if (index === 0) {
                   ))}
                   </div>
                 ) : (
-                <p>No hay ningun lugar monitorizándose</p>
+                <p className='text-center'>No hay ningun lugar monitorizándose</p>
                 )}
             
               </div>
@@ -198,22 +196,22 @@ if (index === 0) {
                     <div className='row'>
                   <ul className="nav nav-tabs border-0">
                   <li className="nav-item">
-                    <button className={`nav-link ml-3 ${activeTab === 0 ? 'active' : ''}`} onClick={() => handleTabClick(0)}>Temperatura</button>
+                    <button className={`nav-link ml-3 border-2 ${activeTab === 0 ? 'active' : ''}`} onClick={() => handleTabClick(0)}>Temperatura</button>
                   </li>
                   <li className="nav-item">
-                    <button className={`nav-link ${activeTab === 1 ? 'active' : ''}`} onClick={() => handleTabClick(1)}>Temperatura Máx</button>
+                    <button className={`nav-link border-2  ${activeTab === 1 ? 'active' : ''}`} onClick={() => handleTabClick(1)}>Temperatura Máx</button>
                   </li>
                   <li className="nav-item">
-                    <button className={`nav-link ${activeTab === 2 ? 'active' : ''}`} onClick={() => handleTabClick(2)}>Temperatura Mín</button>
+                    <button className={`nav-link border-2  ${activeTab === 2 ? 'active' : ''}`} onClick={() => handleTabClick(2)}>Temperatura Mín</button>
                   </li>
                   <li className="nav-item">
-                    <button className={`nav-link ${activeTab === 3 ? 'active' : ''}`} onClick={() => handleTabClick(3)}>Sensación térmica</button>
+                    <button className={`nav-link border-2 ${activeTab === 3 ? 'active' : ''}`} onClick={() => handleTabClick(3)}>Sensación térmica</button>
                   </li>
                   <li className="nav-item">
-                    <button className={`nav-link ${activeTab === 4 ? 'active' : ''}`} onClick={() => handleTabClick(4)}>Presión</button>
+                    <button className={`nav-link border-2  ${activeTab === 4 ? 'active' : ''}`} onClick={() => handleTabClick(4)}>Presión</button>
                   </li>
                   <li className="nav-item">
-                    <button className={`nav-link ${activeTab === 5 ? 'active' : ''}`} onClick={() => handleTabClick(5)}>Humedad</button>
+                    <button className={`nav-link border-2  ${activeTab === 5 ? 'active' : ''}`} onClick={() => handleTabClick(5)}>Humedad</button>
                   </li>
                   </ul>
                   </div>

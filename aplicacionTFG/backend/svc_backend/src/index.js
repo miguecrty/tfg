@@ -415,7 +415,7 @@ app.get('/obtenerpronostico', async (req, res) => {
         temperaturas[element.dt_txt]={temp:(element.main.temp-273.15).toFixed(2)}; 
         descripcion_tiempo[element.dt_txt]={description:element.weather[0].description,icon:element.weather[0].icon,sunrise:element};
         nubes[element.dt_txt]=element.clouds.all;
-        viento[element.dt_txt]={speed:element.wind.speed,deg:element.wind.deg};
+        viento[element.dt_txt]=element.wind.speed;
        });
        function obtenerDiaSemana(fecha) {
         const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];

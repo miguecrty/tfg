@@ -24,8 +24,10 @@ const Pronostico = () => {
         setValoresT(datos.temperatura[dia]);
         datasetsN.data = datos.nubes[dia].valores;
         datasetsT.data = datos.temperatura[dia].valores.temp;
+        datasetsV.data = datos.viento[dia].valores;
         setDatasetsN(datasetsN);
         setDatasetsT(datasetsT);
+        setDatasetsV(datasetsV);
 
         const temperatura = datos.descripcion_tiempo[dia].valores.length == 8 ?
             datos.temperatura[dia].valores.temp[3] :
@@ -67,9 +69,7 @@ const Pronostico = () => {
                 setDiasSemana(dias_semana);
                 setDatos(data);
                 setLabels(data.temperatura[dias_semana[0]].horas);
-                console.log(data.temperatura[dias_semana[0]])
                 setValoresActuales(data.datos_actuales);
-                
                 //Datasets chartTemp
                 const datasetsTemperatura = {
                     label: 'Temperatura (ºC)',
@@ -86,12 +86,19 @@ const Pronostico = () => {
                     borderColor:'rgba(0,150,150,0.5)',
                     borderWidth:1
                 }
-                //Datasets chartViento       
+                //Datasets chartViento
+                const datasetsViento = {
+                    label: 'Viento (m/s)',
+                    data: data.viento[dias_semana[0]].valores,
+                    backgroundColor: 'rgba(55,30,50,0.3)',
+                    borderColor:'rgba(55,30,50,0.5)',
+                    borderWidth:1
+                }       
                 setDatasetsN(datasetsNubes);
                 setDatasetsT(datasetsTemperatura);
+                setDatasetsV(datasetsViento);
                 setValoresT(data.temperatura[dias_semana[0]]);
                 setDiaSeleccionado(dias_semana[0]);
-                //setValoresV(data.viento[dias_semana[0]].valores);
             }
 
         } catch (error) {
@@ -232,7 +239,7 @@ const Pronostico = () => {
                             </div>                    
                     <div className="col text-center">
                         <div className='card border-0 shadow mb-2 ml-2'>
-                        <div className="card-header" style={{background:'rgba(255,100,0,0.2)'}}>
+                        <div className="card-header" style={{background:'rgba(255,100,0,0.2)', minWidth:'300px'}}>
                         <h6>Temperatura</h6>
                         </div>
                                 {datasetsT && labels && (
@@ -242,20 +249,21 @@ const Pronostico = () => {
                             </div>
                             <div className="col text-center">
                         <div className='card border-0 shadow mb-2 ml-2'>
-                        <div className="card-header" style={{background:'rgba(0,150,150,0.2)'}}>
+                        <div className="card-header" style={{background:'rgba(0,150,150,0.2)', minWidth:'300px'}}>
                         <h6>Nubes</h6>
                         </div>
                                 {datasetsN && labels && (
-                                   <ChartTodas datasets={datasetsN} labels={labels} tipo={'bar'} />
+                                   <ChartTodas datasets={datasetsN} labels={labels} tipo={'bar'}/>
                                 )}
                             </div>
                             </div>
                             <div className="col text-center">
                         <div className='card border-0 shadow mb-2 ml-2'>
-                        <div className="card-header" style={{background:'rgba(55,30,50,0.2)'}}>
+                        <div className="card-header" style={{background:'rgba(55,30,50,0.2)', minWidth:'300px'}}>
                         <h6>Viento</h6>
-                        </div>
-                                    {/*<ChartTodas data={valoresT} labels={labels} /> */}
+                        </div>      {datasetsV && labels && (
+                                    <ChartTodas datasets={datasetsV} labels={labels} tipo={'line'}/> 
+                                )}
                             </div>
                             </div>
                 </div>               
