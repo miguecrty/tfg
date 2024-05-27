@@ -34,7 +34,7 @@ const Cabecera = ({ mostrarBotonHome,mostrarUser}) => {
             <nav className="nav-container container-fluid px-3 w-auto">
                 <div>
                     {mostrarBotonHome && (
-                        <button onClick={handleHome} className="btn p-1.5 home-button">
+                        <button onClick={handleHome} className="btn p-1.5 home-button iconohome">
                              <FontAwesomeIcon icon={faHome} className="home-button" style={{width:'30px',height:'30px',color:'white'}} />
                         </button>
                     )}

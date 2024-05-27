@@ -3,8 +3,12 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/menu": "pages/menu.js",
-  "/monitorizar": "pages/monitorizar.js",
   "/": "pages/index.js",
+  "/monitorizar": "pages/monitorizar.js",
+  "/api/obtenerlista": "pages/api/obtenerlista.js",
+  "/micuenta": "pages/micuenta.js",
+  "/api/login": "pages/api/login.js",
   "/pronostico": "pages/pronostico.js",
-  "/api/obtenerpronostico": "pages/api/obtenerpronostico.js"
+  "/api/desmonitorizar": "pages/api/desmonitorizar.js",
+  "/registro": "pages/registro.js"
 }
