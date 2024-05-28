@@ -3,13 +3,6 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/monitorizar": "pages/monitorizar.js",
-  "/registro": "pages/registro.js",
-  "/api/obtenerlista": "pages/api/obtenerlista.js",
-  "/api/login": "pages/api/login.js",
   "/menu": "pages/menu.js",
-  "/pronostico": "pages/pronostico.js",
-  "/micuenta": "pages/micuenta.js",
-  "/api/iniciarsondeo": "pages/api/iniciarsondeo.js",
-  "/api/obtenerdatosgraficatemperatura": "pages/api/obtenerdatosgraficatemperatura.js"
+  "/pronostico": "pages/pronostico.js"
 }

@@ -31,26 +31,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/menu.js"
-    ],
-    "/micuenta": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/micuenta.js"
-    ],
-    "/monitorizar": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/monitorizar.js"
-    ],
-    "/pronostico": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/pronostico.js"
-    ],
-    "/registro": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/registro.js"
     ]
   },
   "ampFirstPages": []
