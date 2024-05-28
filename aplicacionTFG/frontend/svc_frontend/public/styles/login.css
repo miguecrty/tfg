@@ -1,8 +1,8 @@
 /* Estilos para el formulario de inicio de sesión */
 
 body {
-    background-image: url('../images/fondo.gif');
-    background-size: cover;
+    background-image: url('../images/ffondo.jpg');
+    background-size: calc();
     background-repeat: no-repeat;
   }
 

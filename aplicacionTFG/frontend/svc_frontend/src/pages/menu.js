@@ -3,7 +3,6 @@ import Pie from '../components/pie';
 import React from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import Script from 'next/script'
 
 const Menu = () => {
     
@@ -14,7 +13,6 @@ const Menu = () => {
     return (
         <>
         <div className='fondo'>
-            <Script src="./js/menu.js" />
             <Head>
                 <title>Menú principal</title>
                 <link rel="icon" href="./images/map.png" />

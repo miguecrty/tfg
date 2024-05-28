@@ -84,7 +84,7 @@ const Home = () => {
     return (
         <>
             <Head>
-                <title>Chat</title>
+                <title>Login</title>
                 <link rel="icon" href="./images/map.png" />
                 <link rel="stylesheet" href="./styles/login.css" />
             </Head>
@@ -117,8 +117,10 @@ const Home = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
+               <div className='d-flex justify-content-center align-items-center'>
                 <button type="button" onClick={handleLogin} className="btn btn-primary btn-block mb-2">Iniciar Sesión</button>
                 <button type="button" onClick={handleRegistro} className="btn btn-secondary btn-block">Registrarse</button>
+                </div>
             </form>
             {error && <div className="alert alert-danger mt-3">{error}</div>}
             {exito && <div className="alert alert-success mt-3">{exito}</div>}
