@@ -7,13 +7,6 @@ body {
     background-size: calc();
     background-repeat: no-repeat;
 }
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
 .login-form {
   display: flex;
   flex-direction: column;

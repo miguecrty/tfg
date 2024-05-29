@@ -288,7 +288,7 @@ app.post('/registrar', async (req, res) => {
     const { username, email, password, token } = req.body;
     if(token != null)
       {
-        if(token[token] != null){
+        if(tokens[token] != null){
         try {
           const result = await client.execute("INSERT INTO usuarios (nombre_usu,clave,email,lugares) VALUES (?,?,?,?) IF NOT EXISTS",[tokens[token].usuario,tokens[token].password,tokens[token].email,null]);
         if (result.wasApplied()) {
@@ -320,9 +320,10 @@ app.post('/registrar', async (req, res) => {
           const token = crypto.randomBytes(20).toString('hex');
           const confirmacionLink = `http://${dominio}/registro?token=${token}`;
           const expirationTime = Date.now() + 3600000;
-          const texto_correo = `<p>Haz clic en el siguiente enlace para confirmar tu correo electrónico:</p><p><a href="${confirmacionLink}">Confirmar</a></p>`;
+          const html_correo = `<p>Haz clic en el siguiente enlace para confirmar tu cuenta:</p><p><a href="${confirmacionLink}">Confirmar</a></p>`;
+          const asunto = `Verificar la cuenta`;
           tokens[token] = { usuario: username, email: email, password: password, expires: expirationTime };
-          enviarCorreo(email,texto_correo)
+          enviarCorreo(email,html_correo,asunto)
         
           res.status(200).json({exito: 'Correo de confirmación mandado con éxito.'});
     }  
@@ -590,8 +591,9 @@ else{
     const resetLink = `http://${dominio}/reset-password?token=${token}&usuario=${usuario}`;
     const expirationTime = Date.now() + 3600000;
     tokens[token] = { email: email, expires: expirationTime };
-    const texto_correo=`<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href="${resetLink}">Recuperar contraseña</a></p>`;
-    enviarCorreo(email,texto_correo);
+    const html_correo=`<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href="${resetLink}">Recuperar contraseña</a></p>`;
+    const asunto=`Recuperación de contraseña`;
+    enviarCorreo(email,html_correo,asunto);
     res.sendStatus(200); 
    }
   } catch (error) {
@@ -601,7 +603,7 @@ else{
 
 });
 
-async function enviarCorreo(email,texto_correo)
+async function enviarCorreo(email,html_correo,asunto)
 { 
   const transporter = nodemailer.createTransport({
     host: "smtp-es.securemail.pro",
@@ -616,8 +618,8 @@ async function enviarCorreo(email,texto_correo)
   const mailOptions = {
     from: 'soporte@etsisevilla.me"',
     to: email,
-    subject: 'Recuperación de la contraseña',
-    html: texto_correo
+    subject: asunto,
+    html: html_correo
   };
 
   transporter.sendMail(mailOptions, function(error, info){

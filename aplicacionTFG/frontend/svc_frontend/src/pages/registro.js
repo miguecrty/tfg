@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Pie from '../components/pie';
 import { server } from './_app';
@@ -12,7 +12,7 @@ const Registro = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [r_password, setRPassword] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
     const [exito, setExito] = useState('');
     const [exitoConfirmacion, setExitoConfirmacion] = useState('');
@@ -21,6 +21,10 @@ const Registro = () => {
     const [showRPassword, setShowRPassword] = useState(false);
 
     const token = router.query.token;
+
+    useEffect(() => {
+      setIsLoading(false);
+    }, [token]);
 
     const handleConfirmarRegistro = async() => {
         setErrorConfirmacion('');
@@ -35,6 +39,9 @@ const Registro = () => {
         const respuesta = await response.json();
         if (response.status == 200) {
             setExitoConfirmacion(respuesta.exito);
+            setTimeout(() => {
+                router.push('/')
+            }, 5000);
         } else { 
             setErrorConfirmacion(respuesta.error);
         }
@@ -99,20 +106,21 @@ const Registro = () => {
             </>
         );
     }
-
     return (
        
         <>
             <Head>
                 <title>Registro</title>
                 <link rel="icon" href="./images/map.png" />
-                <link rel="stylesheet" href="./styles/login.css" />
+                
             </Head>
             <Cabecera mostrarBotonHome={true} mostrarUser={false}/>
             {!token && (
                 <>
+                <div className="container">
+                <div className="row justify-content-center">
             <h1 className='display-2 text-center mt-5'>MeteoStats</h1>
-            <div className="card ml-5 mr-5 mt-5" style={{width: 'auto', maxWidth: '600px'}}>
+            <div className="card ml-5 mr-5 mt-5" style={{maxWidth:'600px'}}>
                 <div className="card-body ml-3 mr-3">
                     <h1 className="card-title text-center">Registrar usuario</h1>
                     <form>
@@ -174,31 +182,40 @@ const Registro = () => {
                     </form>
                 </div>
             </div>
+            </div>
+            </div>
             </>
             )}
            {token && (
-                <div className="row justify-content-center">
-                <div className="col-md-6">
-                    <div className="card">
-                    <div className="card-header text-center">
-                        <h5>Verificar Cuenta</h5>
-                    </div>
-                    <div className="card-body">
-                        <div className="d-flex justify-content-center">
-                        <button 
-                            type="button" 
-                            onClick={handleConfirmarRegistro} 
-                            className="btn btn-success btn-block"
-                        >
-                            Verificar correo electrónico
-                        </button>
+                <div className="container d-flex justify-content-center align-items-center mt-5">
+                <div className="row justify-content-center w-100">
+                    <div className="col-md-6">
+                        <div className="card" style={{ maxWidth: '500px' }}>
+                            <div className="card-header text-center">
+                                <h5>Verificar Cuenta</h5>
+                            </div>
+                            <div className="card-body">
+                            <h5 className='text-center mb-3 mt-3'>Pulsa el siguiente botón para verificar la cuenta</h5>
+                                <div className="d-flex justify-content-center">
+                                    
+                                    <button 
+                                        type="button" 
+                                        onClick={handleConfirmarRegistro} 
+                                        className="btn btn-success btn-block"
+                                    >
+                                        Verificar correo electrónico
+                                    </button>
+                                </div>
+                            
+                            {exitoConfirmacion && <div className="alert alert-success mt-3 text-center">{exitoConfirmacion}</div>}
+                            {errorConfirmacion && <div className="alert alert-danger mt-3 text-center">{errorConfirmacion}</div>}
+                            </div>
                         </div>
                     </div>
-                    {exitoConfirmacion && <div className="alert alert-success mt-3">{exitoConfirmacion}</div>}
-                    {errorConfirmacion && <div className="alert alert-danger mt-3">{errorConfirmacion}</div>}
-                    </div>
                 </div>
-                </div>
+            </div>
+            
+            
             )}
 
 
