@@ -285,18 +285,54 @@ app.post('/compruebausu', async (req, res) => {
 
 
 app.post('/registrar', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, email, password, token } = req.body;
+    if(token != null)
+      {
+        if(token[token] != null){
+        try {
+          const result = await client.execute("INSERT INTO usuarios (nombre_usu,clave,email,lugares) VALUES (?,?,?,?) IF NOT EXISTS",[tokens[token].usuario,tokens[token].password,tokens[token].email,null]);
+        if (result.wasApplied()) {
+          crearTabla(tokens[token].usuario);
+          intervalos[tokens[token].usuario]={};
+          delete tokens[token];
+          res.status(200).json({exito: 'Usuario creado con éxito. Redirigiendo al login...'});
+        }
+        }
+        catch(error)
+        {
+
+        }
+      }
+      else{
+        res.status(401).json({error: 'Token invalido. Error al confirmar la cuenta'});
+      }
+      }
+    else if(username != null)
+      {
     try {
-      const result = await client.execute("INSERT INTO usuarios (nombre_usu,clave,lugares) VALUES (?,?,?)",[username,password,null]);
-      console.log("USUARIO "+username+" INSERTADO CORRECTAMENTE");
-      crearTabla(username);
-      intervalos[username]={};
-      console.log(intervalos);
-      res.sendStatus(200); 
+      const consulta = await client.execute("SELECT nombre_usu FROM usuarios WHERE nombre_usu='"+username+"'");
+      if (consulta.rows.length > 0){
+        res.status(401).json({ error: 'Nombre de usuario ya existente' });
+      }
+      else
+      {
+          
+          const token = crypto.randomBytes(20).toString('hex');
+          const confirmacionLink = `http://${dominio}/registro?token=${token}`;
+          const expirationTime = Date.now() + 3600000;
+          const texto_correo = `<p>Haz clic en el siguiente enlace para confirmar tu correo electrónico:</p><p><a href="${confirmacionLink}">Confirmar</a></p>`;
+          tokens[token] = { usuario: username, email: email, password: password, expires: expirationTime };
+          enviarCorreo(email,texto_correo)
+        
+          res.status(200).json({exito: 'Correo de confirmación mandado con éxito.'});
+    }  
     } catch (error) {
-      res.status(401).json({ error: 'Usuario existe en BBDD' });
-      console.log(error);
+      
     }
+  }
+  else{
+    res.status(401).json({error: 'Token inválido y/o error del servidor'})
+  }
 
 });
 
@@ -538,7 +574,6 @@ app.post('/reset-password', async (req, res) => {
   }
 
   try {
-    console.log("usuario: "+usuario+" nuevaPass:"+password);
     const result = await client.execute("UPDATE usuarios SET clave = '"+password+"' WHERE nombre_usu = '"+usuario+"'");
     delete tokens[token];
     res.status(200).json({message: 'Contraseña cambiada correctamente'}); 
@@ -551,7 +586,12 @@ else{
   try {
     const result = await client.execute("SELECT * FROM usuarios WHERE nombre_usu='"+usuario+"' AND email='"+email+"' ALLOW FILTERING");
    if(result.rows.length > 0){
-    enviarCorreoRecuperacion(email,usuario);
+    const token = crypto.randomBytes(20).toString('hex');
+    const resetLink = `http://${dominio}/reset-password?token=${token}&usuario=${usuario}`;
+    const expirationTime = Date.now() + 3600000;
+    tokens[token] = { email: email, expires: expirationTime };
+    const texto_correo=`<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href="${resetLink}">Recuperar contraseña</a></p>`;
+    enviarCorreo(email,texto_correo);
     res.sendStatus(200); 
    }
   } catch (error) {
@@ -561,12 +601,8 @@ else{
 
 });
 
-async function enviarCorreoRecuperacion(correo,usuario)
-{
-  const token = crypto.randomBytes(20).toString('hex');
-  const resetLink = `http://${dominio}/reset-password?token=${token}&usuario=${usuario}`;
-   const expirationTime = Date.now() + 3600000;
-   tokens[token] = { email: correo, expires: expirationTime };
+async function enviarCorreo(email,texto_correo)
+{ 
   const transporter = nodemailer.createTransport({
     host: "smtp-es.securemail.pro",
     port: 465,
@@ -579,9 +615,9 @@ async function enviarCorreoRecuperacion(correo,usuario)
 
   const mailOptions = {
     from: 'soporte@etsisevilla.me"',
-    to: correo,
+    to: email,
     subject: 'Recuperación de la contraseña',
-    html: `<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href="${resetLink}">Recuperar contraseña</a></p>`
+    html: texto_correo
   };
 
   transporter.sendMail(mailOptions, function(error, info){

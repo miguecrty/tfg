@@ -3,9 +3,6 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/api/login": "pages/api/login.js",
-  "/menu": "pages/menu.js",
-  "/api/iniciarsondeo": "pages/api/iniciarsondeo.js",
-  "/monitorizar": "pages/monitorizar.js",
-  "/api/obtenerlista": "pages/api/obtenerlista.js"
+  "/reset-password": "pages/reset-password.js",
+  "/registro": "pages/registro.js"
 }
