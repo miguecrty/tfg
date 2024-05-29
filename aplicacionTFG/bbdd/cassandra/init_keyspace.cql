@@ -5,6 +5,7 @@ CREATE KEYSPACE IF NOT EXISTS tfg WITH REPLICATION = { 'class' : 'SimpleStrategy
 CREATE TABLE IF NOT EXISTS tfg.usuarios (
 nombre_usu TEXT PRIMARY KEY,
 clave TEXT,
+email TEXT,
 lugares map<text,text>
 );
 
@@ -19,6 +20,6 @@ PRIMARY KEY(nombre_lugar,toma)
 ) WITH CLUSTERING ORDER BY(toma DESC);
 
 
-INSERT INTO tfg.usuarios (nombre_usu,clave,lugares) 
-VALUES ('usuario', 'clave',null);
+INSERT INTO tfg.usuarios (nombre_usu,clave,email,lugares) 
+VALUES ('usuario', 'clave','miguelangelloppez7@gmail.com',null);
 

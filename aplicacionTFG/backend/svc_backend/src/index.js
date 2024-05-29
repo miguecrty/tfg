@@ -2,8 +2,9 @@ const express = require('express');
 const cassandra = require('cassandra-driver');
 const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
-
+const nodemailer = require("nodemailer");
 const app = express();
+const crypto = require('crypto');
 /* CLUSTER
 const client = new cassandra.Client({
   contactPoints: [process.env.CASSANDRA],
@@ -28,7 +29,7 @@ const client = new cassandra.Client({
   }
 });
 
-
+const dominio = 'localhost:8080';
 
 app.use(express.json());
 
@@ -39,6 +40,16 @@ app.use((req, res, next) => {
   next();
 });
 
+
+
+
+
+
+
+
+
+
+
 // Array para almacenar los clientes conectados
 const clients = [];
 //ms
@@ -48,7 +59,9 @@ const PORT = 3000;
 const server = app.listen(PORT, () => {
   console.log(`Servidor Express en funcionamiento en el puerto ${PORT}`);
 });
+
 let intervalos ={}
+const tokens = {};
 intervalos['usuario']={}
 // Establecer una conexión WebSocket
 const WebSocket = require('ws');
@@ -525,3 +538,70 @@ console.log(datos.temperatura);
     res.status(500).json({ error: 'Error al procesar la solicitud' });
   }
 });
+
+
+app.post('/reset-password', async (req, res) => {
+
+  if(req.body.token != null){
+  const { token, usuario, password } = req.body;
+  const tokenData = tokens[token];
+
+  if (!tokenData || tokenData.expires < Date.now()) {
+    return res.status(400).send('Token inválido o expirado.');
+  }
+
+  try {
+    console.log("usuario: "+usuario+" nuevaPass:"+password);
+    const result = await client.execute("UPDATE usuarios SET clave = '"+password+"' WHERE nombre_usu = '"+usuario+"'");
+    delete tokens[token];
+    res.status(200).json({message: 'Contraseña cambiada correctamente'}); 
+  } catch (error) {
+    res.status(401).json({ error: 'Error al cambiar la contraseña' });
+  }
+}
+else{
+  const {usuario, email} = req.body;
+  try {
+    const result = await client.execute("SELECT * FROM usuarios WHERE nombre_usu='"+usuario+"' AND email='"+email+"' ALLOW FILTERING");
+   if(result.rows.length > 0){
+    enviarCorreoRecuperacion(email,usuario);
+    res.sendStatus(200); 
+   }
+  } catch (error) {
+    res.status(401).json({ error: 'Nombre de usuario y/o email no existen' });
+  }
+}
+
+});
+
+async function enviarCorreoRecuperacion(correo,usuario)
+{
+  const token = crypto.randomBytes(20).toString('hex');
+  const resetLink = `http://${dominio}/reset-password?token=${token}&usuario=${usuario}`;
+   const expirationTime = Date.now() + 3600000;
+   tokens[token] = { email: correo, expires: expirationTime };
+  const transporter = nodemailer.createTransport({
+    host: "smtp-es.securemail.pro",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "soporte@etsisevilla.me",
+      pass: "GOrrino711",
+    },
+  });
+
+  const mailOptions = {
+    from: 'soporte@etsisevilla.me"',
+    to: correo,
+    subject: 'Recuperación de la contraseña',
+    html: `<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href="${resetLink}">Recuperar contraseña</a></p>`
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log('Error:', error);
+    } else {
+      console.log('Email enviado correctamente!');
+    }
+  });
+}
