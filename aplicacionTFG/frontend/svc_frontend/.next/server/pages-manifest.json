@@ -4,9 +4,8 @@
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
   "/api/login": "pages/api/login.js",
-  "/pronostico": "pages/pronostico.js",
-  "/api/obtenerlista": "pages/api/obtenerlista.js",
-  "/monitorizar": "pages/monitorizar.js",
   "/menu": "pages/menu.js",
-  "/reset-password": "pages/reset-password.js"
+  "/api/iniciarsondeo": "pages/api/iniciarsondeo.js",
+  "/monitorizar": "pages/monitorizar.js",
+  "/api/obtenerlista": "pages/api/obtenerlista.js"
 }

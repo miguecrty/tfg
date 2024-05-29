@@ -36,16 +36,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/monitorizar.js"
-    ],
-    "/pronostico": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/pronostico.js"
-    ],
-    "/reset-password": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/reset-password.js"
     ]
   },
   "ampFirstPages": []

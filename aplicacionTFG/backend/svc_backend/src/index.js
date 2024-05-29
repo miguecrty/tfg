@@ -40,16 +40,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
-
-
-
-
-
-
-
-
 // Array para almacenar los clientes conectados
 const clients = [];
 //ms
@@ -63,32 +53,29 @@ const server = app.listen(PORT, () => {
 let intervalos ={}
 const tokens = {};
 intervalos['usuario']={}
-// Establecer una conexión WebSocket
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ server });
 
-// Manejar las conexiones WebSocket
-wss.on('connection', ws => {
-  console.log('Cliente conectado');
-  const client = { ws, res: null };
 
-  // Agregar el cliente a la lista de clientes conectados
-  clients.push(client);
-  // Manejar la desconexión del cliente
-  ws.on('close', () => {
-    console.log('Cliente desconectado');
-    // Eliminar el cliente de la lista de clientes conectados
-    clients.splice(clients.indexOf(client), 1);
-  });
-  ws.send('¡Hola desde el servidor!');
-  ws.on('message', message => {
+limpiarBBDD();
+async function limpiarBBDD() 
+{
+  console.log("LIMPIANDO BBDD ....");
+  const resultado = await client.execute("SELECT nombre_usu FROM usuarios");
+  if(resultado.rows.length >0){
+    resultado.rows.forEach(async usuario => {
+      try {
+      await client.execute("TRUNCATE datos_"+usuario.nombre_usu);
+      await client.execute("UPDATE tfg.usuarios SET lugares =null WHERE nombre_usu ='"+usuario.nombre_usu+"'");
+      }
+      catch(error)
+      {
+        console.log(error);
+      }
+    });
+    
+  }
+}
 
-      const mensaje = JSON.parse(message.toString());
-      const latitud = mensaje.geometry.location.lat;
-      const longitud = mensaje.geometry.location.lng;
-      const usuario = mensaje.username;
-  });
-});
+
 async function actualizarTablaUsu(usuario,nombre_lugar,lat,lon) {
     
     let exito=false;
