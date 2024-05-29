@@ -320,7 +320,84 @@ app.post('/registrar', async (req, res) => {
           const token = crypto.randomBytes(20).toString('hex');
           const confirmacionLink = `http://${dominio}/registro?token=${token}`;
           const expirationTime = Date.now() + 3600000;
-          const html_correo = `<p>Haz clic en el siguiente enlace para confirmar tu cuenta:</p><p><a href="${confirmacionLink}">Confirmar</a></p>`;
+          const html_correo = `<!DOCTYPE html>
+          <html lang="es">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              body {
+                font-family: 'Arial', sans-serif;
+                background-color: #f4f4f4;
+                color: #333333;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+              }
+              .container {
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              }
+              .header {
+                text-align: center;
+                padding-bottom: 20px;
+                border-bottom: 1px solid #eeeeee;
+              }
+              .header h1 {
+                margin: 0;
+                color: #4CAF50;
+              }
+              .content {
+                padding: 20px 0;
+                text-align: center;
+              }
+              .content p {
+                margin: 10px 0;
+              }
+              .button {
+                background-color: #4CAF50;
+                color: white;
+                padding: 15px 25px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius: 5px;
+                font-size: 16px;
+                margin: 20px 0;
+                transition: background-color 0.3s ease;
+              }
+              .button:hover {
+                background-color: #45a049;
+              }
+              .footer {
+                text-align: center;
+                padding-top: 20px;
+                border-top: 1px solid #eeeeee;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>Bienvenido a <strong>MeteoStats</strong></h1>
+              </div>
+              <div class="content">
+                <p>¡Hola!</p>
+                <p>Estamos encantados de que te unas a <strong>MeteoStats</strong>. Para completar el proceso de registro y activar tu cuenta, por favor haz clic en el siguiente enlace:</p>
+                <a href="${confirmacionLink}" class="button">Confirmar Cuenta</a>
+                <p>Si no has solicitado la creación de una cuenta, por favor ignora este mensaje.</p>
+              </div>
+              <div class="footer">
+                <p>¡Gracias y bienvenido!</p>
+                <p>El equipo de MeteoStats</p>
+              </div>
+            </div>
+          </body>
+          </html>`;
           const asunto = `Verificar la cuenta`;
           tokens[token] = { usuario: username, email: email, password: password, expires: expirationTime };
           enviarCorreo(email,html_correo,asunto)
