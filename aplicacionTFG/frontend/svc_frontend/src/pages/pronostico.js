@@ -148,7 +148,7 @@ const Pronostico = () => {
             </Head>
             <Cabecera mostrarBotonHome={true} mostrarUser={true} />
                 <>
-            <div className="row">
+            <div className="row mr-0">
                 <div className='col-3 mt-1 mr-3'>
 
                 <div className="p-4 rounded shadow bg-warning text-dark bg-opacity-50 ml-3 mt-3 mr-3"  style={{ minWidth:'150px',maxWidth: '400px'}}>
@@ -169,7 +169,7 @@ const Pronostico = () => {
                     <div className="card-header" style={{background:'rgba(0,0,255,0.1)'}}>
                     <h1>{datoslugar.address_components[0].long_name}</h1>
                         </div>
-                <div className='row'>
+                <div className='row mr-0'>
                      <div className='col ml-2' >
                         {datoslugar.address_components[1] && (
                         <p>Provincia: <strong>{datoslugar.address_components[1].long_name}</strong></p>
@@ -198,7 +198,7 @@ const Pronostico = () => {
                        <div className="card-header" style={{background:'rgba(0,0,255,0.1)'}}>
                        <h1 >Previsión para el {diaSeleccionado}</h1>
                         </div>
-                        <div className="row">
+                        <div className="row mr-0">
                              <div className="col">
                              <strong>Descripción:</strong><p >{valoresActuales.description}</p> 
                                 </div>
@@ -246,7 +246,7 @@ const Pronostico = () => {
                                         cursor:'pointer'
                                         }}
                                     >
-                                        <h4 className="text-center">{dia}<img src={getIconUrl(dia)} alt="Icono del clima" className="img-fluid"/></h4>
+                                        <h2 className="text-center mb-3 mt-3 ml-3 mr-3">{dia}<img src={getIconUrl(dia)} alt="Icono del clima" className="img-fluid"/></h2>
                                     </div>
                                     </div>
                                 ))}
