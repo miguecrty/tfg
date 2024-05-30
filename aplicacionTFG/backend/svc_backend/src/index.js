@@ -1,10 +1,47 @@
 const express = require('express');
 const cassandra = require('cassandra-driver');
 const axios = require('axios');
-const { v4: uuidv4 } = require('uuid');
 const nodemailer = require("nodemailer");
 const app = express();
 const crypto = require('crypto');
+const pino = require('pino');
+const pretty = require('pino-pretty');
+
+const transport = pino.transport({
+  target: 'pino-pretty',
+  options: {
+      colorize: true, // Colorize the output
+      translateTime: true, // Show human-readable time format
+      ignore: 'pid,hostname' // Remove the pid and hostname from the logs
+  }
+});
+
+// Create a Pino logger instance using the transport stream
+const logger = pino(transport);
+
+
+// EMAIL
+const host = "smtp-es.securemail.pro";
+const emailport = 465;
+const emailuser = "soporte@etsisevilla.me";
+const emailpass = "GOrrino711";
+
+
+// CASSANDRA
+const hostBD = '10.88.0.2';
+const datacenterBD = 'datacenter1';
+const portBD = 9042;
+const keyspaceBD = 'tfg';
+const usernameBD = 'cassandra';
+const passwordBD = 'cassandra';
+
+const APIKEY_WEATHER = 'fd10b0dcb392959b10aa51f78462f9fd';
+
+// DOMINIO APP
+const dominio_app = 'localhost:8080';
+
+const PORT = 3000;
+
 /* CLUSTER
 const client = new cassandra.Client({
   contactPoints: [process.env.CASSANDRA],
@@ -17,19 +54,21 @@ const client = new cassandra.Client({
   }
 });
 */
+
+
 //   LOCAL
 const client = new cassandra.Client({
-  contactPoints: ['10.88.0.2'],
-  localDataCenter: 'datacenter1',
-  protocolOptions: { port: 9042 },
-  keyspace: 'tfg',
+  contactPoints: [hostBD],
+  localDataCenter: datacenterBD,
+  protocolOptions: { port: portBD },
+  keyspace: keyspaceBD,
   credentials: {
-    username: 'cassandra',
-    password: 'cassandra'
+    username: usernameBD,
+    password: passwordBD
   }
 });
 
-const dominio = 'localhost:8080';
+
 
 app.use(express.json());
 
@@ -45,9 +84,9 @@ const clients = [];
 //ms
 const TIEMPO_SONDEO=10000
 // Iniciar el servidor
-const PORT = 3000;
+
 const server = app.listen(PORT, () => {
-  console.log(`Servidor Express en funcionamiento en el puerto ${PORT}`);
+  logger.info(`Servidor Express en funcionamiento en el puerto ${PORT}`);
 });
 
 let intervalos ={}
@@ -58,7 +97,7 @@ intervalos['usuario']={}
 limpiarBBDD();
 async function limpiarBBDD() 
 {
-  console.log("LIMPIANDO BBDD ....");
+  logger.warn("LIMPIANDO BBDD...");
   const resultado = await client.execute("SELECT nombre_usu FROM usuarios");
   if(resultado.rows.length >0){
     resultado.rows.forEach(async usuario => {
@@ -68,7 +107,7 @@ async function limpiarBBDD()
       }
       catch(error)
       {
-        console.log(error);
+        logger.info(error);
       }
     });
     
@@ -104,7 +143,7 @@ async function actualizarTablaUsu(usuario,nombre_lugar,lat,lon) {
     );
       exito=true;
       }catch (error) {
-        console.log("Error al realizar el update");
+        logger.error("Error al realizar el update");
     }
     }
     return exito;
@@ -116,12 +155,12 @@ app.post('/iniciarsondeo', async (req, res) => {
     let nombre_lugar= req.body.nombre_lugar;
     const latitud= req.body.lat.toString();
     const longitud= req.body.lng.toString();
-    const url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid=fd10b0dcb392959b10aa51f78462f9fd&lang=es';
+    const url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid='+APIKEY_WEATHER+'&lang=es';
     const response = await axios.get(url);
     nombre_lugar = response.data.name;
     const noexiste=await actualizarTablaUsu(usuario,nombre_lugar,latitud,longitud);
     if(noexiste){
-    console.log("...........................\nIniciando sondeo para el usuario: "+usuario);
+    logger.info(`Iniciando sondeo para el usuario '${usuario}' en el lugar '${nombre_lugar}'`);
     let intervaloID=setInterval(async () => {
         try {
             const response = await axios.get(url);
@@ -150,12 +189,11 @@ app.post('/iniciarsondeo', async (req, res) => {
             console.error(error);
         }
     }, TIEMPO_SONDEO);
-    console.log("Sondeo iniciado con exito\n...........................");
     intervalos[usuario][nombre_lugar]=intervaloID;
-    res.sendStatus(200).json({exito: "Sondeo iniciado con exito"});
+    res.status(200).json({nombre_corto: nombre_lugar});
    } 
    else{
-    console.log("Lugar ya existente");
+    logger.warn("Lugar ya existente");
     res.sendStatus(401).json({error:"Lugar ya existente"});
   }
 } catch (error) { 
@@ -175,7 +213,7 @@ async function crearTabla(usu)
       "toma TIMESTAMP, "+
       "PRIMARY KEY(nombre_lugar,toma)) WITH CLUSTERING ORDER BY(toma DESC);"
     );
-    console.log("TABLA datos_"+usu+" CREADA CORRECTAMENTE");
+    logger.info("Tabla 'datos_"+usu+"' creada correctamente");
   } catch (error) {
     console.error('Error al obtener datos de la tabla:', error);
   }
@@ -185,7 +223,7 @@ async function eliminarTabla(usu)
 {
   try {
     const result = await client.execute("DROP TABLE datos_"+usu);
-    console.log("TABLA datos_"+usu+" BORRADA CORRECTAMENTE");
+    logger.warn("Tabla datos_"+usu+" borrada correctamente!");
   } catch (error) {
     console.error('Error al obtener datos de la tabla:', error);
   }
@@ -204,7 +242,7 @@ app.get('/obtenerlista', async (req, res) => {
         res.status(401).json({ error: 'Usuario no existe en la BBDD' });
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       res.status(500).json({ error: 'Error al consultar la base de datos' });
     }
   } catch (error) {
@@ -216,20 +254,18 @@ app.get('/obtenerlista', async (req, res) => {
 app.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log("Usuario:", username);
-    console.log("Contraseña:", password);
-
     try {
       const result = await client.execute("SELECT * FROM usuarios WHERE nombre_usu=? AND clave=? ALLOW FILTERING",[username,password]);
       if(result.rows.length > 0)
       {
+      logger.info(`Usuario '${username}' logeado correctamente`);
       res.status(200).json({exito: 'Credenciales correctas. Redirigiendo al menu principal...'}); 
       }
       else{
         res.status(401).json({ error: 'Credenciales incorrectas!' });
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
 
     }
   
@@ -248,12 +284,13 @@ app.put('/desmonitorizar', async (req, res) => {
           await client.execute("UPDATE usuarios SET lugares = lugares - {'" + lugar + "'} WHERE nombre_usu = '" + usuario + "'");
           clearInterval(intervalos[usuario][lugar]);
           delete intervalos[usuario][lugar];
+          logger.warn(`Desmonitorizando el lugar '${lugar}' para el usuario '${usuario}'`);
           await client.execute("DELETE FROM tfg.datos_"+usuario+" WHERE nombre_lugar = '"+lugar+"'");
       }
-      res.status(200).json({ "mensaje": "Éxito al desmonitorizar los lugares" });
+      res.status(200).json({ exito: "Éxito al desmonitorizar los lugares" });
   } catch (error) {
-      console.log(error);
-      res.status(500).json({ "error": "Error al desmonitorizar los lugares" });
+      logger.error(error);
+      res.status(500).json({ error: "Error al desmonitorizar los lugares" });
   }
 });
 
@@ -270,6 +307,7 @@ app.post('/registrar', async (req, res) => {
           crearTabla(tokens[token].usuario);
           intervalos[tokens[token].usuario]={};
           delete tokens[token];
+          logger.info(`Usuario '${username}' creado con éxito!`)
           res.status(200).json({exito: 'Usuario creado con éxito. Redirigiendo al login...'});
         }
         }
@@ -293,7 +331,7 @@ app.post('/registrar', async (req, res) => {
       {
           
           const token = crypto.randomBytes(20).toString('hex');
-          const confirmacionLink = `http://${dominio}/registro?token=${token}`;
+          const confirmacionLink = `http://${dominio_app}/registro?token=${token}`;
           const expirationTime = Date.now() + 3600000;
           const html_correo =
           `
@@ -393,8 +431,10 @@ app.put('/cambiarpassword', async (req, res) => {
     
     // Comprobar si la actualización fue exitosa
     if (result.wasApplied()) {
+      logger.info('Contraseña cambiada con éxito para el usuario '+username);
       res.status(200).json({exito: 'Contraseña cambiada con éxito!'}); // OK
     } else {
+      logger.error(`Error al cambiar la contraseña. (Contraseñas no coinciden)`);
       res.status(401).json({ error: 'La contraseña antigua no coincide' });
     }
   } catch (error) {
@@ -409,12 +449,12 @@ app.delete('/borracuenta', async (req, res) => {
   const username = req.body.usuario;
   try {
     const result = await client.execute("DELETE FROM usuarios WHERE nombre_usu='"+username+"'");
-    console.log("USUARIO "+username+" BORRADO CORRECTAMENTE");
     eliminarTabla(username);
+    logger.warn("Usuario '"+username+"' borrado correctamente!");
     res.status(200).json({exito: "Cuenta borrada con éxito. Redirigiendo al login en 5s..."}); 
   } catch (error) {
     res.status(401).json({ error: "La cuenta no se ha borrado." });
-    console.log(error);
+    logger.error(error);
   }
 
 });
@@ -472,7 +512,7 @@ app.get('/obtenerdatosgraficatemperatura', async (req, res) => {
         res.status(401).json({ error: 'Usuario no existe en la BBDD' });
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       res.status(500).json({ error: 'Error al consultar la base de datos' });
     }
   } catch (error) {
@@ -486,7 +526,7 @@ app.get('/obtenerpronostico', async (req, res) => {
   try {
     const latitud=req.query.lat;
     const longitud = req.query.lon;
-    const url = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + latitud + '&lon=' + longitud + '&appid=854c5489c0f85d6fd1fd9a30d77eee0a&lang=es';
+    const url = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + latitud + '&lon=' + longitud + '&appid='+APIKEY_WEATHER+'&lang=es';
        const response = await axios.get(url);
        const lista_datos =response.data.list;
        const temperaturas = {}
@@ -543,7 +583,7 @@ app.get('/obtenerpronostico', async (req, res) => {
   const vientoFormateado = formatearDatos(vientoData);
   const temperaturaFormateada = formatearDatos(temperaturaData);
   const descripcion_tiempoFormateado = formatearDatos(descripcion_tiempoData);
-  const url_datos = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid=854c5489c0f85d6fd1fd9a30d77eee0a&lang=es';
+  const url_datos = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid='+APIKEY_WEATHER+'&lang=es';
   const response_datos = await axios.get(url_datos);
   const lista_datos_actuales =response_datos.data;
 
@@ -600,7 +640,6 @@ const amanecer_f = `${amanecer_horas}:${amanecer_minutos}`;
     descripcion_tiempo: descripcion_tiempoFormateado,
     datos_actuales: datos_actuales
 };
-console.log(datos.temperatura);
       if(response.data.list != null){
         res.status(200).json(datos); // Enviar la lista de lugares como respuesta
       } else {
@@ -638,7 +677,7 @@ else{
     const result = await client.execute("SELECT * FROM usuarios WHERE nombre_usu='"+usuario+"' AND email='"+email+"' ALLOW FILTERING");
    if(result.rows.length > 0){
     const token = crypto.randomBytes(20).toString('hex');
-    const resetLink = `http://${dominio}/reset-password?token=${token}&usuario=${usuario}`;
+    const resetLink = `http://${dominio_app}/reset-password?token=${token}&usuario=${usuario}`;
     const expirationTime = Date.now() + 3600000;
     tokens[token] = { email: email, expires: expirationTime };
     const html_correo=`<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href="${resetLink}">Recuperar contraseña</a></p>`;
@@ -659,17 +698,17 @@ else{
 async function enviarCorreo(email,html_correo,asunto)
 { 
   const transporter = nodemailer.createTransport({
-    host: "smtp-es.securemail.pro",
-    port: 465,
+    host: host,
+    port: emailport,
     secure: true,
     auth: {
-      user: "soporte@etsisevilla.me",
-      pass: "GOrrino711",
+      user: emailuser,
+      pass: emailpass,
     },
   });
 
   const mailOptions = {
-    from: 'soporte@etsisevilla.me"',
+    from: emailuser,
     to: email,
     subject: asunto,
     html: html_correo
@@ -677,9 +716,9 @@ async function enviarCorreo(email,html_correo,asunto)
 
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-      console.log('Error:', error);
+      logger.error('Error:', error);
     } else {
-      console.log('Email enviado correctamente!');
+      logger.info('Email enviado correctamente!');
     }
   });
 }

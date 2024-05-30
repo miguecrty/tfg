@@ -10,7 +10,7 @@ export default async function handler(req, res) {
         });
         const respuesta = await response.json();
         if (response.ok) {
-            res.status(200).json({ message: respuesta.mensaje });
+            res.status(200).json({ message: respuesta.exito });
         }
         else{
             const respuesta = await response.json();

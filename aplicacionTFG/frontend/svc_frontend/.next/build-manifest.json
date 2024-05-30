@@ -27,10 +27,20 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/reset-password": [
+    "/menu": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/reset-password.js"
+      "static/chunks/pages/menu.js"
+    ],
+    "/micuenta": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/micuenta.js"
+    ],
+    "/monitorizar": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/monitorizar.js"
     ]
   },
   "ampFirstPages": []

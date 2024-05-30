@@ -14,31 +14,36 @@ const ListaLugares = () => {
   const [datasetslista, setDatasetsLista] = useState([]);
   const [labels, setLabels] = useState([]);
   const [datosActuales, setDatosActuales] = useState(null);
-  const center = { lat: 40.7128, lng: -74.006 };
-  const zoom = 15;
+  const [tipo,setTipo] = useState(null);
   const username = Cookies.get('username');
   const [activeTab, setActiveTab] = useState(null);
 
   const handleTabClick = (index) => {
     let color, borde;
 if (index === 0) {
-  color = 'rgba(0, 0, 255, 0.5)'; // Azul
-  borde = 'rgba(0, 0, 255, 0.2)';
+  color = 'rgba(245, 173, 59, 0.5)';
+  borde = 'rgba(245, 173, 59, 1)';
+  setTipo('line');
 } else if (index === 1) {
-  color = 'rgba(0, 255, 255, 0.5)'; // Cyan
-  borde = 'rgba(0, 255, 255, 0.2)';
+  color = 'rgba(255, 0, 0, 0.5)'; 
+  borde = 'rgba(255, 0, 0, 1)';
+  setTipo('line');
 } else if (index === 2) {
-  color = 'rgba(255, 0, 255, 0.5)'; // Magenta
-  borde = 'rgba(255, 0, 255, 0.2)';
+  color = 'rgba(100, 100, 255, 0.5)'; 
+  borde = 'rgba(100, 100, 255, 0.8)';
+  setTipo('line');
 } else if (index === 3) {
-  color = 'rgba(255, 255, 0, 0.5)'; // Amarillo
-  borde = 'rgba(255, 255, 0, 0.2)';
+  color = 'rgba(255, 255, 0, 0.3)'; 
+  borde = 'rgba(255, 200, 50, 1)';
+  setTipo('line');
 } else if (index === 4) {
-  color = 'rgba(0, 0, 255, 0.5)'; // Azul
+  color = 'rgba(102, 100, 68, 0.5)'; 
   borde = 'rgba(0, 0, 255, 0.2)';
+  setTipo('bar');
 } else if (index === 5) {
-  color = 'rgba(173, 216, 230, 0.5)'; // Azul claro
+  color = 'rgba(173, 216, 230, 0.5)'; 
   borde = 'rgba(173, 216, 230, 0.2)';
+  setTipo('bar');
 }
       datasetslista[index].backgroundColor=color;
       datasetslista[index].borderColor=borde;
@@ -48,9 +53,14 @@ if (index === 0) {
   };
 
   const handlePlaceSelected = async (place, resolve) => {
-    alert("Has seleccionado " + place.address_components[0].long_name);
-    await obtenerLista(username, true);
     resolve();
+    const lista = await obtenerLista(username, true);
+    let lugares=[];
+      for (let lugar in lista) {
+        lugares.push(lugar);
+      }
+      console.log(lugares);
+    setOpciones(lugares);
   };
 
   const handleOpcionSeleccionada = async (opcion, index) => {
@@ -65,6 +75,7 @@ if (index === 0) {
 
   const obtenerLista = async (usuario, actualizar) => {
     let lista = {};
+    const lugares = [];
     try {
       const response = await fetch('/api/obtenerlista?usuario=' + usuario, {
         method: 'GET',
@@ -75,14 +86,7 @@ if (index === 0) {
 
       if (response.ok) {
         lista = await response.json();
-        console.log(lista);
-        const lugares = [];
-        for (let lugar in lista) {
-          lugares.push(lugar);
-        }
-        if (actualizar) {
-          setOpciones(lugares);
-        }
+        
       } else {
         console.error('Error al obtener la lista');
       }
@@ -128,9 +132,16 @@ if (index === 0) {
     }
   }, [datasetslista, labels, datosActuales]);
   useEffect(() => {
-    obtenerLista(username, true);
-  }, []);
-
+    const fetchLugares = async () => {
+      const lista = await obtenerLista(username, true);
+      let lugares=[];
+      for (let lugar in lista) {
+        lugares.push(lugar);
+      }
+      setOpciones(lugares);
+    };
+    fetchLugares();
+  }, [username]);
     return (
         <>
         <Head>
@@ -222,8 +233,8 @@ if (index === 0) {
                   </ul>
                   </div>
                   <div className='row mb-5'>
-                    {datasets && labels &&(
-                    <ChartTodas datasets={datasets} labels={labels} tipo={'line'} />
+                    {datasets && labels && tipo &&(
+                    <ChartTodas datasets={datasets} labels={labels} tipo={tipo} />
                     )}
                   </div>
                   </>

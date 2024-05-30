@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Cookies from 'js-cookie';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 
 const Menu = () => {
     const [lista, setLista] = useState([]);
@@ -19,41 +21,51 @@ const Menu = () => {
     const router = useRouter();
     const username = Cookies.get('username');
     const [selected, setSelected] = useState([]);
+    const [selectAll, setSelectAll] = useState(false);
 
     const handleCheckboxChange = (index) => {
-        setSelected(prevSelected => {
+        setSelected((prevSelected) => {
             if (prevSelected.includes(index)) {
-                return prevSelected.filter(item => item !== index);
+                return prevSelected.filter((item) => item !== index);
             } else {
                 return [...prevSelected, index];
             }
         });
     };
+    const seleccionarTodos = () => {
+        if (selectAll) {
+            setSelected([]);
+        } else {
+            setSelected(lista.map((_, index) => index));
+        }
+        setSelectAll(!selectAll); // Alternar entre true y false para el estado de seleccionar todos
+    };
 
     const handleConfirmClick = async () => {
         const selectedLugares = lista.filter((_, index) => selected.includes(index));
-        if (selectedLugares.length >0){
-        try {
-          const response = await fetch('/api/desmonitorizar', {
-              method: 'PUT',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({"lugares":selectedLugares, "usuario":username})
-          });
-  
-          if (response.status == 200) {
-            obtenerLista(username);
-            setTimeout(() => {
-              setDesmonitorizar(false);
-           }, 5000);
-           setDesmonitorizar(true);
-          }
-      } catch (error) {
-          console.error(error);
-      }
-    }
-    
+        if (selectedLugares.length > 0) {
+            try {
+                const response = await fetch('/api/desmonitorizar', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ lugares: selectedLugares, usuario: username }),
+                });
+
+                if (response.status == 200) {
+                    obtenerLista(username);
+                    setTimeout(() => {
+                        setDesmonitorizar(false);
+                    }, 5000);
+                    setDesmonitorizar(true);
+                    setSelected([]);
+                    setSelectAll(false); // Después de confirmar, deseleccionamos todos los checkbox
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
     };
 
     async function borraCuenta (usuario) {
@@ -141,6 +153,7 @@ const Menu = () => {
         }
     };
 
+    
     const handlePasswordChange = async () => {
         console.log('Antigua contraseña:', antiguaPassword);
         console.log('Nueva contraseña:', nuevaPassword);
@@ -201,42 +214,47 @@ const Menu = () => {
                             <div className="row-md-4 mt-3 ml-3">
                                 <div className="card border-0">
                                     <div className="card-body">
-                                        {lista.length ? (
-                                            <>
-                                                <h5 className='mt-2 text-center mb-3'>Selecciona los lugares para desmonitorizar...</h5>
-                                                <div className="list-group mt-5" style={{ maxHeight: '180px', overflowY: 'auto' }}>
-                                                    {lista.map((opcion, index) => (
-                                                        <div className="row ml-4 mr-0 border-0 shadow mb-3" key={index}>
-                                                            <div className=" mt-2 d-flex align-items-center justify-content-center position-relative">
-                                                                <input
-                                                                    className="position-absolute"
-                                                                    type="checkbox"
-                                                                    value=""
-                                                                    id="defaultCheck1"
-                                                                    onChange={() => handleCheckboxChange(index)}
-                                                                    style={{ left: "10px", height: '20px', width: '20px' }}
-                                                                />
-                                                                <p className="mb-0 flex-grow-1 text-center mr-4" style={{ fontSize: '1.5rem' }}>{opcion}</p>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                                <div className="d-flex justify-content-center">
-                                            <button type="button" className='btn btn-secondary btn-block mb-2 shadow mt-4' style={{ width: '25%' }} onClick={handleConfirmClick} >Confirmar</button>
-                                        </div>
-                                            </>
-                                        ) : (
-                                          <>
-                                            <p className='text-center'>No hay ningun lugar monitorizándose</p>
-                                            <p className='text-center'>
-                                              <a href="/monitorizar" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
-                                                Monitorizar
-                                                </a>
-                                            </p>
-
-                                            
-                                            </>
-                                        )}
+                                    <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+                                        <button onClick={seleccionarTodos} className='btn btn-info mb-2 ml-2 mt-2 shadow' style={{fontSize:'12px'}}>
+                                        Des/Seleccionar todos
+                                        <FontAwesomeIcon icon={faCheckSquare} style={{ marginLeft: '5px',marginBottom:'4px', width:'20px',height:'20px'}} />
+                                        </button>
+                                    </div>
+                                    {lista.length ? (
+                <>
+                    <h5 className='mt-2 text-center mb-3'>Selecciona los lugares para desmonitorizar...</h5>
+                    <div className="list-group mt-5" style={{ maxHeight: '180px', overflowY: 'auto' }}>
+                        {lista.map((opcion, index) => (
+                            <div className="row ml-4 mr-0 border-0 shadow mb-3" key={index}>
+                                <div className=" mt-2 d-flex align-items-center justify-content-center position-relative">
+                                    <input
+                                        className="position-absolute"
+                                        type="checkbox"
+                                        value=""
+                                        id="defaultCheck1"
+                                        onChange={() => handleCheckboxChange(index)}
+                                        style={{ left: "10px", height: '20px', width: '20px' }}
+                                        checked={selectAll || selected.includes(index)} // Marcamos como seleccionado si está seleccionado individualmente o si se seleccionaron todos
+                                    />
+                                    <p className="mb-0 flex-grow-1 text-center mr-4" style={{ fontSize: '1.5rem' }}>{opcion}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="d-flex justify-content-center">
+                        <button type="button" className='btn btn-secondary btn-block mb-2 shadow mt-4' style={{ width: '25%' }} onClick={handleConfirmClick} >Confirmar</button>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <p className='text-center'>No hay ningún lugar monitorizándose</p>
+                    <p className='text-center'>
+                        <a href="/monitorizar" className="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                            Monitorizar
+                        </a>
+                    </p>
+                </>
+            )}
                                         {desmonitorizar && (
                                         <strong><p className='text-center text-success'>Lugares desmonitorizados con éxito</p></strong>
                                         )

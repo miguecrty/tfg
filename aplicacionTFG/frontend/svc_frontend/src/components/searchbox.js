@@ -25,9 +25,13 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
                 },
                 body: JSON.stringify(datos)
             });
-
+              const respuesta = await response.json();
             if (response.status === 200) {
                 console.log('Sondeo iniciado');
+                await new Promise(async (resolve) => {
+                  onPlaceSelected(respuesta.nombre_corto, resolve);
+                  setOpciones(prevOpciones => [...prevOpciones, respuesta.nombre_corto]);
+                });
             } else {
                 console.error('Error al iniciar sondeo');
             }
@@ -44,17 +48,16 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
             if (confirmar) {
                 const json = JSON.stringify(place);
                 const lugar = JSON.parse(json.toString());
-                await new Promise(async (resolve) => {
+                
                     //console.log(place.address_components[0].long_name);
-                    onPlaceSelected(place, resolve);
+                    
                     setUbicacionSeleccionada({ lat: lugar.geometry.location.lat, lng: lugar.geometry.location.lng });
                     if (setOpciones != null || opciones != null){
                     setMarcador({ lat: lugar.geometry.location.lat, lng: lugar.geometry.location.lng });
                     const datos = { usuario: username, nombre_lugar: place.address_components[0].long_name, lat: lugar.geometry.location.lat, lng: lugar.geometry.location.lng };
                     await iniciarSondeo(datos);
-                    setOpciones(prevOpciones => [...prevOpciones, place.address_components[0].long_name]);
                     }
-                });
+                
             }
         }
     };
