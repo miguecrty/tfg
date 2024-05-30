@@ -9,7 +9,7 @@ import SearchBox from '@/components/searchbox';
 const ListaLugares = () => {   
     const [opciones, setOpciones] = useState([]);
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(null);
-  const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
+  const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 37.3890924, lng: -5.9844589 });
   const [datasets, setDatasets] = useState(null);
   const [datasetslista, setDatasetsLista] = useState([]);
   const [labels, setLabels] = useState([]);
@@ -40,8 +40,6 @@ if (index === 0) {
   color = 'rgba(173, 216, 230, 0.5)'; // Azul claro
   borde = 'rgba(173, 216, 230, 0.2)';
 }
-
-    
       datasetslista[index].backgroundColor=color;
       datasetslista[index].borderColor=borde;
       datasetslista[index].borderWidth=1;
@@ -137,7 +135,7 @@ if (index === 0) {
         <>
         <Head>
                 <title>Lugares</title>
-                <link rel="icon" href="./images/map.png" />
+                <link rel="icon" href="./images/logo.png" />
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
             </Head>
       <Cabecera mostrarBotonHome={true} mostrarUser={true} /> 
@@ -240,7 +238,7 @@ if (index === 0) {
                     
                     <>
                     <div className='col-md-3'>
-                      <div className='mt-5'>
+                      <div className='mt-5 mb-5'>
                     <h5 className='text-center'>Informe climático ({new Date().toLocaleTimeString('en-GB', { hour12: false, hour: '2-digit', minute: '2-digit'})})</h5>
                 <div className="card">
                       <p className='text-center'>Descripción: <strong>{datosActuales.tiempo_actual}</strong>

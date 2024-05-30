@@ -65,14 +65,16 @@ const Menu = () => {
               },
               body: JSON.stringify({"usuario":usuario})
           });
-  
+          const responseData = await response.json();
           if (response.status == 200) {
-             const responseData = await response.json();
-             setExito(responseData.message);
+             setExito(responseData.exito);
              Cookies.remove('isLoggedIn');
              setTimeout(() => {
                 router.push('/');
              }, 3000);
+          }
+          else{
+            setError(responseData.error);
           }
       } catch (error) {
           console.error(error);
@@ -182,7 +184,7 @@ const Menu = () => {
         <>
             <Head>
                 <title>Menú principal</title>
-                <link rel="icon" href="./images/map.png" />
+                <link rel="icon" href="./images/logo.png" />
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
             </Head>
             <Cabecera mostrarBotonHome={true} mostrarUser={true} />
@@ -332,7 +334,7 @@ const Menu = () => {
                                     </div>
                                 )}
                                 {error && (
-                                  <strong><p className='text-danger text-center'>La cuenta no se borrará</p></strong>
+                                  <strong><p className='text-danger text-center'>{error}</p></strong>
                                 )}
                                 {exito && (
                                   <strong><p className='text-success text-center'>{exito}</p></strong>

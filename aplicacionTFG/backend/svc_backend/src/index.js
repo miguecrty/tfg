@@ -199,7 +199,7 @@ app.get('/obtenerlista', async (req, res) => {
       const result = await client.execute("SELECT lugares FROM usuarios WHERE nombre_usu='"+username+"' ALLOW FILTERING;");
       if(result.rows.length > 0) {
         const lugares = result.rows[0].lugares;;
-        res.status(200).json(lugares); // Enviar la lista de lugares como respuesta
+        res.status(200).json(lugares);
       } else {
         res.status(401).json({ error: 'Usuario no existe en la BBDD' });
       }
@@ -223,10 +223,10 @@ app.post('/login', async (req, res) => {
       const result = await client.execute("SELECT * FROM usuarios WHERE nombre_usu=? AND clave=? ALLOW FILTERING",[username,password]);
       if(result.rows.length > 0)
       {
-      res.sendStatus(200); 
+      res.status(200).json({exito: 'Credenciales correctas. Redirigiendo al menu principal...'}); 
       }
       else{
-        res.status(401).json({ error: 'Credenciales incorrectas' });
+        res.status(401).json({ error: 'Credenciales incorrectas!' });
       }
     } catch (error) {
       console.log(error);
@@ -257,31 +257,6 @@ app.put('/desmonitorizar', async (req, res) => {
   }
 });
 
-
-
-app.post('/compruebausu', async (req, res) => {
-  try {
-    const username = req.body;
-    console.log(username.usuario);
-    try {
-      const result = await client.execute("SELECT * FROM usuarios WHERE nombre_usu='"+username.usuario+"' ALLOW FILTERING;");
-      if(result.rows.length == 0)
-      {
-      res.sendStatus(200); 
-      }
-      else{
-        res.status(401).json({ error: 'Usuario existe en BBDD' });
-      }
-    } catch (error) {
-      console.log(error);
-
-    }
-  
-  } catch (error) {
-    console.error('Error al procesar la solicitud de inicio de sesión:', error);
-    res.status(500).json({ error: 'Error al procesar la solicitud de inicio de sesión' });
-  }
-});
 
 
 app.post('/registrar', async (req, res) => {
@@ -320,84 +295,77 @@ app.post('/registrar', async (req, res) => {
           const token = crypto.randomBytes(20).toString('hex');
           const confirmacionLink = `http://${dominio}/registro?token=${token}`;
           const expirationTime = Date.now() + 3600000;
-          const html_correo = `<!DOCTYPE html>
+          const html_correo =
+          `
+          <!DOCTYPE html>
           <html lang="es">
           <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <style>
-              body {
-                font-family: 'Arial', sans-serif;
-                background-color: #f4f4f4;
-                color: #333333;
-                line-height: 1.6;
-                margin: 0;
-                padding: 20px;
-              }
-              .container {
-                max-width: 600px;
-                margin: 0 auto;
-                background-color: #ffffff;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-              }
-              .header {
-                text-align: center;
-                padding-bottom: 20px;
-                border-bottom: 1px solid #eeeeee;
-              }
-              .header h1 {
-                margin: 0;
-                color: #4CAF50;
-              }
-              .content {
-                padding: 20px 0;
-                text-align: center;
-              }
-              .content p {
-                margin: 10px 0;
-              }
-              .button {
-                background-color: #4CAF50;
-                color: white;
-                padding: 15px 25px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                border-radius: 5px;
-                font-size: 16px;
-                margin: 20px 0;
-                transition: background-color 0.3s ease;
-              }
-              .button:hover {
-                background-color: #45a049;
-              }
-              .footer {
-                text-align: center;
-                padding-top: 20px;
-                border-top: 1px solid #eeeeee;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <div class="header">
-                <h1>Bienvenido a <strong>MeteoStats</strong></h1>
-              </div>
-              <div class="content">
-                <p>¡Hola!</p>
-                <p>Estamos encantados de que te unas a <strong>MeteoStats</strong>. Para completar el proceso de registro y activar tu cuenta, por favor haz clic en el siguiente enlace:</p>
-                <a href="${confirmacionLink}" class="button">Confirmar Cuenta</a>
-                <p>Si no has solicitado la creación de una cuenta, por favor ignora este mensaje.</p>
-              </div>
-              <div class="footer">
-                <p>¡Gracias y bienvenido!</p>
-                <p>El equipo de MeteoStats</p>
-              </div>
-            </div>
-          </body>
-          </html>`;
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                  .container {
+                      border: 1px solid #ddd;
+                      background-color: #f9f9f9;
+                      border-radius: 5px;
+                      font-family: Arial, sans-serif;
+                      max-width:800px;
+                  }
+                  .container2 {
+                      margin:20px;
+                  }
+                  .header h1 {
+                      color: #333;
+                      margin: 0;
+                      padding-bottom: 20px;
+                  }
+                  .content {
+                      font-size: 16px;
+                      color: #555;
+                  }
+                  .content p {
+                      line-height: 1.5;
+                      margin: 0 0 10px 0;
+                  }
+                  .button {
+                      display: inline-block;
+                      padding: 10px 20px;
+                      margin: 20px 0;
+                      font-size: 16px;
+                      color: rgba(0,0,0);
+                      border: 1px solid #999;
+                      background-color: rgba(255,255,0);
+                      text-decoration: none;
+                      border-radius: 5px;
+                  }
+                  .footer {
+                      font-size: 14px;
+                      color: #888;
+                      padding-top: 20px;
+                  }
+              </style>
+            </head>
+              <body>
+                  <div class="container">
+                      <div class="container2">
+                      <div class="header">
+                          <h1>Bienvenido ${username}!</h1>
+                      </div>
+                      
+                      <div class="content">
+                          <p>Estamos encantados de que te unas a <strong>MeteoStats</strong>. Para completar el proceso de registro y activar tu cuenta, por favor haz clic en el siguiente enlace:</p>
+                          <a href="${confirmacionLink}" class="button">Confirmar Cuenta</a>
+                          <p>Si no has solicitado la creación de una cuenta, por favor ignora este mensaje.</p>
+                      </div>
+                      <div class="footer">
+                          <p>¡Gracias y bienvenido!</p>
+                          <p>El equipo de MeteoStats</p>
+                      </div>
+                      </div>
+                      </div>
+              </body>
+            </html>
+          `
+          ;
           const asunto = `Verificar la cuenta`;
           tokens[token] = { usuario: username, email: email, password: password, expires: expirationTime };
           enviarCorreo(email,html_correo,asunto)
@@ -425,7 +393,7 @@ app.put('/cambiarpassword', async (req, res) => {
     
     // Comprobar si la actualización fue exitosa
     if (result.wasApplied()) {
-      res.sendStatus(200); // OK
+      res.status(200).json({exito: 'Contraseña cambiada con éxito!'}); // OK
     } else {
       res.status(401).json({ error: 'La contraseña antigua no coincide' });
     }
@@ -443,9 +411,9 @@ app.delete('/borracuenta', async (req, res) => {
     const result = await client.execute("DELETE FROM usuarios WHERE nombre_usu='"+username+"'");
     console.log("USUARIO "+username+" BORRADO CORRECTAMENTE");
     eliminarTabla(username);
-    res.sendStatus(200); 
+    res.status(200).json({exito: "Cuenta borrada con éxito. Redirigiendo al login en 5s..."}); 
   } catch (error) {
-    res.status(401).json({ error: 'Usuario existe en BBDD' });
+    res.status(401).json({ error: "La cuenta no se ha borrado." });
     console.log(error);
   }
 
@@ -608,10 +576,15 @@ for (const dia in temperaturaFormateada) {
   };
 }
 
-  const atardecer = new Date(lista_datos_actuales.sys.sunset * 1000);
-  const atardecer_f = atardecer.getHours()+":"+atardecer.getMinutes();
-  const amanecer = new Date(lista_datos_actuales.sys.sunrise * 1000); // Convertir a milisegundos
-  const amanecer_f = "0"+amanecer.getHours()+":"+amanecer.getMinutes();
+const atardecer = new Date(lista_datos_actuales.sys.sunset * 1000);
+const atardecer_horas = atardecer.getHours().toString().padStart(2, '0');
+const atardecer_minutos = atardecer.getMinutes().toString().padStart(2, '0');
+const atardecer_f = `${atardecer_horas}:${atardecer_minutos}`;
+
+const amanecer = new Date(lista_datos_actuales.sys.sunrise * 1000);
+const amanecer_horas = amanecer.getHours().toString().padStart(2, '0');
+const amanecer_minutos = amanecer.getMinutes().toString().padStart(2, '0');
+const amanecer_f = `${amanecer_horas}:${amanecer_minutos}`;
 
   const datos_actuales = {
     description:lista_datos_actuales.weather[0].description,
@@ -648,13 +621,13 @@ app.post('/reset-password', async (req, res) => {
   const tokenData = tokens[token];
 
   if (!tokenData || tokenData.expires < Date.now()) {
-    return res.status(400).send('Token inválido o expirado.');
+    return res.status(400).json({error:'Token inválido o expirado.'});
   }
 
   try {
     const result = await client.execute("UPDATE usuarios SET clave = '"+password+"' WHERE nombre_usu = '"+usuario+"'");
     delete tokens[token];
-    res.status(200).json({message: 'Contraseña cambiada correctamente'}); 
+    res.status(200).json({exito: 'Contraseña cambiada correctamente'}); 
   } catch (error) {
     res.status(401).json({ error: 'Error al cambiar la contraseña' });
   }
@@ -671,10 +644,13 @@ else{
     const html_correo=`<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href="${resetLink}">Recuperar contraseña</a></p>`;
     const asunto=`Recuperación de contraseña`;
     enviarCorreo(email,html_correo,asunto);
-    res.sendStatus(200); 
+    res.status(200).json({ exito: 'Se ha mandado un correo con las instrucciones para recuperar la contraseña.' }); 
+   }
+   else{
+    res.status(401).json({ error: 'Nombre de usuario y/o email no existen' });
    }
   } catch (error) {
-    res.status(401).json({ error: 'Nombre de usuario y/o email no existen' });
+    res.status(401).json({ error: 'Error del servidor' });
   }
 }
 

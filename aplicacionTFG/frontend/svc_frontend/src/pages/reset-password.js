@@ -8,11 +8,13 @@ export default function ResetPassword() {
   const { token, usuario } = router.query;
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [messageError, setMessageError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+        if(newPassword.length > 4){
       const datos = {
         token: token,
         usuario: usuario,
@@ -25,11 +27,17 @@ export default function ResetPassword() {
         },
         body: JSON.stringify(datos)
       });
+      const respuesta = await response.json();
       if (response.status === 200) {
-        const respuesta = await response.json();
-        console.log(respuesta);
-        setMessage(respuesta.message);
+        setMessage(respuesta.exito);
       }
+      else{
+        setMessageError(respuesta.error);
+      }
+    }
+    else{
+        setMessageError('La contraseña tiene que tener más de 4 caracteres');
+    }
     } catch (error) {
       console.error(error);
     }
@@ -43,7 +51,7 @@ export default function ResetPassword() {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
       </Head>
       <div className="container d-flex justify-content-center align-items-center vh-100">
-        <div className="card w-50">
+        <div className="card" style={{minWidth:'300px'}}>
           <div className="card-body">
             <h1 className="card-title text-center">Restablecer la contraseña</h1>
             <form onSubmit={handleSubmit}>
@@ -75,6 +83,7 @@ export default function ResetPassword() {
               )}
             </form>
             {message && <div className="alert alert-info mt-3">{message}</div>}
+            {messageError && <div className="alert alert-danger mt-3">{messageError}</div>}
           </div>
         </div>
       </div>

@@ -29,22 +29,22 @@ const Home = () => {
                 },
                 body: JSON.stringify(userData)
             });
-
+            const responseData = await response.json();
             if (response.ok) {
-                const responseData = await response.json();
+                
                 setError('');
                 setTimeout(() => {
                 setIsLoading(true);
                 }, 1500);
-                setExito(responseData.message);
+                setExito(responseData.exito);
                 setTimeout(() => {
                     Cookies.set('isLoggedIn', 'true');
                     Cookies.set('username', userData.username);
                     router.push('/menu');
-                }, 2000);
-            } else {
-                const responseData = await response.json();
-                setError(responseData.message);
+                }, 3000);
+            }
+            else{
+                setError(responseData.error);
             }
         } catch (error) {
             console.error(error);
@@ -102,12 +102,12 @@ const Home = () => {
                 },
                 body: JSON.stringify({ usuario: recuperacionUsuario, email: recuperacionEmail })
             });
-
+            const responseData = await response.json();
             if (response.ok) {
-                setRecoveryMessage('Se ha enviado un correo con las instrucciones para recuperar la contraseña.');
+                setRecoveryMessage(responseData.exito);
             } else {
-                const responseData = await response.json();
-                setErrorMessage(responseData.message);
+                
+                setErrorMessage(responseData.error);
             }
         } catch (error) {
             console.error(error);
@@ -119,7 +119,7 @@ const Home = () => {
             <>
                 <Head>
                     <title>Cargando...</title>
-                    <link rel="icon" href="./images/map.png" />
+                    <link rel="icon" href="./images/logo.png" />
                 </Head>
                 <div className="d-flex justify-content-center align-items-center vh-100">
                     <img src="/images/cargando.gif" alt="Cargando" />
@@ -132,16 +132,18 @@ const Home = () => {
         <>
             <Head>
                 <title>Login</title>
-                <link rel="icon" href="./images/map.png" />
+                <link rel="icon" href="./images/logo.png" />
                 <link rel="stylesheet" href="./styles/login.css" />
             </Head>
-        
+            
             <div className="container-fluid">
                 <div className="row justify-content-center align-items-center vh-100">
-                    <h1 className='display-2 text-center mt-2'>MeteoStats</h1>
+                <div className="logo-container" style={{display: 'flex',justifyContent: 'center',alignItems: 'center',marginTop: '20px'}}>
+                <img src='./images/logofondo.png' className="logo-image" alt="Logo" style={{maxWidth: '100%',height: 'auto',maxHeight: '200px'}} />
+            </div>
                     {isPasswordRecoveryVisible && (
-                        <div className="col">
-                            <div className="card ml-5 mr-5">
+                        <div className="col"  style={{transform:'translate(0px, -80px)'}}>
+                            <div className="card ml-5 mr-5 border-0 shadow-lg">
                                 <div className="card-body">
                                     <h2 className="card-title text-center">Recuperar Contraseña</h2>
                                     <div className="form-group">
@@ -177,8 +179,9 @@ const Home = () => {
                         </div>
                     )}
                     {muestraformulario && (
-                        <div className="col-md-6">
-                            <div className="card ml-5 mr-5">
+                        <>
+                         <div className="col"  style={{transform:'translate(0px, -80px)'}}>
+                            <div className="card ml-5 mr-5 border-0 shadow-lg">
                                 <div className="card-body ">
                                     <h1 className="card-title text-center">Iniciar Sesión</h1>
                                     <form>
@@ -217,7 +220,7 @@ const Home = () => {
                                         </div>
                                         <div className='d-flex justify-content-center align-items-center'>
                                             <button type="button" onClick={handleLogin} className="btn btn-primary btn-block mb-2">Iniciar Sesión</button>
-                                            <button type="button" onClick={handleRegistro} className="btn btn-secondary btn-block">Registrarse</button>
+                                            <button type="button" onClick={handleRegistro} className="btn btn-warning btn-block">Registrarse</button>
                                         </div>
                                         <div className='d-flex justify-content-center align-items-center'>
                                             <span
@@ -233,6 +236,7 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
+                        </>
                     )}
                 </div>
                 <Pie />

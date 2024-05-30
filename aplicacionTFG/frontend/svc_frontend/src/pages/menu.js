@@ -15,7 +15,7 @@ const Menu = () => {
         <div className='fondo'>
             <Head>
                 <title>Menú principal</title>
-                <link rel="icon" href="./images/map.png" />
+                <link rel="icon" href="./images/logo.png" />
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
                 <link rel="stylesheet" href="./styles/menu.css" />
             </Head>

@@ -20,7 +20,7 @@ const Pie = () => {
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            fontSize: '0.9rem', // Ajusta el tamaño de la fuente según sea necesario
+            fontSize: '0.9rem',
           }}
         >
           &copy; TFG [Monitorización] : Miguel Ángel López Rodríguez

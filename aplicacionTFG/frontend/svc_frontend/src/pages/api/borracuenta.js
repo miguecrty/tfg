@@ -9,11 +9,12 @@ export default async function handler(req, res) {
             body: JSON.stringify(req.body)
         });
 
+        const respuesta = await response.json();
         if (response.ok) {
-            res.status(200).json({ message: "Cuenta borrada con éxito. Redirigiendo al login en 5s..." });
+            res.status(200).json({ exito: respuesta.exito });
         }
         else{
-            res.status(500).json({ message: "La cuenta no se ha borrado." });
+            res.status(500).json({ error: respuesta.error });
         }   
   }
   

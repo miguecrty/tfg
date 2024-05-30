@@ -12,6 +12,7 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
     const inputRef = useRef();
 
     useEffect(() => {
+      
         setMarcador(ubicacionSeleccionada);
     }, [ubicacionSeleccionada]);
 

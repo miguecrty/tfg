@@ -98,7 +98,7 @@ const Registro = () => {
             <>
                 <Head>
                     <title>Cargando...</title>
-                    <link rel="icon" href="./images/map.png" />
+                    <link rel="icon" href="./images/logo.png" />
                 </Head>
                 <div className="d-flex justify-content-center align-items-center vh-100">
                     <img src="/images/cargando.gif" alt="Cargando" />
@@ -107,123 +107,116 @@ const Registro = () => {
         );
     }
     return (
-       
         <>
             <Head>
                 <title>Registro</title>
-                <link rel="icon" href="./images/map.png" />
-                
+                <link rel="icon" href="./images/logo.png" />
             </Head>
-            <Cabecera mostrarBotonHome={true} mostrarUser={false}/>
+            <Cabecera mostrarBotonHome={true} mostrarUser={false} />
+            <div className="logo-container" style={{display: 'flex',justifyContent: 'center',alignItems: 'center',marginTop: '20px'}}>
+                <img src='./images/logofondo.png' className="logo-image" alt="Logo" style={{maxWidth: '100%',height: 'auto',maxHeight: '200px'}} />
+            </div>
             {!token && (
                 <>
-                <div className="container">
-                <div className="row justify-content-center">
-            <h1 className='display-2 text-center mt-5'>MeteoStats</h1>
-            <div className="card ml-5 mr-5 mt-5" style={{maxWidth:'600px'}}>
-                <div className="card-body ml-3 mr-3">
-                    <h1 className="card-title text-center">Registrar usuario</h1>
-                    <form>
-                        <div className="form-group ml-5 mr-5">
-                            <label htmlFor="username"><strong>Usuario</strong></label>
-                            <input type="text" placeholder="Nombre de Usuario" className="form-control" value={username} onChange={(e) => setUsername(e.target.value)}/>
-                        </div>
-                        <div className="form-group ml-5 mr-5">
-                            <label htmlFor="email"><strong>Email</strong></label>
-                            <input type="email" placeholder="Correo Electrónico" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="password"><strong>Contraseña</strong></label>
-                            <div className="input-group">
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    placeholder="Contraseña"
-                                    className="form-control"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                                <div className="input-group-append">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-secondary"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                    >
-                                        <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                                    </button>
+                    <div className="container">
+                        <div className="row justify-content-center">
+                            <div className="card ml-5 mr-5 border-0 shadow-lg" style={{ maxWidth: '600px', transform:'translate(0px, -10px)'}}>
+                                <div className="card-body ml-3 mr-3">
+                                    <h1 className="card-title text-center">Registrar usuario</h1>
+                                    <form>
+                                        <div className="form-group ml-5 mr-5 mt-3">
+                                            <label htmlFor="username"><strong>Usuario</strong></label>
+                                            <input type="text" placeholder="Nombre de Usuario" className="form-control" value={username} onChange={(e) => setUsername(e.target.value)} />
+                                        </div>
+                                        <div className="form-group ml-5 mr-5 mt-3">
+                                            <label htmlFor="email"><strong>Email</strong></label>
+                                            <input type="email" placeholder="Correo Electrónico" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                        </div>
+                                        <div className="form-group ml-5 mr-5 mt-3">
+                                            <label htmlFor="password"><strong>Contraseña</strong></label>
+                                            <div className="input-group">
+                                                <input
+                                                    type={showPassword ? 'text' : 'password'}
+                                                    placeholder="Contraseña"
+                                                    className="form-control"
+                                                    value={password}
+                                                    onChange={(e) => setPassword(e.target.value)}
+                                                />
+                                                <div className="input-group-append">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-outline-secondary"
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                    >
+                                                        <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="form-group ml-5 mr-5 mt-3">
+                                            <label htmlFor="password"><strong>Repetir contraseña</strong></label>
+                                            <div className="input-group">
+                                                <input
+                                                    type={showRPassword ? 'text' : 'password'}
+                                                    placeholder="Repetir Contraseña"
+                                                    className="form-control"
+                                                    value={r_password}
+                                                    onChange={(e) => setRPassword(e.target.value)}
+                                                />
+                                                <div className="input-group-append">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-outline-secondary"
+                                                        onClick={() => setShowRPassword(!showRPassword)}
+                                                    >
+                                                        <i className={`fas ${showRPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='d-flex justify-content-center align-items-center mt-3'>
+                                            <button type="button" onClick={handleRegistrar} className="btn btn-success btn-block mb-3">Registrarse</button>
+                                        </div>
+                                        {error && <div className="alert alert-danger mt-3 mb-3">{error}</div>}
+                                        {exito && <div className="alert alert-success mt-3 mb-3">{exito}</div>}
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="password"><strong>Repetir contraseña</strong></label>
-                            <div className="input-group">
-                                <input
-                                    type={showRPassword ? 'text' : 'password'}
-                                    placeholder="Repetir Contraseña"
-                                    className="form-control"
-                                    value={r_password}
-                                    onChange={(e) => setRPassword(e.target.value)}
-                                />
-                                <div className="input-group-append">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-secondary"
-                                        onClick={() => setShowRPassword(!showRPassword)}
-                                    >
-                                        <i className={`fas ${showRPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='d-flex justify-content-center align-items-center'>
-                            <button type="button" onClick={handleRegistrar} className="btn btn-success btn-block">Registrarse</button>
-                        </div>
-                        {error && <div className="alert alert-danger mt-3">{error}</div>}
-                        {exito && <div className="alert alert-success mt-3">{exito}</div>}
-                    </form>
-                </div>
-            </div>
-            </div>
-            </div>
-            </>
+                    </div>
+                </>
             )}
-           {token && (
+            {token && (
                 <div className="container d-flex justify-content-center align-items-center mt-5">
-                <div className="row justify-content-center w-100">
-                    <div className="col-md-6">
-                        <div className="card" style={{ maxWidth: '500px' }}>
-                            <div className="card-header text-center">
-                                <h5>Verificar Cuenta</h5>
-                            </div>
-                            <div className="card-body">
-                            <h5 className='text-center mb-3 mt-3'>Pulsa el siguiente botón para verificar la cuenta</h5>
-                                <div className="d-flex justify-content-center">
-                                    
-                                    <button 
-                                        type="button" 
-                                        onClick={handleConfirmarRegistro} 
-                                        className="btn btn-success btn-block"
-                                    >
-                                        Verificar correo electrónico
-                                    </button>
+                    <div className="row justify-content-center w-100">
+                        <div className="col-md-6">
+                            <div className="card border-0 shadow-lg" style={{ maxWidth: '500px' }}>
+                                <div className="card-header text-center">
+                                    <h5>Verificar Cuenta</h5>
                                 </div>
-                            
-                            {exitoConfirmacion && <div className="alert alert-success mt-3 text-center">{exitoConfirmacion}</div>}
-                            {errorConfirmacion && <div className="alert alert-danger mt-3 text-center">{errorConfirmacion}</div>}
+                                <div className="card-body">
+                                    <h5 className='text-center mb-3 mt-3'>Pulsa el siguiente botón para verificar la cuenta</h5>
+                                    <div className="d-flex justify-content-center">
+                                        <button 
+                                            type="button" 
+                                            onClick={handleConfirmarRegistro} 
+                                            className="btn btn-success btn-block"
+                                        >
+                                            Verificar correo electrónico
+                                        </button>
+                                    </div>
+                                    {exitoConfirmacion && <div className="alert alert-success mt-3 text-center">{exitoConfirmacion}</div>}
+                                    {errorConfirmacion && <div className="alert alert-danger mt-3 text-center">{errorConfirmacion}</div>}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            
             )}
-
-
             <Pie />
-            
         </>
-        
     );
+    
 };
 
 export default Registro;

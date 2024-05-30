@@ -9,13 +9,12 @@ export default async function handler(req, res) {
             },
             body: JSON.stringify(req.body)
         });
+        const respuesta = await response.json();
         if (response.ok) {
-            const respuesta = await response.json();
-            res.status(200).json({ message: respuesta.message });
+           res.status(200).json({ exito: respuesta.exito });
         }
         else{
-            const respuesta = await response.json();
-            res.status(500).json({ message: respuesta.error });
+            res.status(500).json({ error: respuesta.error });
         }   
     }
     else{
@@ -26,12 +25,12 @@ export default async function handler(req, res) {
             },
             body: JSON.stringify(req.body)
         });
+        const respuesta = await response.json();
         if (response.ok) {
-            res.status(200).json({ message: "Correo enviado con éxito" });
+            res.status(200).json({ exito: respuesta.exito});
         }
         else{
-            const respuesta = await response.json();
-            res.status(500).json({ message: respuesta.error });
+            res.status(500).json({ error: respuesta.error });
         }   
     }
     }

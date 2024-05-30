@@ -17,17 +17,18 @@ export default async function handler(req, res) {
         });
 
         clearTimeout(timeoutId);
-
+        const respuesta = await response.json();
         if (response.ok) {
-            res.status(200).json({ message: "Logeo exitoso" });
+            res.status(200).json({ exito: respuesta.exito });
         } else {
-            res.status(500).json({ message: "Logeo erroneo!" });
+            res.status(500).json({ error: respuesta.error });
         }
     } catch (error) {
+        console.log(error);
         if (error.name === 'AbortError') {
-            res.status(408).json({ message: "Timeout al realizar la petición" });
+            res.status(408).json({ error: "Timeout al realizar la petición" });
         } else {
-            res.status(500).json({ message: "Logeo erroneo!" });
+            res.status(500).json({  error: "Error al realizar la petición" });
         }
     }
 }

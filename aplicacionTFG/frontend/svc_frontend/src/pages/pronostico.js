@@ -19,6 +19,17 @@ const Pronostico = () => {
     const [diaSeleccionado, setDiaSeleccionado] = useState(null);
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
     const [backgroundColor, setBackgroundColor] = useState('rgba(255,0,0,0.7)');
+    
+    useEffect(() => {
+        const jsonSevilla = `{"address_components":[{"long_name":"Sevilla"},{"long_name":"Sevilla"},{"long_name":"Andalucía"},{"long_name":"España"},{"long_name":41003}],"geometry":{"location":{"lat":37.3890924,"lng":-5.9844589}}}`;
+        const jsonObjectSevilla = JSON.parse(jsonSevilla);
+        setDatosLugar(jsonObjectSevilla);
+        const lat = jsonObjectSevilla.geometry.location.lat;
+        const long = jsonObjectSevilla.geometry.location.lng;
+        cargarDatos(lat,long);
+    }, []);
+
+
     const handleDiaSeleccionado = (dia) => {
         setLabels(datos.temperatura[dia].horas);
         setValoresT(datos.temperatura[dia]);
@@ -48,13 +59,17 @@ const Pronostico = () => {
 
     const handlePlaceSelected = async (place, resolve) => {
         resolve();
-        setBandera(true);
         const lugar = JSON.stringify(place);
+        console.log(lugar);
         const mensaje = JSON.parse(lugar.toString());
         setDatosLugar(mensaje);
-        console.log(mensaje);
         const lat = mensaje.geometry.location.lat;
         const long = mensaje.geometry.location.lng;
+        cargarDatos(lat,long);
+    };
+
+    const cargarDatos= async (lat,long) => {
+
         try {
             const response = await fetch(`/api/obtenerpronostico?lat=${lat}&lon=${long}`, {
                 method: 'GET',
@@ -128,11 +143,10 @@ const Pronostico = () => {
             <>
              <Head>
                 <title>Pronóstico</title>
-                <link rel="icon" href="./images/map.png" />
+                <link rel="icon" href="./images/logo.png" />
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
             </Head>
             <Cabecera mostrarBotonHome={true} mostrarUser={true} />
-            {bandera && (
                 <>
             <div className="row">
                 <div className='col-3 mt-1 mr-3'>
@@ -158,7 +172,7 @@ const Pronostico = () => {
                 <div className='row'>
                      <div className='col ml-2' >
                         {datoslugar.address_components[1] && (
-                        <p>Ciudad: <strong>{datoslugar.address_components[1].long_name}</strong></p>
+                        <p>Provincia: <strong>{datoslugar.address_components[1].long_name}</strong></p>
                         )}
                         {datoslugar.address_components[2] && (
                         <p>Comunidad Autónoma: <strong>{datoslugar.address_components[2].long_name}</strong></p>
@@ -274,56 +288,14 @@ const Pronostico = () => {
             </div>
             </div>
             
-        </>)
+        </>
        
-        }
-            
-            {!bandera && (
-               <>
-               <div className='row mr-0 ml-0'>
-               <div className="col-4 mt-3 mr-3 ml-3 d-flex justify-content-center align-items-center">
-                   <div className="p-4 rounded shadow bg-white" style={{width: '100%' }}>
-                       <h2 className="mb-4 text-center">Buscar Ubicación</h2>
-                       <SearchBox 
-                           onPlaceSelected={handlePlaceSelected}
-                           pronostico={true}
-                           mostrarMapa={false}
-                           ubicacionSeleccionada={ubicacionSeleccionada}
-                           setUbicacionSeleccionada={setUbicacionSeleccionada} 
-                       />
-                   </div>
-            
-               </div>
-               {/* 
-               <div className="col d-flex justify-content-center align-items-center vh-90 mt-2 p-0 ">
-            <div className="card rounded shadow mx-4 mb-5">
-                <div className="card-body">
-                    <h2 className="card-title text-center mb-4">Información de la Sección Pronóstico</h2>
-                    <p className="card-text">En esta sección se podrá seleccionar un lugar para observar el pronóstico del tiempo en los 5 siguientes días:</p>
-                    <ul className="list-group list-group-flush">
-                        <li className="list-group-item"><strong>Gráfica Temperatura</strong></li>
-                        <li className="list-group-item"><strong>Gráfica Nubes</strong></li>
-                        <li className="list-group-item"><strong>Gráfica Viento</strong></li>
-                    </ul>
-                    <h3 className='text-center'>Ejemplo</h3>
-                    <div className="text-center">
-                        <img src='./images/pronost.png' className='img-fluid' alt='Pronóstico Ejemplo' />
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-        */}
 
-             </div>
-               
-
-           </>
-           
-            )}
             <Pie />
             </>
     );
 };
 
 export default Pronostico;
+
+
