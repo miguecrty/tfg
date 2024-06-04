@@ -7,7 +7,6 @@ WORKDIR /app/svc_frontend
 
 # Copiar los archivos de configuración del paquete
 COPY svc_frontend/package*.json ./
-
 # Instalar las dependencias
 RUN npm install
 

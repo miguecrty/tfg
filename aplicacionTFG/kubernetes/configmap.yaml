@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tfg-backend-configmap
+data:
+  HOST_EMAIL: "smtp-es.securemail.pro"
+  PORT_EMAIL: "465"
+  HOST_CASSANDRA: "cassandra"
+  DATACENTER_CASSANDRA: "datacenter1"
+  KEYSPACE_CASSANDRA: "tfg"
+  PORT_CASSANDRA: "9042"
+  DOMINIO_APP: "meteostats.es"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tfg-frontend-configmap
+data:
+  SERVER: "backend:3000"

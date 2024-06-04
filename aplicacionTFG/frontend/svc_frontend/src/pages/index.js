@@ -145,7 +145,7 @@ const Home = () => {
                         <div className="col"  style={{transform:'translate(0px, -80px)'}}>
                             <div className="card ml-5 mr-5 border-0 shadow-lg">
                                 <div className="card-body">
-                                    <h2 className="card-title text-center">Recuperar Contraseña</h2>
+                                    <h1 className="card-title text-center">Recuperar Contraseña</h1>
                                     <div className="form-group">
                                         <label htmlFor="usuario_rec"><strong>Nombre de usuario</strong></label>
                                         <input

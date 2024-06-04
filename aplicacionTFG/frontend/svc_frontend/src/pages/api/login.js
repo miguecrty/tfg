@@ -1,7 +1,6 @@
-import { server } from "../_app";
+import { googleApiKey, server } from "../_app";
 
 export default async function handler(req, res) {
-    console.log('http://' + server + '/login');
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);

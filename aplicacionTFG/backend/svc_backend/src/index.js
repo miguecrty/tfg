@@ -20,42 +20,29 @@ const transport = pino.transport({
 const logger = pino(transport);
 
 
+////// k8s (secrets) ////
+
 // EMAIL
-const host = "smtp-es.securemail.pro";
-const emailport = 465;
-const emailuser = "soporte@etsisevilla.me";
-const emailpass = "GOrrino711";
+const host = process.env.HOST_EMAIL || "smtp-es.securemail.pro";
+const emailport = process.env.PORT_EMAIL || 465;
+const emailuser = process.env.USER_EMAIL || "soporte@etsisevilla.me";
+const emailpass = process.env.PASS_EMAIL || "";
 
 
 // CASSANDRA
-const hostBD = '10.88.0.11';
-const datacenterBD = 'datacenter1';
-const portBD = 9042;
-const keyspaceBD = 'tfg';
-const usernameBD = 'cassandra';
-const passwordBD = 'cassandra';
+const hostBD = process.env.HOST_CASSANDRA || '10.88.0.11';
+const datacenterBD = process.env.DATACENTER_CASSANDRA || 'datacenter1';
+const portBD = process.env.PORT_CASSANDRA || 9042;
+const keyspaceBD = process.env.KEYSPACE_CASSANDRA || 'tfg';
+const usernameBD = process.env.USERNAME_CASSANDRA || 'cassandra';
+const passwordBD = process.env.PASSWORD_CASSANDRA || 'cassandra';
 
-const APIKEY_WEATHER = 'fd10b0dcb392959b10aa51f78462f9fd';
+const APIKEY_WEATHER = process.env.APIKEY_WEATHER || 'fd10b0dcb392959b10aa51f78462f9fd';
 
 // DOMINIO APP
-const dominio_app = 'localhost:8080';
+const dominio_app = process.env.DOMINIO_APP || 'localhost:8080';
 
-const PORT = 3000;
-
- //CLUSTER
- /*
-const client = new cassandra.Client({
-  contactPoints: [process.env.CASSANDRA],
-  localDataCenter: process.env.DATACENTER,
-  protocolOptions: { port: process.env.PORT },
-  keyspace: process.env.KEYSPACE,
-  credentials: {
-    username: 'cassandra',
-    password: 'cassandra'
-  }
-});
-*/
-
+const PORT = process.env.PORT_APP || 3000;
 
 //   LOCAL
 

@@ -1,9 +1,0 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/reset-password": "pages/reset-password.js",
-  "/registro": "pages/registro.js",
-  "/api/reset-password": "pages/api/reset-password.js"
-}

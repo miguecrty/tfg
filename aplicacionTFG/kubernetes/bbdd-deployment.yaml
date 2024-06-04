@@ -1,19 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: cassandra
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: cassandra
   template:
     metadata:
       labels:
-        app: postgres
+        app: cassandra
     spec:
       containers:
-      - name: postgres
-        image: docker.io/miguecrty/trabajorest:postgres-latest
+      - name: cassandra
+        image: docker.io/miguecrty/tfg-bbdd:v1.0
+        imagePullPolicy: Always
         ports:
         - containerPort: 5432
