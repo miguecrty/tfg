@@ -4,8 +4,7 @@
   "/_document": "pages/_document.js",
   "/menu": "pages/menu.js",
   "/pronostico": "pages/pronostico.js",
-  "/api/obtenerpronostico": "pages/api/obtenerpronostico.js",
-  "/": "pages/index.js",
   "/monitorizar": "pages/monitorizar.js",
-  "/api/obtenerlista": "pages/api/obtenerlista.js"
+  "/": "pages/index.js",
+  "/api/obtenerpronostico": "pages/api/obtenerpronostico.js"
 }

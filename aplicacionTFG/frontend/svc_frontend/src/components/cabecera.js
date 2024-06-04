@@ -43,7 +43,7 @@ const Cabecera = ({ mostrarBotonHome,mostrarUser}) => {
                 <div className="profile-container">
                     <FontAwesomeIcon icon={faUser} className="logout-icon mr-3" style={{width:'20px',height:'20px'}} />
                     <span className="username text-black"><strong style={{color:'white'}}>{username}</strong></span>
-                    <button onClick={handleLogout} className="cerrar p-2 logout-button">
+                    <button onClick={handleLogout} className="cerrar p-2 logout-button" style={{maxWidth:'150px',fontSize:'13px'}}>
                     <FontAwesomeIcon icon={faSignOutAlt} className="logout-icon mr-3" style={{width:'20px',height:'20px'}} />
                     Cerrar Sesión
                 </button>

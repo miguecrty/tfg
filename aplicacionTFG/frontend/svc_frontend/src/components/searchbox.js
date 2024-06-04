@@ -57,6 +57,10 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
                     const datos = { usuario: username, nombre_lugar: place.address_components[0].long_name, lat: lugar.geometry.location.lat, lng: lugar.geometry.location.lng };
                     await iniciarSondeo(datos);
                     }
+                    if(onPlaceSelected != null)
+                      {
+                        onPlaceSelected(lugar);
+                      }
                 
             }
         }

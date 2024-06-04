@@ -13,6 +13,8 @@ services:
       - KEYSPACE=tfg
     networks:
       - red
+    depends_on:
+      - cassandra
   frontend:
     build:
       context: ./frontend
@@ -23,13 +25,12 @@ services:
     networks:
       - red
   cassandra:
-    image: bitnami/cassandra:4.0.7
+    build:
+      context: ./bbdd
     networks:
       - red
     ports:
       - "9042:9042"
-    volumes:
-       - "./bbdd/cassandra:/docker-entrypoint-initdb.d/"
 networks:
   red:
     driver: bridge

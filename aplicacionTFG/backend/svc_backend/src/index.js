@@ -28,7 +28,7 @@ const emailpass = "GOrrino711";
 
 
 // CASSANDRA
-const hostBD = '10.88.0.2';
+const hostBD = '10.88.0.11';
 const datacenterBD = 'datacenter1';
 const portBD = 9042;
 const keyspaceBD = 'tfg';
@@ -42,7 +42,8 @@ const dominio_app = 'localhost:8080';
 
 const PORT = 3000;
 
-/* CLUSTER
+ //CLUSTER
+ /*
 const client = new cassandra.Client({
   contactPoints: [process.env.CASSANDRA],
   localDataCenter: process.env.DATACENTER,
@@ -57,6 +58,7 @@ const client = new cassandra.Client({
 
 
 //   LOCAL
+
 const client = new cassandra.Client({
   contactPoints: [hostBD],
   localDataCenter: datacenterBD,
@@ -67,6 +69,7 @@ const client = new cassandra.Client({
     password: passwordBD
   }
 });
+
 
 
 
@@ -94,7 +97,7 @@ const tokens = {};
 intervalos['usuario']={}
 
 
-limpiarBBDD();
+//limpiarBBDD();
 async function limpiarBBDD() 
 {
   logger.warn("LIMPIANDO BBDD...");

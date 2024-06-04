@@ -57,8 +57,7 @@ const Pronostico = () => {
         
     };
 
-    const handlePlaceSelected = async (place, resolve) => {
-        resolve();
+    const handlePlaceSelected = async (place) => {
         const lugar = JSON.stringify(place);
         console.log(lugar);
         const mensaje = JSON.parse(lugar.toString());

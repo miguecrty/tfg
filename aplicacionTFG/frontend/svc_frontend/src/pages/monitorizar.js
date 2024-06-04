@@ -52,8 +52,7 @@ if (index === 0) {
       setDatasets(datasetslista[index]);
   };
 
-  const handlePlaceSelected = async (place, resolve) => {
-    resolve();
+  const handlePlaceSelected = async (place) => {
     const lista = await obtenerLista(username, true);
     let lugares=[];
       for (let lugar in lista) {
@@ -154,7 +153,7 @@ if (index === 0) {
      <div className="col-md-4">
       <div className="row-md-4 mt-3 ml-3">
       
-            <div className="card">
+            <div className="card mr-3">
               <div className="card-body">
             <h4>Lista de lugares</h4>
             {opciones.length ? (
@@ -181,7 +180,7 @@ if (index === 0) {
 
         {/*Segunda fila de la primera columna*/}
         <div className="row-md-4 mt-3 ml-3 mb-3">
-        <div className="card">
+        <div className="card mr-3">
         <div className="card-body">
         <h4>Mapa</h4>
           <SearchBox
@@ -197,8 +196,8 @@ if (index === 0) {
       </div>
 
         </div>
-      <div className="col mt-3  mr-3">
-            <div className="card" style={{ minHeight:'670px',maxHeight: '670px'}}>
+      <div className="col mt-3 mr-3 ml-3 mb-5">
+            <div className="card mb-2" style={{ minHeight:'670px',maxHeight: '670px'}}>
               <div className="card-body">
                 {opcionSeleccionada ? (
                   <h4>Monitorizando {opcionSeleccionada}</h4>
