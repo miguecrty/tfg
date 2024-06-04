@@ -169,7 +169,7 @@ const Home = () => {
                                         />
                                     </div> 
                                     <div className='d-flex justify-content-center align-items-center'>
-                                    <button type="button" onClick={handlePasswordRecovery} className="btn btn-primary btn-block">Recuperar Contraseña</button>
+                                    <button type="button" onClick={handlePasswordRecovery} className="btn btn-primary btn-block">Restablecer Contraseña</button>
                                     <button type="button" onClick={volverFormulario} className="btn btn-secondary btn-block">Volver</button>
                                     </div>
                                     {recoveryMessage && <div className="alert alert-info mt-3">{recoveryMessage}</div>}

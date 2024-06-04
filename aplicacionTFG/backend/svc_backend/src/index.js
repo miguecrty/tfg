@@ -683,7 +683,78 @@ else{
     const resetLink = `http://${dominio_app}/reset-password?token=${token}&usuario=${usuario}`;
     const expirationTime = Date.now() + 3600000;
     tokens[token] = { email: email, expires: expirationTime };
-    const html_correo=`<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href="${resetLink}">Recuperar contraseña</a></p>`;
+    const html_correo =
+          `
+          <!DOCTYPE html>
+          <html lang="es">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                  .container {
+                      border: 1px solid #ddd;
+                      background-color: #f9f9f9;
+                      border-radius: 5px;
+                      font-family: Arial, sans-serif;
+                      max-width:800px;
+                  }
+                  .container2 {
+                      margin:20px;
+                  }
+                  .header h1 {
+                      color: #333;
+                      margin: 0;
+                      padding-bottom: 20px;
+                  }
+                  .content {
+                      font-size: 16px;
+                      color: #555;
+                  }
+                  .content p {
+                      line-height: 1.5;
+                      margin: 0 0 10px 0;
+                  }
+                  .button {
+                      display: inline-block;
+                      padding: 10px 20px;
+                      margin: 20px 0;
+                      font-size: 16px;
+                      color: rgba(0,0,0);
+                      border: 1px solid #999;
+                      background-color: rgba(255,255,0);
+                      text-decoration: none;
+                      border-radius: 5px;
+                  }
+                  .footer {
+                      font-size: 14px;
+                      color: #888;
+                      padding-top: 20px;
+                  }
+              </style>
+            </head>
+              <body>
+                  <div class="container">
+                      <div class="container2">
+                      <div class="header">
+                          <h1>Restablecer contraseña</h1>
+                      </div>
+                      
+                      <div class="content">
+                          <p>Estimado <strong>${usuario}</strong>.</p>
+                          <p>Se ha solicitado el restablecimento de contraseña, para seguir con el procedimiento, haz click en el siguiente enlace:</p>
+                          <a href="${resetLink}" class="button">Restablecer contraseña</a>
+                          <p>Si no has solicitado restablecer la contraseña, por favor ignora este mensaje.</p>
+                      </div>
+                      <div class="footer">
+                          <p>¡Gracias y bienvenido!</p>
+                          <p>El equipo de MeteoStats</p>
+                      </div>
+                      </div>
+                      </div>
+              </body>
+            </html>
+          `
+          ;
     const asunto=`Recuperación de contraseña`;
     enviarCorreo(email,html_correo,asunto);
     res.status(200).json({ exito: 'Se ha mandado un correo con las instrucciones para recuperar la contraseña.' }); 

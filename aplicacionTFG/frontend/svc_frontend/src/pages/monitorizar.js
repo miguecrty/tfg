@@ -7,7 +7,7 @@ import ChartTodas from '@/components/chartTodas';
 import SearchBox from '@/components/searchbox';
 
 const ListaLugares = () => {   
-    const [opciones, setOpciones] = useState([]);
+  const [opciones, setOpciones] = useState([]);
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(null);
   const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 37.3890924, lng: -5.9844589 });
   const [datasets, setDatasets] = useState(null);

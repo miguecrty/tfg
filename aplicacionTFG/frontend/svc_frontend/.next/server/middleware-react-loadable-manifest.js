@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{\"components/chartTodas.js -> chartjs-plugin-zoom\":{\"id\":\"components/chartTodas.js -> chartjs-plugin-zoom\",\"files\":[\"static/chunks/node_modules_chartjs-plugin-zoom_dist_chartjs-plugin-zoom_esm_js.js\"]}}"
+self.__REACT_LOADABLE_MANIFEST="{}"
