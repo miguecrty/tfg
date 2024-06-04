@@ -32,11 +32,6 @@
       "static/chunks/main.js",
       "static/chunks/pages/menu.js"
     ],
-    "/monitorizar": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/monitorizar.js"
-    ],
     "/pronostico": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
