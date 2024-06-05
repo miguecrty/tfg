@@ -30,7 +30,7 @@ const emailpass = process.env.PASS_EMAIL || "GOrrino711";
 
 
 // CASSANDRA
-const hostBD = process.env.HOST_CASSANDRA || '10.88.0.11';
+const hostBD = process.env.HOST_CASSANDRA || '10.88.0.16';
 const datacenterBD = process.env.DATACENTER_CASSANDRA || 'datacenter1';
 const portBD = process.env.PORT_CASSANDRA || 9042;
 const keyspaceBD = process.env.KEYSPACE_CASSANDRA || 'tfg';

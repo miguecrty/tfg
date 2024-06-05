@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: cassandra
-        image: docker.io/miguecrty/tfg-bbdd:v1.0
+        image: docker.io/miguecrty/tfg-bbdd:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 9042

@@ -23,17 +23,7 @@ const Pronostico = () => {
     const [backgroundColor, setBackgroundColor] = useState('rgba(255,0,0,0.7)');
     const [authenticated, setAuthenticated] = useState(false);
 
-    useEffect(() => {
-        const obtenerUsuarioLogeado = async () => {
-            const usuario = await Cookies.get('username');
-            setAuthenticated(usuario);
-        };
-
-        obtenerUsuarioLogeado();
-    }, []);
-    if (!authenticated) {
-        return null; // O algún indicador de carga mientras se verifica la autenticación
-    }
+    
 
     useEffect(() => {
         const jsonSevilla = `{"address_components":[{"long_name":"Sevilla"},{"long_name":"Sevilla"},{"long_name":"Andalucía"},{"long_name":"España"},{"long_name":41003}],"geometry":{"location":{"lat":37.3890924,"lng":-5.9844589}}}`;
@@ -153,6 +143,17 @@ const Pronostico = () => {
             return `http://openweathermap.org/img/w/${iconoMasComun}.png`;
     }
     const targetRef = useRef();
+    useEffect(() => {
+        const obtenerUsuarioLogeado = async () => {
+            const usuario = await Cookies.get('username');
+            setAuthenticated(usuario);
+        };
+
+        obtenerUsuarioLogeado();
+    }, []);
+    if (!authenticated) {
+        return null; // O algún indicador de carga mientras se verifica la autenticación
+    }
     return (
             <>
              <Head>

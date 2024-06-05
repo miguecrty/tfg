@@ -25,17 +25,7 @@ const MiCuenta = () => {
     const [selectAll, setSelectAll] = useState(false);
     const [authenticated, setAuthenticated] = useState(false);
 
-    useEffect(() => {
-        const obtenerUsuarioLogeado = async () => {
-            const usuario = await Cookies.get('username');
-            setAuthenticated(usuario);
-        };
-
-        obtenerUsuarioLogeado();
-    }, []);
-    if (!authenticated) {
-        return null; // O algún indicador de carga mientras se verifica la autenticación
-    }
+    
 
     const handleCheckboxChange = (index) => {
         setSelected((prevSelected) => {
@@ -190,11 +180,11 @@ const MiCuenta = () => {
               setTimeout(() => {
                 setExitoContra('');
              }, 5000);
-             setExitoContra(responseData.message);
+             setExitoContra(responseData.exito);
             
             }
             else{
-              setErrorContra(responseData.message);
+              setErrorContra(responseData.error);
             }
         } catch (error) {
             console.error(error);
@@ -206,7 +196,17 @@ const MiCuenta = () => {
 
         }
     };
+    useEffect(() => {
+        const obtenerUsuarioLogeado = async () => {
+            const usuario = await Cookies.get('username');
+            setAuthenticated(usuario);
+        };
 
+        obtenerUsuarioLogeado();
+    }, []);
+    if (!authenticated) {
+        return null; // O algún indicador de carga mientras se verifica la autenticación
+    }
     return (
         <>
             <Head>

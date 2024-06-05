@@ -19,17 +19,7 @@ const Monitorizar = () => {
   const [activeTab, setActiveTab] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
 
-    useEffect(() => {
-        const obtenerUsuarioLogeado = async () => {
-            const usuario = await Cookies.get('username');
-            setAuthenticated(usuario);
-        };
-
-        obtenerUsuarioLogeado();
-    }, []);
-    if (!authenticated) {
-        return null; // O algún indicador de carga mientras se verifica la autenticación
-    }
+    
 
   const handleTabClick = (index) => {
     let color, borde;
@@ -154,6 +144,18 @@ if (index === 0) {
     };
     fetchLugares();
   }, [username]);
+  
+  useEffect(() => {
+    const obtenerUsuarioLogeado = async () => {
+        const usuario = await Cookies.get('username');
+        setAuthenticated(usuario);
+    };
+
+    obtenerUsuarioLogeado();
+    }, []);
+    if (!authenticated) {
+        return null; // O algún indicador de carga mientras se verifica la autenticación
+    }
     return (
         <>
         <Head>

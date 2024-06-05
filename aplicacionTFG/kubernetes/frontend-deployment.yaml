@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: docker.io/miguecrty/tfg-frontend:v1.0
+        image: docker.io/miguecrty/tfg-frontend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

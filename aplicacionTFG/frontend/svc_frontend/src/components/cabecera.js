@@ -18,6 +18,7 @@ const Cabecera = ({ mostrarBotonHome,mostrarUser}) => {
 
     const handleLogout = () => {
         Cookies.remove('isLoggedIn');
+        Cookies.remove('username');
         router.push('/'); // Redirect to the homepage after logout
     };
 
