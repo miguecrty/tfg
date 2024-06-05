@@ -17,4 +17,4 @@ spec:
         image: docker.io/miguecrty/tfg-bbdd:v1.0
         imagePullPolicy: Always
         ports:
-        - containerPort: 5432
+        - containerPort: 9042

@@ -25,8 +25,8 @@ const logger = pino(transport);
 // EMAIL
 const host = process.env.HOST_EMAIL || "smtp-es.securemail.pro";
 const emailport = process.env.PORT_EMAIL || 465;
-const emailuser = process.env.USER_EMAIL || "soporte@etsisevilla.me";
-const emailpass = process.env.PASS_EMAIL || "";
+const emailuser = process.env.USER_EMAIL || "soporte@meteostats.es";
+const emailpass = process.env.PASS_EMAIL || "GOrrino711";
 
 
 // CASSANDRA

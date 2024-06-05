@@ -5,8 +5,8 @@ import Head from 'next/head';
 import Cookies from 'js-cookie';
 import ChartTodas from '@/components/chartTodas';
 import SearchBox from '@/components/searchbox';
-
-const ListaLugares = () => {   
+import withAuth from '@/components/withAuth';
+const Monitorizar = () => {   
   const [opciones, setOpciones] = useState([]);
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(null);
   const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 37.3890924, lng: -5.9844589 });
@@ -17,6 +17,19 @@ const ListaLugares = () => {
   const [tipo,setTipo] = useState(null);
   const username = Cookies.get('username');
   const [activeTab, setActiveTab] = useState(null);
+  const [authenticated, setAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const obtenerUsuarioLogeado = async () => {
+            const usuario = await Cookies.get('username');
+            setAuthenticated(usuario);
+        };
+
+        obtenerUsuarioLogeado();
+    }, []);
+    if (!authenticated) {
+        return null; // O algún indicador de carga mientras se verifica la autenticación
+    }
 
   const handleTabClick = (index) => {
     let color, borde;
@@ -276,4 +289,4 @@ if (index === 0) {
     ); 
 };
 
-export default ListaLugares;
+export default withAuth(Monitorizar);

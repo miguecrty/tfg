@@ -36,10 +36,10 @@ const ChartTodas = ({ datasets, labels, tipo }) => {
                   pointHoverRadius: 7,
                   fill: {
                     target: 'origin',
-                    below: 'rgba(255, 255, 0, 0.5)'
+                    below: 'rgba(255, 255, 0, 0.5)',
                   },
-                }
-              ]
+                },
+              ],
             },
             options: {
               responsive: true,
@@ -56,15 +56,7 @@ const ChartTodas = ({ datasets, labels, tipo }) => {
               },
               plugins: {
                 zoom: {
-                  pan: {
-                    enabled: true,
-                    mode: 'xy',
-                    drag: true,
-                  },
                   zoom: {
-                    wheel: {
-                      enabled: true,
-                    },
                     drag: {
                       enabled: true,
                       backgroundColor: 'rgba(0,0,255,0.3)',
@@ -73,11 +65,6 @@ const ChartTodas = ({ datasets, labels, tipo }) => {
                       enabled: true,
                     },
                     mode: 'xy',
-                  },
-                  interaction: {
-                    mode: 'index',
-                    intersect: false,
-                    dragData: true, // Habilitar el arrastre de datos
                   },
                 },
               },
@@ -93,7 +80,7 @@ const ChartTodas = ({ datasets, labels, tipo }) => {
         chartInstance.current.destroy();
       }
     };
-  }, [datasets, labels]);
+  }, [datasets, labels, tipo]);
 
   const resetZoom = () => {
     if (chartInstance.current) {
@@ -102,20 +89,15 @@ const ChartTodas = ({ datasets, labels, tipo }) => {
   };
 
   return (
-    <>
-      <div style={{ position: 'relative', width: '100%', height: '500px' }}>
-  <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-    <button onClick={resetZoom} className='btn btn-warning mb-2 ml-2 mt-2 shadow'>
-      <FontAwesomeIcon icon={faSearchMinus} style={{ marginRight: '5px', width:'20px',height:'20px'}} />
-      Restablecer zoom
-    </button>
-  </div>
-  <canvas ref={chartRef} className='mb-3 ml-3 mr-3 mt-5' style={{ width: '100%', height: 'calc(100% - 40px)' }}></canvas>
-  </div>
-      
-   
-   </>
-
+    <div style={{ position: 'relative', width: '100%', height: '500px' }}>
+      <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+        <button onClick={resetZoom} className='btn btn-warning mb-2 ml-2 mt-2 shadow'>
+          <FontAwesomeIcon icon={faSearchMinus} style={{ marginRight: '5px', width: '20px', height: '20px' }} />
+          Restablecer zoom
+        </button>
+      </div>
+      <canvas ref={chartRef} className='mb-3 ml-3 mr-3 mt-5' style={{ width: '100%', height: 'calc(100% - 40px)' }}></canvas>
+    </div>
   );
 };
 

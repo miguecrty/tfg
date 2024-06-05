@@ -6,8 +6,9 @@ import Head from 'next/head';
 import Cookies from 'js-cookie';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faCheckSquare } from '@fortawesome/free-solid-svg-icons';
+import withAuth from '@/components/withAuth';
 
-const Menu = () => {
+const MiCuenta = () => {
     const [lista, setLista] = useState([]);
     const [confirmar, setConfirmar] = useState(null);
     const [error, setError] = useState(null);
@@ -22,6 +23,19 @@ const Menu = () => {
     const username = Cookies.get('username');
     const [selected, setSelected] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
+    const [authenticated, setAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const obtenerUsuarioLogeado = async () => {
+            const usuario = await Cookies.get('username');
+            setAuthenticated(usuario);
+        };
+
+        obtenerUsuarioLogeado();
+    }, []);
+    if (!authenticated) {
+        return null; // O algún indicador de carga mientras se verifica la autenticación
+    }
 
     const handleCheckboxChange = (index) => {
         setSelected((prevSelected) => {
@@ -367,4 +381,4 @@ const Menu = () => {
     );
 };
 
-export default Menu;
+export default withAuth(MiCuenta);

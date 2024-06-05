@@ -5,6 +5,8 @@ import SearchBox from '../components/searchbox';
 import Head from 'next/head';
 import { useRef } from 'react';
 import ChartTodas from '@/components/chartTodas';
+import withAuth from '@/components/withAuth';
+import Cookies from 'js-cookie';
 const Pronostico = () => {
     const [diasSemana, setDiasSemana] = useState(null);
     const [bandera, setBandera] = useState(false);
@@ -19,7 +21,20 @@ const Pronostico = () => {
     const [diaSeleccionado, setDiaSeleccionado] = useState(null);
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
     const [backgroundColor, setBackgroundColor] = useState('rgba(255,0,0,0.7)');
-    
+    const [authenticated, setAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const obtenerUsuarioLogeado = async () => {
+            const usuario = await Cookies.get('username');
+            setAuthenticated(usuario);
+        };
+
+        obtenerUsuarioLogeado();
+    }, []);
+    if (!authenticated) {
+        return null; // O algún indicador de carga mientras se verifica la autenticación
+    }
+
     useEffect(() => {
         const jsonSevilla = `{"address_components":[{"long_name":"Sevilla"},{"long_name":"Sevilla"},{"long_name":"Andalucía"},{"long_name":"España"},{"long_name":41003}],"geometry":{"location":{"lat":37.3890924,"lng":-5.9844589}}}`;
         const jsonObjectSevilla = JSON.parse(jsonSevilla);
@@ -295,6 +310,6 @@ const Pronostico = () => {
     );
 };
 
-export default Pronostico;
+export default withAuth(Pronostico);
 
 

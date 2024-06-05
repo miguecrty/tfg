@@ -76,7 +76,7 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
                 onLoad={ref => (inputRef.current = ref)}
                 onPlacesChanged={handlePlaceChanged}
               >
-                <input type="text" className="form-control" placeholder="Introduce lugar a monitorizar"
+                <input type="text" className="form-control" placeholder="Introduce lugar"
                   style={{
                     boxSizing: `border-box`,
                     border: `1px solid transparent`,
