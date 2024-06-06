@@ -30,7 +30,7 @@ const emailpass = process.env.PASS_EMAIL || "GOrrino711";
 
 
 // CASSANDRA
-const hostBD = process.env.HOST_CASSANDRA || '10.88.0.16';
+const hostBD = process.env.HOST_CASSANDRA || '10.88.0.30';
 const datacenterBD = process.env.DATACENTER_CASSANDRA || 'datacenter1';
 const portBD = process.env.PORT_CASSANDRA || 9042;
 const keyspaceBD = process.env.KEYSPACE_CASSANDRA || 'tfg';
@@ -733,7 +733,6 @@ else{
                           <p>Si no has solicitado restablecer la contraseña, por favor ignora este mensaje.</p>
                       </div>
                       <div class="footer">
-                          <p>¡Gracias y bienvenido!</p>
                           <p>El equipo de MeteoStats</p>
                       </div>
                       </div>

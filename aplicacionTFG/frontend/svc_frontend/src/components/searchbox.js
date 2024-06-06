@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { StandaloneSearchBox, LoadScript } from '@react-google-maps/api';
 import { googleApiKey } from '@/pages/_app';
 import { GoogleMap, Marker } from '@react-google-maps/api';
-import { server } from '@/pages/_app';
 import Cookies from 'js-cookie';
 
 const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbicacionSeleccionada, setOpciones, opciones, pronostico }) => {

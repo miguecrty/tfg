@@ -224,45 +224,46 @@ if (index === 0) {
                 <div className="card mt-4 border-0">
                   {opcionSeleccionada ? (
                     <>
-                    <div className='row'>
-                  <ul className="nav nav-tabs border-0">
-                  <li className="nav-item">
-                    <button className={`nav-link ml-3 border-2 ${activeTab === 0 ? 'active' : ''}`} onClick={() => handleTabClick(0)}>Temperatura</button>
-                  </li>
-                  <li className="nav-item">
-                    <button className={`nav-link border-2  ${activeTab === 1 ? 'active' : ''}`} onClick={() => handleTabClick(1)}>Temperatura Máx</button>
-                  </li>
-                  <li className="nav-item">
-                    <button className={`nav-link border-2  ${activeTab === 2 ? 'active' : ''}`} onClick={() => handleTabClick(2)}>Temperatura Mín</button>
-                  </li>
-                  <li className="nav-item">
-                    <button className={`nav-link border-2 ${activeTab === 3 ? 'active' : ''}`} onClick={() => handleTabClick(3)}>Sensación térmica</button>
-                  </li>
-                  <li className="nav-item">
-                    <button className={`nav-link border-2  ${activeTab === 4 ? 'active' : ''}`} onClick={() => handleTabClick(4)}>Presión</button>
-                  </li>
-                  <li className="nav-item">
-                    <button className={`nav-link border-2  ${activeTab === 5 ? 'active' : ''}`} onClick={() => handleTabClick(5)}>Humedad</button>
-                  </li>
-                  </ul>
-                  </div>
-                  <div className='row mb-5'>
-                    {datasets && labels && tipo &&(
-                    <ChartTodas datasets={datasets} labels={labels} tipo={tipo} />
-                    )}
-                  </div>
-                  </>
-              
-                  ) : (
-                    <strong className='text-center pt-3 pb-3'> ⬅ ⬅ Selecciona un lugar para monitorizar</strong>
-                  )}
-                </div>
-                </div>
-                
-                  {datosActuales ? (
-                    
+        <div class="row">
+    <div class="col-md-1 mr-0 ml-0 d-flex align-items-center justify-content-center" style={{maxWidth:'60px'}}>
+      <ul class="list-group ml-0">
+        <li class="list-group-item active" style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingLeft:'15px',paddingBottom:'30px'}}>Básica</li>
+        <li class="list-group-item" style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingLeft:'15px',paddingBottom:'30px'}}>Avanzada</li>
+      </ul>
+    </div>
+    <div class="col ml-0">
+      <div class='row'>
+        <ul className="nav nav-tabs border-0">
+          <li className="nav-item">
+            <button className={`nav-link ml-3 border-2 ${activeTab === 0 ? 'active' : ''}`} onClick={() => handleTabClick(0)}>Temperatura</button>
+          </li>
+          <li className="nav-item">
+            <button className={`nav-link border-2 ${activeTab === 1 ? 'active' : ''}`} onClick={() => handleTabClick(1)}>Temperatura Máx</button>
+          </li>
+          <li className="nav-item">
+            <button className={`nav-link border-2 ${activeTab === 2 ? 'active' : ''}`} onClick={() => handleTabClick(2)}>Temperatura Mín</button>
+          </li>
+          <li className="nav-item">
+            <button className={`nav-link border-2 ${activeTab === 3 ? 'active' : ''}`} onClick={() => handleTabClick(3)}>Sensación térmica</button>
+          </li>
+          <li className="nav-item">
+            <button className={`nav-link border-2 ${activeTab === 4 ? 'active' : ''}`} onClick={() => handleTabClick(4)}>Presión</button>
+          </li>
+          <li className="nav-item">
+            <button className={`nav-link border-2 ${activeTab === 5 ? 'active' : ''}`} onClick={() => handleTabClick(5)}>Humedad</button>
+          </li>
+        </ul>
+      </div>
+      <div className='row mb-5'>
+        {datasets && labels && tipo && (
+          <ChartTodas datasets={datasets} labels={labels} tipo={tipo} />
+        )}
+      </div>
+      </div>
+      <div class="col-md-2">
+            
+            {datosActuales && (
                     <>
-                    <div className='col-md-3'>
                       <div className='mt-5 mb-5'>
                     <h5 className='text-center'>Informe climático ({new Date().toLocaleTimeString('en-GB', { hour12: false, hour: '2-digit', minute: '2-digit'})})</h5>
                 <div className="card">
@@ -274,11 +275,23 @@ if (index === 0) {
                       <p className='text-center'>Nubes: <strong>{datosActuales.nubes_actual}%</strong></p>
                       </div>
                       </div>
-                </div>
                     </>
+                  )} 
+            </div>
+    
+  </div>
+        
+
+                    
+            
+                  </>
+              
                   ) : (
-                    <></>
+                    <strong className='text-center pt-3 pb-3'> ⬅ ⬅ Selecciona un lugar para monitorizar</strong>
                   )}
+                </div>
+                </div>
+                
                
                 </div>
               </div>
