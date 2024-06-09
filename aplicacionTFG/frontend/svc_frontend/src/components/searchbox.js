@@ -17,6 +17,8 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
 
     const iniciarSondeo = async (datos) => {
         try {
+           let avanzada = confirm("desea selecccionar la monitorización avanzada");
+           datos.avanzada = avanzada;
             const response = await fetch('/api/iniciarsondeo', {
                 method: 'POST',
                 headers: {
@@ -39,7 +41,7 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
         }
     };
 
-    const handlePlaceChanged = async () => {
+    const handlePlaceChanged = async (avanzada,event) => {
         const [place] = inputRef.current.getPlaces();
         if (place) {
             const nombre_corto = place.address_components[0].long_name;
@@ -73,7 +75,7 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
             <div className='searchbox' style={{ position: 'absolute', zIndex: 1}}>
               <StandaloneSearchBox
                 onLoad={ref => (inputRef.current = ref)}
-                onPlacesChanged={handlePlaceChanged}
+                onPlacesChanged={() => handlePlaceChanged(true)}
               >
                 <input type="text" className="form-control" placeholder="Introduce lugar"
                   style={{

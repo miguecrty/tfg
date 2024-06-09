@@ -3,7 +3,8 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/menu": "pages/menu.js",
   "/monitorizar": "pages/monitorizar.js",
-  "/api/obtenerlista": "pages/api/obtenerlista.js"
+  "/api/obtenerlista": "pages/api/obtenerlista.js",
+  "/menu": "pages/menu.js",
+  "/api/obtenerdatosgraficas": "pages/api/obtenerdatosgraficas.js"
 }

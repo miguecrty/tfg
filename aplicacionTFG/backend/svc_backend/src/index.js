@@ -6,6 +6,7 @@ const app = express();
 const crypto = require('crypto');
 const pino = require('pino');
 const pretty = require('pino-pretty');
+const { Console } = require('console');
 
 const transport = pino.transport({
   target: 'pino-pretty',
@@ -37,8 +38,7 @@ const keyspaceBD = process.env.KEYSPACE_CASSANDRA || 'tfg';
 const usernameBD = process.env.USERNAME_CASSANDRA || 'cassandra';
 const passwordBD = process.env.PASSWORD_CASSANDRA || 'cassandra';
 
-const APIKEY_WEATHER = process.env.APIKEY_WEATHER || 'fd10b0dcb392959b10aa51f78462f9fd';
-
+const APIKEY_WEATHER = process.env.APIKEY_WEATHER || '854c5489c0f85d6fd1fd9a30d77eee0a';
 // DOMINIO APP
 const dominio_app = process.env.DOMINIO_APP || 'localhost:8080';
 
@@ -105,35 +105,25 @@ async function limpiarBBDD()
 }
 
 
-async function actualizarTablaUsu(usuario,nombre_lugar,lat,lon) {
+async function actualizarTablaLugares(usuario,nombre_lugar,lat,lon,avanzada) {
     
     let exito=false;
-    const resultado = await client.execute("SELECT lugares FROM usuarios WHERE nombre_usu='"+usuario+"'");
+    const resultado = await client.execute("SELECT lugar FROM lugares WHERE nombre_usu='"+usuario+"' AND lugar='"+nombre_lugar+"' ALLOW FILTERING");
     let bandera=false;
-    let lista =resultado.rows[0].lugares;
-    if(lista == null)
+    //let lista =resultado.rows[0].lugares;
+    if(resultado.rows.length > 0)
     {
-    lista = {}
-    }
-    else
-    {
-      const nombresEnLista = Object.keys(lista);
-      if (nombresEnLista.includes(nombre_lugar))
-        {
-          bandera = true;
-        }  
+        bandera = true;
     }
     if(bandera==false)
     {
-      lista[nombre_lugar]=lat+"|"+lon;
       try {
-      const resultado = await client.execute('UPDATE usuarios SET lugares = ? WHERE nombre_usu = ?', 
-      [lista, usuario],
-      {prepare: true}
-    );
+      const resultado = await client.execute("INSERT INTO lugares (lugar,lat,lon,nombre_usu,avanzada) VALUES (?,?,?,?,?) IF NOT EXISTS",[nombre_lugar,lat,lon,usuario,avanzada]);
+      if (resultado.wasApplied()) {
       exito=true;
+      }
       }catch (error) {
-        logger.error("Error al realizar el update");
+        logger.error("Lugar ya existente");
     }
     }
     return exito;
@@ -145,11 +135,12 @@ app.post('/iniciarsondeo', async (req, res) => {
     let nombre_lugar= req.body.nombre_lugar;
     const latitud= req.body.lat.toString();
     const longitud= req.body.lng.toString();
+    const monitorizacion_avanzada= req.body.avanzada;
     const url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid='+APIKEY_WEATHER+'&lang=es';
     const response = await axios.get(url);
     nombre_lugar = response.data.name;
-    const noexiste=await actualizarTablaUsu(usuario,nombre_lugar,latitud,longitud);
-    if(noexiste){
+    const noexiste=await actualizarTablaLugares(usuario,nombre_lugar,latitud,longitud,monitorizacion_avanzada);
+    if((noexiste==true) && (monitorizacion_avanzada==true)){
     logger.info(`Iniciando sondeo para el usuario '${usuario}' en el lugar '${nombre_lugar}'`);
     let intervaloID=setInterval(async () => {
         try {
@@ -182,6 +173,9 @@ app.post('/iniciarsondeo', async (req, res) => {
     intervalos[usuario][nombre_lugar]=intervaloID;
     res.status(200).json({nombre_corto: nombre_lugar});
    } 
+   else if((noexiste==true) && (monitorizacion_avanzada==false)){
+    res.status(200).json({nombre_corto: nombre_lugar});
+   }
    else{
     logger.warn("Lugar ya existente");
     res.sendStatus(401).json({error:"Lugar ya existente"});
@@ -220,14 +214,14 @@ async function eliminarTabla(usu)
 }
 
 
+
 app.get('/obtenerlista', async (req, res) => {
   try {
     const username = req.query.usuario;
     try {
-      const result = await client.execute("SELECT lugares FROM usuarios WHERE nombre_usu='"+username+"' ALLOW FILTERING;");
+      const result = await client.execute("SELECT * FROM lugares WHERE nombre_usu='"+username+"' ALLOW FILTERING;");
       if(result.rows.length > 0) {
-        const lugares = result.rows[0].lugares;;
-        res.status(200).json(lugares);
+        res.status(200).json(result.rows);
       } else {
         res.status(401).json({ error: 'Usuario no existe en la BBDD' });
       }
@@ -449,7 +443,7 @@ app.delete('/borracuenta', async (req, res) => {
 
 });
 
-app.get('/obtenerdatosgraficatemperatura', async (req, res) => {
+app.get('/obtenerdatosgraficasavanzados', async (req, res) => {
   try {
     const username= req.query.usuario;
     const lugar = req.query.lugar;
@@ -510,6 +504,31 @@ app.get('/obtenerdatosgraficatemperatura', async (req, res) => {
     res.status(500).json({ error: 'Error al procesar la solicitud' });
   }
 });
+
+
+app.get('/obtenerdatosgraficasbasicos', async (req, res) => {
+  try {
+    const username= req.query.usuario;
+    const lugar = req.query.lugar;
+    const result = await client.execute("SELECT lat,lon FROM lugares WHERE nombre_usu='"+username+"' AND lugar='"+lugar+"' ALLOW FILTERING;");
+    if(result.rows.length > 0) {
+      const latitud = result.rows[0].lat;
+      const longitud = result.rows[0].lon;
+      const final = Math.floor(Date.now() / 1000);
+      const inicio = final - (3*24*60*60);
+      const url = 'https://history.openweathermap.org/data/2.5/history/city?lat=' + latitud + '&lon=' + longitud + '&type=hour&start='+inicio+'&end='+final+'&appid='+APIKEY_WEATHER+'&lang=es';
+      const response = await axios.get(url);
+      console.log(response.data.list);
+    }
+   
+    res.status(200).json("Exito");
+  } catch (error) {
+    //console.error('Error al procesar la solicitud:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
+  }
+});
+
+
 
 
 app.get('/obtenerpronostico', async (req, res) => {

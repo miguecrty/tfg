@@ -19,6 +19,14 @@ toma TIMESTAMP,
 PRIMARY KEY(nombre_lugar,toma)
 ) WITH CLUSTERING ORDER BY(toma DESC);
 
+-- Creamos la tabla lugares
+CREATE TABLE IF NOT EXISTS tfg.lugares (
+lugar TEXT PRIMARY KEY,
+nombre_usu TEXT,
+lat TEXT,
+lon TEXT,
+avanzada BOOLEAN
+);
 
 INSERT INTO tfg.usuarios (nombre_usu,clave,email,lugares) 
 VALUES ('usuario', 'clave','miguelangelloppez7@gmail.com',null);

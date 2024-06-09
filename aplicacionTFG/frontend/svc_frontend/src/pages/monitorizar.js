@@ -17,9 +17,19 @@ const Monitorizar = () => {
   const [tipo,setTipo] = useState(null);
   const username = Cookies.get('username');
   const [activeTab, setActiveTab] = useState(null);
+  const [modo, setModo] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
+  const [datasetsBasicos,setDatasetsBasicos]=useState(null);
+  const [labelsBasicos,setLabelsBasicos]=useState(null);
 
     
+  const handleCambiarModo = (index) => {
+    if (index === 0) {
+    }
+    if (index ===1){
+    }
+    setModo(index);
+  }
 
   const handleTabClick = (index) => {
     let color, borde;
@@ -40,12 +50,12 @@ if (index === 0) {
   borde = 'rgba(255, 200, 50, 1)';
   setTipo('line');
 } else if (index === 4) {
-  color = 'rgba(102, 100, 68, 0.5)'; 
-  borde = 'rgba(0, 0, 255, 0.2)';
+  color = 'rgba(102, 100, 68, 0.8)'; 
+  borde = 'rgba(102, 100, 68, 0.8)';
   setTipo('bar');
 } else if (index === 5) {
-  color = 'rgba(173, 216, 230, 0.5)'; 
-  borde = 'rgba(173, 216, 230, 0.2)';
+  color = 'rgba(100, 150, 130, 0.5)'; 
+  borde = 'rgba(100, 150, 130, 0.5)';
   setTipo('bar');
 }
       datasetslista[index].backgroundColor=color;
@@ -56,28 +66,31 @@ if (index === 0) {
   };
 
   const handlePlaceSelected = async (place) => {
-    const lista = await obtenerLista(username, true);
-    let lugares=[];
-      for (let lugar in lista) {
-        lugares.push(lugar);
-      }
-      console.log(lugares);
-    setOpciones(lugares);
+    const lista = await obtenerLista(username);
+    setOpciones(lista);
   };
 
   const handleOpcionSeleccionada = async (opcion, index) => {
-    console.log(opcion);
-    setOpcionSeleccionada(opcion);
-    const lista = await obtenerLista(username, false);
-    const [latitud, longitud] = lista[opcion].split("|").map(parseFloat);
-    setUbicacionSeleccionada({ lat: latitud, lng: longitud });
-    await obtenerDatosParaGrafico(opcion);
+    setOpcionSeleccionada(opcion.lugar);
+    const lista = await obtenerLista(username);
+    lista.forEach(async element => {
+      if(element.lugar == opcion.lugar)
+        {
+          const latitud= parseFloat(element.lat);
+          const longitud= parseFloat(element.lon);
+          const avanzada = element.avanzada;
+          setUbicacionSeleccionada({ lat: latitud, lng: longitud });
+          setDatasets(null);
+          setDatasetsBasicos(null);
+          await obtenerDatosParaGrafico(opcion.lugar,avanzada);
+          setModo(0);
+        }
+    });
     
   };
 
-  const obtenerLista = async (usuario, actualizar) => {
-    let lista = {};
-    const lugares = [];
+  const obtenerLista = async (usuario) => {
+    let lista = []
     try {
       const response = await fetch('/api/obtenerlista?usuario=' + usuario, {
         method: 'GET',
@@ -98,9 +111,29 @@ if (index === 0) {
     return lista;
   };
 
-  const obtenerDatosParaGrafico = async (lugar) => {
+  const obtenerDatosParaGrafico = async (lugar,avanzada) => {
+
     try {
-      const response = await fetch('/api/obtenerdatosgraficatemperatura?usuario=' + username + "&lugar=" + lugar, {
+      const response = await fetch('/api/obtenerdatosgraficas?usuario=' + username + "&lugar=" + lugar, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+    }
+    catch(error){
+
+    }
+
+
+    const datasetsB = {label: 'Temperatura (ºC)', data: [24,52,1,2,3,4,1]};
+    const labelsB = [4,5,1,2,3,4,1];
+    setDatasetsBasicos(datasetsB);
+    setLabelsBasicos(labelsB);
+
+    if(avanzada){
+    try {
+      const response = await fetch('/api/obtenerdatosgraficas?usuario=' + username + "&lugar=" + lugar+"&avanzada="+avanzada, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -109,7 +142,6 @@ if (index === 0) {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data.datosClimaticos);
        const nombresPersonalizados = ['Temperatura (ºC)', 'Temperatura máxima (ºC)', 'Temperatura mínima (ºC)', 'Sensación térmica (ºC)', 'Presión (hPa)','Humedad (%)'];
         const newDatasets = Object.keys(data.datosClimaticos).filter(key => key !== 'tomas').map((key, index) => ({
           label: nombresPersonalizados[index],
@@ -127,6 +159,7 @@ if (index === 0) {
     } catch (error) {
       console.error('Error al obtener los datos para el gráfico:', error);
     }
+    }
   };
   useEffect(() => {
     if (datasetslista.length > 0 && labels.length > 0 && datosActuales !== null) {
@@ -136,11 +169,7 @@ if (index === 0) {
   useEffect(() => {
     const fetchLugares = async () => {
       const lista = await obtenerLista(username, true);
-      let lugares=[];
-      for (let lugar in lista) {
-        lugares.push(lugar);
-      }
-      setOpciones(lugares);
+      setOpciones(lista);
     };
     fetchLugares();
   }, [username]);
@@ -170,22 +199,21 @@ if (index === 0) {
       
             <div className="card mr-3">
               <div className="card-body">
-            <h4>Lista de lugares</h4>
-            {opciones.length ? (
-
-                  <div className="list-group"  style={{ minHeight:'160px',maxHeight: '160px', overflowY: 'auto' }}>
-                  {opciones.map((opcion, index) => (
-                    <button
-                      key={index}
-                      className="list-group-item mb-2 border-2 list-group-item-action"
-                      onClick={() => handleOpcionSeleccionada(opcion, index)}
-                    >
-                      {opcion}
-                    </button>
-                  ))}
+              <h4>Lista de lugares</h4>
+                {opciones.length ? (
+                  <div className="list-group" style={{ minHeight: '160px', maxHeight: '160px', overflowY: 'auto' }}>
+                    {opciones.map((opcion, index) => (
+                      <button
+                        key={index}
+                        className="list-group-item mb-2 border-2 list-group-item-action"
+                        onClick={() => handleOpcionSeleccionada(opcion, index)}
+                      >
+                        {opcion.lugar}
+                      </button>
+                    ))}
                   </div>
                 ) : (
-                <p className='text-center'>No hay ningun lugar monitorizándose</p>
+                  <p className='text-center'>No hay ningún lugar monitorizándose</p>
                 )}
             
               </div>
@@ -225,14 +253,19 @@ if (index === 0) {
                   {opcionSeleccionada ? (
                     <>
         <div class="row">
-    <div class="col-md-1 mr-0 ml-0 d-flex align-items-center justify-content-center" style={{maxWidth:'60px'}}>
-      <ul class="list-group ml-0">
-        <li class="list-group-item active" style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingLeft:'15px',paddingBottom:'30px'}}>Básica</li>
-        <li class="list-group-item" style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingLeft:'15px',paddingBottom:'30px'}}>Avanzada</li>
-      </ul>
-    </div>
-    <div class="col ml-0">
+    <div class="col-md-1 d-flex align-items-center justify-content-center" style={{maxWidth:'60px'}}>
+      <ul class="list-group ml-0 ml-2">
+        <button className={`btn shadow fs-5 ${modo === 0 ? 'btn-dark' : ''}`} style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingBottom:'20px',paddingTop:'20px'}} onClick={() => handleCambiarModo(0)}>Básica</button>
+        {datasets && (
+        <button className={`btn shadow fs-5 ${modo === 1 ? 'btn-dark' : ''}`}  style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingBottom:'20px',paddingTop:'20px'}} onClick={() => handleCambiarModo(1)}>Avanzada</button>
+        )}
+        </ul>
+    </div>  
+    {modo ===1 && datasets &&(   
+      <>  
+    <div class="col">
       <div class='row'>
+        
         <ul className="nav nav-tabs border-0">
           <li className="nav-item">
             <button className={`nav-link ml-3 border-2 ${activeTab === 0 ? 'active' : ''}`} onClick={() => handleTabClick(0)}>Temperatura</button>
@@ -253,14 +286,36 @@ if (index === 0) {
             <button className={`nav-link border-2 ${activeTab === 5 ? 'active' : ''}`} onClick={() => handleTabClick(5)}>Humedad</button>
           </li>
         </ul>
+      
       </div>
       <div className='row mb-5'>
-        {datasets && labels && tipo && (
+        {datasets && labels && tipo  && (
           <ChartTodas datasets={datasets} labels={labels} tipo={tipo} />
         )}
       </div>
       </div>
-      <div class="col-md-2">
+      </> 
+    )}
+    {modo ===0 &&(  
+    <>
+    <div class="col">
+      <div class='row'>
+        
+        <ul className="nav nav-tabs border-0">
+          <li className="nav-item">
+            <p className={`nav-link ml-3 border-2 ${activeTab === 0 ? 'active' : ''}`}>Temperatura de los últimos 3 días</p>
+          </li>
+        </ul>
+      
+      </div>
+      <div className='row mb-5'>
+        {datasetsBasicos && labelsBasicos && (
+          <ChartTodas datasets={datasetsBasicos} labels={labelsBasicos} tipo={'line'} />
+        )}
+      </div>
+      </div>
+                  
+      <div class="col-md-3">
             
             {datosActuales && (
                     <>
@@ -277,13 +332,13 @@ if (index === 0) {
                       </div>
                     </>
                   )} 
-            </div>
-    
-  </div>
-        
-
-                    
-            
+      </div>
+    </>
+    )}
+    </div>
+    <div className='row mb-5'>
+      
+    </div>
                   </>
               
                   ) : (
