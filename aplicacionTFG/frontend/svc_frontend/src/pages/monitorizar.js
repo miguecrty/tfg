@@ -66,6 +66,7 @@ if (index === 0) {
   };
 
   const handlePlaceSelected = async (place) => {
+    setOpciones([]);
     const lista = await obtenerLista(username);
     setOpciones(lista);
   };
@@ -120,17 +121,16 @@ if (index === 0) {
           'Content-Type': 'application/json'
         },
       });
+
+      const respuesta = await response.json();
+      const datasetsB = {label: 'Temperatura (ºC)', data: respuesta.temp};
+      const labelsB = respuesta.tomas;
+      setDatasetsBasicos(datasetsB);
+      setLabelsBasicos(labelsB);
     }
     catch(error){
 
     }
-
-
-    const datasetsB = {label: 'Temperatura (ºC)', data: [24,52,1,2,3,4,1]};
-    const labelsB = [4,5,1,2,3,4,1];
-    setDatasetsBasicos(datasetsB);
-    setLabelsBasicos(labelsB);
-
     if(avanzada){
     try {
       const response = await fetch('/api/obtenerdatosgraficas?usuario=' + username + "&lugar=" + lugar+"&avanzada="+avanzada, {
@@ -168,7 +168,7 @@ if (index === 0) {
   }, [datasetslista, labels, datosActuales]);
   useEffect(() => {
     const fetchLugares = async () => {
-      const lista = await obtenerLista(username, true);
+      const lista = await obtenerLista(username);
       setOpciones(lista);
     };
     fetchLugares();
@@ -200,7 +200,7 @@ if (index === 0) {
             <div className="card mr-3">
               <div className="card-body">
               <h4>Lista de lugares</h4>
-                {opciones.length ? (
+                {opciones.length ?  (
                   <div className="list-group" style={{ minHeight: '160px', maxHeight: '160px', overflowY: 'auto' }}>
                     {opciones.map((opcion, index) => (
                       <button
@@ -209,6 +209,7 @@ if (index === 0) {
                         onClick={() => handleOpcionSeleccionada(opcion, index)}
                       >
                         {opcion.lugar}
+                  
                       </button>
                     ))}
                   </div>
@@ -303,7 +304,7 @@ if (index === 0) {
         
         <ul className="nav nav-tabs border-0">
           <li className="nav-item">
-            <p className={`nav-link ml-3 border-2 ${activeTab === 0 ? 'active' : ''}`}>Temperatura de los últimos 3 días</p>
+            <p className={`nav-link ml-3 border-2 active`}>Temperatura de los últimos 3 días</p>
           </li>
         </ul>
       

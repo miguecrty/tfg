@@ -7,6 +7,8 @@ import Cookies from 'js-cookie';
 const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbicacionSeleccionada, setOpciones, opciones, pronostico }) => {
     const username = Cookies.get('username');
     const [marcador, setMarcador] = useState(ubicacionSeleccionada);
+    const [mensajeExito, setMensajeExito] = useState(null);
+    const [mensajeError, setMensajeError] = useState(null);
     const zoom = 15;
     const inputRef = useRef();
 
@@ -17,7 +19,7 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
 
     const iniciarSondeo = async (datos) => {
         try {
-           let avanzada = confirm("desea selecccionar la monitorización avanzada");
+           let avanzada = confirm("¿Desea selecccionar la monitorización avanzada?");
            datos.avanzada = avanzada;
             const response = await fetch('/api/iniciarsondeo', {
                 method: 'POST',
@@ -28,13 +30,16 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
             });
               const respuesta = await response.json();
             if (response.status === 200) {
-                console.log('Sondeo iniciado');
-                await new Promise(async (resolve) => {
-                  onPlaceSelected(respuesta.nombre_corto, resolve);
-                  setOpciones(prevOpciones => [...prevOpciones, respuesta.nombre_corto]);
-                });
+                setMensajeExito(respuesta.exito);
+                setTimeout(() => {
+                  setMensajeExito(null);
+                },5000);
+                
             } else {
-                console.error('Error al iniciar sondeo');
+                setMensajeError(respuesta.error);
+                setTimeout(() => {
+                  setMensajeError(null);
+                },5000);
             }
         } catch (error) {
             console.error('Error al iniciar sondeo:', error);
@@ -70,9 +75,16 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
     return (
       <>
         {!pronostico && (
+          
         <div style={{ height: '300px', maxHeight:'300px', width: '100%', position: 'relative' }}>
+          {mensajeExito && (
+          <div className='mb-3 mt-3 alert alert-success text-center'><strong>{mensajeExito}</strong></div>
+          )}
+          {mensajeError && (
+          <div className='mb-3 mt-3 alert alert-danger text-center'><strong>{mensajeError}</strong></div>
+          )}
           <LoadScript googleMapsApiKey={googleApiKey} libraries={["places"]}>
-            <div className='searchbox' style={{ position: 'absolute', zIndex: 1}}>
+            <div className='searchbox text-center' style={{ position: 'absolute', zIndex: 1}}>
               <StandaloneSearchBox
                 onLoad={ref => (inputRef.current = ref)}
                 onPlacesChanged={() => handlePlaceChanged(true)}
@@ -92,7 +104,9 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
                   }}
                 />
               </StandaloneSearchBox>
+              
             </div>
+            
             {mostrarMapa && (
               <GoogleMap
                 mapContainerStyle={{ height: '90%', width: '100%', position: 'relative', zIndex: 0,top:'30px',bottom:'30px' }}
@@ -132,6 +146,7 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
                   }}
                 />
               </StandaloneSearchBox>
+              
             </LoadScript>
         </>
         )}

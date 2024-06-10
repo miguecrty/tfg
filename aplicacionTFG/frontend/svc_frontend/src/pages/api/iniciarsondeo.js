@@ -8,12 +8,13 @@ export default async function handler(req, res) {
             },
             body: JSON.stringify(req.body)
         });
-
+        const respuesta = await response.json();
+        console.log(respuesta);
         if (response.ok) {
-            res.status(200).json({ message: "Sondeo iniciado con éxito" });
+            res.status(200).json({ exito: respuesta.exito });
         }
         else{
-            res.status(500).json({ message: "El sondeo no ha iniciado, se ha producido un error!" });
+            res.status(500).json({ error: respuesta.error });
         }   
   }
   

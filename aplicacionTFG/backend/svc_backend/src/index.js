@@ -171,14 +171,14 @@ app.post('/iniciarsondeo', async (req, res) => {
         }
     }, TIEMPO_SONDEO);
     intervalos[usuario][nombre_lugar]=intervaloID;
-    res.status(200).json({nombre_corto: nombre_lugar});
+    res.status(200).json({exito:"Monitorización avanzada realizada correctamente!"});
    } 
    else if((noexiste==true) && (monitorizacion_avanzada==false)){
-    res.status(200).json({nombre_corto: nombre_lugar});
+    res.status(200).json({exito:"Monitorización básica realizada correctamente!"});
    }
    else{
     logger.warn("Lugar ya existente");
-    res.sendStatus(401).json({error:"Lugar ya existente"});
+    res.status(401).json({error:"Lugar ya existente"});
   }
 } catch (error) { 
 }
@@ -518,10 +518,25 @@ app.get('/obtenerdatosgraficasbasicos', async (req, res) => {
       const inicio = final - (3*24*60*60);
       const url = 'https://history.openweathermap.org/data/2.5/history/city?lat=' + latitud + '&lon=' + longitud + '&type=hour&start='+inicio+'&end='+final+'&appid='+APIKEY_WEATHER+'&lang=es';
       const response = await axios.get(url);
-      console.log(response.data.list);
+      const lista = response.data.list;
+      const temperaturas = [];
+      const tomas = [];
+      lista.forEach(element => {
+        let date = new Date(element.dt * 1000);
+        let day = ("0" + date.getDate()).slice(-2);
+        let month = ("0" + (date.getMonth() + 1)).slice(-2); 
+        let hours = ("0" + date.getHours()).slice(-2);
+        let minutes = ("0" + date.getMinutes()).slice(-2); 
+        let toma = `${day}-${month} ${hours}:${minutes}`;
+        let temp = parseFloat((element.main.temp - 273.15).toFixed(2));
+        tomas.push(toma);
+        temperaturas.push(temp);
+      });
+      const datos = {temp:temperaturas,tomas:tomas};
+      res.status(200).json(datos);
     }
    
-    res.status(200).json("Exito");
+    
   } catch (error) {
     //console.error('Error al procesar la solicitud:', error);
     res.status(500).json({ error: 'Error al procesar la solicitud' });
