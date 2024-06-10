@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearchMinus } from '@fortawesome/free-solid-svg-icons';
-import 'chart.js/auto'; // Importar Chart.js directamente aquí
+import 'chart.js/auto';
 
 const ChartTodas = ({ datasets, labels, tipo }) => {
   const chartRef = useRef(null);

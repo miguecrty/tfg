@@ -22,7 +22,6 @@ const Monitorizar = () => {
   const [datasetsBasicos,setDatasetsBasicos]=useState(null);
   const [labelsBasicos,setLabelsBasicos]=useState(null);
 
-    
   const handleCambiarModo = (index) => {
     if (index === 0) {
     }
@@ -361,7 +360,7 @@ if (index === 0) {
             </div>
           </div>
           </div>
-            <Pie/>
+            <Pie ayuda={true} page={'monitorizar'}/>
         </>
         
     ); 

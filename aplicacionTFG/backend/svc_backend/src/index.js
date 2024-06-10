@@ -30,7 +30,7 @@ const emailpass = process.env.PASS_EMAIL || "GOrrino711";
 
 
 // CASSANDRA
-const hostBD = process.env.HOST_CASSANDRA || '10.88.0.37';
+const hostBD = process.env.HOST_CASSANDRA || '10.88.0.2';
 const datacenterBD = process.env.DATACENTER_CASSANDRA || 'datacenter1';
 const portBD = process.env.PORT_CASSANDRA || 9042;
 const keyspaceBD = process.env.KEYSPACE_CASSANDRA || 'tfg';
@@ -136,7 +136,6 @@ app.post('/iniciarsondeo', async (req, res) => {
     const longitud = req.body.lng.toString();
     const monitorizacion_avanzada = req.body.avanzada;
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitud}&lon=${longitud}&appid=${APIKEY_WEATHER}&lang=es`;
-
     const response = await axios.get(url);
     nombre_lugar = response.data.name;
     const noexiste = await actualizarTablaLugares(usuario, nombre_lugar, latitud, longitud, monitorizacion_avanzada);
@@ -157,11 +156,11 @@ app.post('/iniciarsondeo', async (req, res) => {
           const viento = response.data.wind;
           delete viento.gust;
           const nubes = response.data.clouds;
-
+          let date = new Date(response.data.dt * 1000);
           try {
             const result = await client.execute(
-              `INSERT INTO datos_${usuario}(nombre_lugar, nubes, temperatura, tiempo, viento, toma) VALUES (?, ?, ?, ?, ?, toTimeStamp(now()));`,
-              [nombre_lugar, nubes, temperatura, tiempo, viento],
+              `INSERT INTO datos_${usuario}(nombre_lugar, nubes, temperatura, tiempo, viento, toma) VALUES (?, ?, ?, ?, ?, ?);`,
+              [nombre_lugar, nubes, temperatura, tiempo, viento,date],
               { prepare: true }
             );
           } catch (error) {
@@ -464,7 +463,7 @@ app.get('/obtenerdatosgraficasavanzados', async (req, res) => {
           const dia = fecha.getDate();
           const horas = fecha.getHours();
           const minutos = fecha.getMinutes();
-          return `${mes < 10 ? '0' : ''}${mes}-${dia < 10 ? '0' : ''}${dia} ${horas}:${minutos < 10 ? '0' : ''}${minutos}`;
+          return `${dia < 10 ? '0' : ''}${dia}-${mes < 10 ? '0' : ''}${mes} ${horas}:${minutos < 10 ? '0' : ''}${minutos}`;
       });
       const tiempo_actual =data[(data.length-1)].tiempo.description;
       const icono_tiempo = data[(data.length-1)].tiempo.icon;

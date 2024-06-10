@@ -306,7 +306,7 @@ const Pronostico = () => {
         </>
        
 
-            <Pie />
+            <Pie ayuda={true} page={'pronostico'}/>
             </>
     );
 };

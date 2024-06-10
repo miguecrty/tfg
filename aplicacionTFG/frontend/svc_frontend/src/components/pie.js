@@ -1,9 +1,22 @@
-import React from 'react';
-
-const Pie = () => {
+import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+const Pie = ({ayuda,page}) => {
+  const seccionAyuda = () =>{
+    if(page === 'monitorizar'){
+      console.log("H");
+    }
+    if(page === 'pronostico'){
+      console.log("B");
+    }
+    if(page === 'mi cuenta'){
+      console.log("M");
+    }
+    
+  }
   return (
     <footer
-      className="bg-dark bg-opacity-75 text-white text-center py-2"
+      className="bg-dark bg-opacity-75 text-white py-2"
       style={{
         position: 'fixed',
         bottom: 0,
@@ -14,8 +27,9 @@ const Pie = () => {
         height: '5%'
       }}
     >
+       <div className='row'>
        <p
-          className="text-white mb-5"
+          className="col text-white text-center"
           style={{
             whiteSpace: 'nowrap',
             overflow: 'hidden',
@@ -24,7 +38,12 @@ const Pie = () => {
           }}
         >
           &copy; TFG [Monitorización] : Miguel Ángel López Rodríguez
+         
         </p>
+        {ayuda && (
+        <>Ayuda<FontAwesomeIcon icon={faCircleInfo} onClick={seccionAyuda} className='col-md-1 mr-2 mb-2' style={{width:'25px',height:'25px',cursor:'pointer'}}/></>
+        )}
+        </div>
     </footer>
   );
 }
