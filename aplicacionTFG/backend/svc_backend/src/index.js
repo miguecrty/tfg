@@ -6,7 +6,6 @@ const app = express();
 const crypto = require('crypto');
 const pino = require('pino');
 const pretty = require('pino-pretty');
-const { Console } = require('console');
 
 const transport = pino.transport({
   target: 'pino-pretty',
@@ -259,13 +258,12 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.put('/desmonitorizar', async (req, res) => {
+app.delete('/desmonitorizar', async (req, res) => {
   try {
       const lugares = req.body.lugares;
       const usuario = req.body.usuario;
       for (const lugar of lugares) {
-          
-          await client.execute("UPDATE usuarios SET lugares = lugares - {'" + lugar + "'} WHERE nombre_usu = '" + usuario + "'");
+          await client.execute(`DELETE from lugares WHERE lugar = '${lugar}' AND nombre_usu= '${usuario}'`);
           clearInterval(intervalos[usuario][lugar]);
           delete intervalos[usuario][lugar];
           logger.warn(`Desmonitorizando el lugar '${lugar}' para el usuario '${usuario}'`);

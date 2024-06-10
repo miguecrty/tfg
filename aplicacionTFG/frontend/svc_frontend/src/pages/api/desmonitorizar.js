@@ -2,7 +2,7 @@
 import { server } from "../_app";
 export default async function handler(req, res) {
         const response = await fetch('http://'+server+'/desmonitorizar', { 
-            method: 'PUT',
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             },

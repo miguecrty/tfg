@@ -21,11 +21,12 @@ PRIMARY KEY(nombre_lugar,toma)
 
 -- Creamos la tabla lugares
 CREATE TABLE IF NOT EXISTS tfg.lugares (
-lugar TEXT PRIMARY KEY,
+lugar TEXT,
 nombre_usu TEXT,
 lat TEXT,
 lon TEXT,
-avanzada BOOLEAN
+avanzada BOOLEAN,
+PRIMARY KEY(lugar,nombre_usu)
 );
 
 INSERT INTO tfg.usuarios (nombre_usu,clave,email,lugares) 

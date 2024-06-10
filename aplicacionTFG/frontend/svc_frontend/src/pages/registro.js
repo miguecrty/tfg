@@ -120,7 +120,7 @@ const Registro = () => {
                 <>
                     <div className="container">
                         <div className="row justify-content-center">
-                            <div className="card ml-5 mr-5 border-0 shadow-lg" style={{ maxWidth: '600px', transform:'translate(0px, -10px)'}}>
+                            <div className="card ml-5 mr-5 border-0 shadow-lg mb-4" style={{ maxWidth: '600px', transform:'translate(0px, -10px)'}}>
                                 <div className="card-body ml-3 mr-3">
                                     <h1 className="card-title text-center">Registrar usuario</h1>
                                     <form>

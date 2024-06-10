@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Cookies from 'js-cookie';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faCheckSquare } from '@fortawesome/free-solid-svg-icons';
+import {faSquareCheck} from '@fortawesome/free-solid-svg-icons';
 import withAuth from '@/components/withAuth';
 
 const MiCuenta = () => {
@@ -47,10 +47,11 @@ const MiCuenta = () => {
 
     const handleConfirmClick = async () => {
         const selectedLugares = lista.filter((_, index) => selected.includes(index));
+        console.log(selectedLugares);
         if (selectedLugares.length > 0) {
             try {
                 const response = await fetch('/api/desmonitorizar', {
-                    method: 'PUT',
+                    method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -98,7 +99,8 @@ const MiCuenta = () => {
     }
     
     const obtenerLista = async (usuario) => {
-        let lista = {};
+        setLista([]);
+        let lista = [];
         try {
             const response = await fetch('/api/obtenerlista?usuario=' + usuario, {
                 method: 'GET',
@@ -109,10 +111,10 @@ const MiCuenta = () => {
 
             if (response.ok) {
                 lista = await response.json();
-                const lugares = [];
-                for (let lugar in lista) {
-                    lugares.push(lugar);
-                }
+                const lugares =[];
+                lista.forEach(element => {
+                    lugares.push(element.lugar);
+                });
                 setLista(lugares);
             } else {
                 console.error('Error al obtener la lista');
@@ -228,15 +230,20 @@ const MiCuenta = () => {
                             <div className="row-md-4 mt-3 ml-3">
                                 <div className="card border-0">
                                     <div className="card-body">
-                                    <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-                                        <button onClick={seleccionarTodos} className='btn btn-info mb-2 ml-2 mt-2 shadow' style={{fontSize:'12px'}}>
-                                        Des/Seleccionar todos
-                                        <FontAwesomeIcon icon={faCheckSquare} style={{ marginLeft: '5px',marginBottom:'4px', width:'20px',height:'20px'}} />
+                                        <div className='row'>
+                                        <div className='col mb-3'>            
+                                    <h5 className='mt-3 text-center mb-3'>Selecciona los lugares para desmonitorizar...</h5>
+                                    </div>
+                                    <div className='col-md-3 mb-3'>
+                                        <button onClick={seleccionarTodos} className='btn btn-info mb-2 ml-2 mt-2 shadow' style={{fontSize:'15px'}}>
+                                        {selectAll == false ? (<>Marcar todos</>) : (<>Desmarcar todos</>)}
+                                        <FontAwesomeIcon icon={faSquareCheck} style={{ marginLeft: '5px', width:'20px',height:'20px'}} />
                                         </button>
                                     </div>
-                                    {lista.length ? (
+                                    
+                    </div>
+                    {lista.length ? (
                 <>
-                    <h5 className='mt-2 text-center mb-3'>Selecciona los lugares para desmonitorizar...</h5>
                     <div className="list-group mt-5" style={{ maxHeight: '180px', overflowY: 'auto' }}>
                         {lista.map((opcion, index) => (
                             <div className="row ml-4 mr-0 border-0 shadow mb-3" key={index}>
@@ -290,7 +297,7 @@ const MiCuenta = () => {
                             <div className='card mt-4 border-0 shadow-lg'>
                                 <h5 className='mt-3 text-center'>Cambiar contraseña</h5>
                                 <div className='row'>
-                                    <div className='col mt-3 mb-3 ml-3 '>
+                                    <div className='col mt-3 mb-3 ml-3 mr-3'>
                                         <div className="input-group input-group-lg">
                                             <div className="input-group-prepend">
                                                 <span className="input-group-text" id="inputGroup-sizing-lg">Antigua contraseña</span>
@@ -305,7 +312,7 @@ const MiCuenta = () => {
                                             />
                                         </div>
                                     </div>
-                                    <div className='col mt-3 mb-3 mr-3'>
+                                    <div className='col mt-3 mb-3 mr-3 ml-3'>
                                         <div className="input-group input-group-lg">
                                             <div className="input-group-prepend">
                                                 <span className="input-group-text" id="inputGroup-sizing-lg">Nueva contraseña</span>
@@ -331,7 +338,7 @@ const MiCuenta = () => {
                                     <button 
                                         type="button" 
                                         className='btn btn-warning btn-block mb-2 shadow' 
-                                        style={{ width: '25%' }} 
+                                        style={{ width: '25%',minWidth:'100px' }} 
                                         onClick={handlePasswordChange}
                                     >
                                         Confirmar
@@ -345,7 +352,7 @@ const MiCuenta = () => {
                                     <button 
                                         type="button" 
                                         className='btn btn-danger btn-block mb-2 shadow' 
-                                        style={{ width: '25%' }} 
+                                        style={{ width: '25%',minWidth:'100px' }} 
                                         onClick={handleConfirmacion}
                                     >
                                         Confirmar

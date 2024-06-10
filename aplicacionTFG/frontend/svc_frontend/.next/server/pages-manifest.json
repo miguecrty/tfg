@@ -1,10 +1,10 @@
 {
+  "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/_app": "pages/_app.js",
-  "/monitorizar": "pages/monitorizar.js",
-  "/api/obtenerlista": "pages/api/obtenerlista.js",
-  "/api/obtenerdatosgraficas": "pages/api/obtenerdatosgraficas.js",
+  "/menu": "pages/menu.js",
   "/": "pages/index.js",
-  "/menu": "pages/menu.js"
+  "/micuenta": "pages/micuenta.js",
+  "/api/obtenerlista": "pages/api/obtenerlista.js",
+  "/api/obtenerpronostico": "pages/api/obtenerpronostico.js"
 }

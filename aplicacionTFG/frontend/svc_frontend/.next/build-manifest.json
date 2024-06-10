@@ -32,10 +32,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/menu.js"
     ],
-    "/monitorizar": [
+    "/micuenta": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/monitorizar.js"
+      "static/chunks/pages/micuenta.js"
     ]
   },
   "ampFirstPages": []
