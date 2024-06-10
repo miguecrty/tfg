@@ -36,6 +36,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/micuenta.js"
+    ],
+    "/monitorizar": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/monitorizar.js"
     ]
   },
   "ampFirstPages": []

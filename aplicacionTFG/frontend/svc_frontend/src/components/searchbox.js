@@ -93,7 +93,7 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
                   style={{
                     boxSizing: `border-box`,
                     border: `1px solid transparent`,
-                    width: `auto`,
+                    maxWidth: `400px`,
                     height: `auto`,
                     padding: `0 12px`,
                     borderRadius: `3px`,

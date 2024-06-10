@@ -263,7 +263,7 @@ const MiCuenta = () => {
                         ))}
                     </div>
                     <div className="d-flex justify-content-center">
-                        <button type="button" className='btn btn-secondary btn-block mb-2 shadow mt-4' style={{ width: '25%' }} onClick={handleConfirmClick} >Confirmar</button>
+                        <button type="button" className='btn btn-secondary btn-block mb-2 shadow mt-4' style={{ width: '25%',minWidth:'100px' }} onClick={handleConfirmClick} >Confirmar</button>
                     </div>
                 </>
             ) : (

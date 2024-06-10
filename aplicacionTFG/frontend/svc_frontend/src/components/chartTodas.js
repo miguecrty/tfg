@@ -27,7 +27,7 @@ const ChartTodas = ({ datasets, labels, tipo }) => {
               labels: labels,
               datasets: [
                 {
-                  label: datasets.label,
+                  label: datasets.label ,
                   data: datasets.data,
                   backgroundColor: datasets.backgroundColor,
                   borderColor: datasets.borderColor,

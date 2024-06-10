@@ -30,7 +30,7 @@ const emailpass = process.env.PASS_EMAIL || "GOrrino711";
 
 
 // CASSANDRA
-const hostBD = process.env.HOST_CASSANDRA || '10.88.0.30';
+const hostBD = process.env.HOST_CASSANDRA || '10.88.0.37';
 const datacenterBD = process.env.DATACENTER_CASSANDRA || 'datacenter1';
 const portBD = process.env.PORT_CASSANDRA || 9042;
 const keyspaceBD = process.env.KEYSPACE_CASSANDRA || 'tfg';
@@ -131,57 +131,65 @@ async function actualizarTablaLugares(usuario,nombre_lugar,lat,lon,avanzada) {
 app.post('/iniciarsondeo', async (req, res) => {
   try {
     const usuario = req.body.usuario;
-    let nombre_lugar= req.body.nombre_lugar;
-    const latitud= req.body.lat.toString();
-    const longitud= req.body.lng.toString();
-    const monitorizacion_avanzada= req.body.avanzada;
-    const url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitud + '&lon=' + longitud + '&appid='+APIKEY_WEATHER+'&lang=es';
+    let nombre_lugar = req.body.nombre_lugar;
+    const latitud = req.body.lat.toString();
+    const longitud = req.body.lng.toString();
+    const monitorizacion_avanzada = req.body.avanzada;
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitud}&lon=${longitud}&appid=${APIKEY_WEATHER}&lang=es`;
+
     const response = await axios.get(url);
     nombre_lugar = response.data.name;
-    const noexiste=await actualizarTablaLugares(usuario,nombre_lugar,latitud,longitud,monitorizacion_avanzada);
-    if((noexiste==true) && (monitorizacion_avanzada==true)){
-    logger.info(`Iniciando sondeo para el usuario '${usuario}' en el lugar '${nombre_lugar}'`);
-    let intervaloID=setInterval(async () => {
+    const noexiste = await actualizarTablaLugares(usuario, nombre_lugar, latitud, longitud, monitorizacion_avanzada);
+
+    if (noexiste && monitorizacion_avanzada) {
+      logger.info(`Iniciando sondeo para el usuario '${usuario}' en el lugar '${nombre_lugar}'`);
+
+      const insertarDatos = async () => {
         try {
-            const response = await axios.get(url);
-            const nombre_lugar = response.data.name;
-            const tiempo = response.data.weather[0];
-            delete tiempo.id;
-            delete tiempo.main;
-            const temperatura = response.data.main;
-            delete temperatura.sea_level;
-            delete temperatura.grnd_level;
-            const viento = response.data.wind;
-            delete tiempo.gust;
-            const nubes = response.data.clouds;
-            try{
+          const response = await axios.get(url);
+          const nombre_lugar = response.data.name;
+          const tiempo = response.data.weather[0];
+          delete tiempo.id;
+          delete tiempo.main;
+          const temperatura = response.data.main;
+          delete temperatura.sea_level;
+          delete temperatura.grnd_level;
+          const viento = response.data.wind;
+          delete viento.gust;
+          const nubes = response.data.clouds;
+
+          try {
             const result = await client.execute(
-                "INSERT INTO datos_"+usuario+"(nombre_lugar, nubes, temperatura, tiempo, viento, toma) VALUES (?, ?, ?, ?, ?, toTimeStamp(now()));",
-                [nombre_lugar, nubes, temperatura, tiempo, viento],
-                { prepare: true }
+              `INSERT INTO datos_${usuario}(nombre_lugar, nubes, temperatura, tiempo, viento, toma) VALUES (?, ?, ?, ?, ?, toTimeStamp(now()));`,
+              [nombre_lugar, nubes, temperatura, tiempo, viento],
+              { prepare: true }
             );
-          }
-          catch(error){
+          } catch (error) {
             console.error(error);
           }
-            
         } catch (error) {
-            console.error(error);
+          console.error(error);
         }
-    }, TIEMPO_SONDEO);
-    intervalos[usuario][nombre_lugar]=intervaloID;
-    res.status(200).json({exito:"Monitorización avanzada realizada correctamente!"});
-   } 
-   else if((noexiste==true) && (monitorizacion_avanzada==false)){
-    res.status(200).json({exito:"Monitorización básica realizada correctamente!"});
-   }
-   else{
-    logger.warn("Lugar ya existente");
-    res.status(401).json({error:"Lugar ya existente"});
+      };
+
+      await insertarDatos();
+
+      let intervaloID = setInterval(insertarDatos, 10000);
+      intervalos[usuario][nombre_lugar] = intervaloID;
+
+      res.status(200).json({ exito: "Monitorización avanzada realizada correctamente!" });
+    } else if (noexiste && !monitorizacion_avanzada) {
+      res.status(200).json({ exito: "Monitorización básica realizada correctamente!" });
+    } else {
+      logger.warn("Lugar ya existente");
+      res.status(401).json({ error: "Lugar ya existente" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al iniciar el sondeo" });
   }
-} catch (error) { 
-}
 });
+
 
 
 async function crearTabla(usu)
@@ -515,6 +523,7 @@ app.get('/obtenerdatosgraficasbasicos', async (req, res) => {
       const final = Math.floor(Date.now() / 1000);
       const inicio = final - (3*24*60*60);
       const url = 'https://history.openweathermap.org/data/2.5/history/city?lat=' + latitud + '&lon=' + longitud + '&type=hour&start='+inicio+'&end='+final+'&appid='+APIKEY_WEATHER+'&lang=es';
+      console.log(url);
       const response = await axios.get(url);
       const lista = response.data.list;
       const temperaturas = [];

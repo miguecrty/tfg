@@ -241,7 +241,7 @@ if (index === 0) {
 
         </div>
       <div className="col mt-3 mr-3 ml-3 mb-5">
-            <div className="card mb-2" style={{ minHeight:'670px',maxHeight: '670px'}}>
+            <div className="card mb-2 border-0 shadow">
               <div className="card-body">
                 {opcionSeleccionada ? (
                   <h4>Monitorizando {opcionSeleccionada}</h4>
@@ -255,18 +255,15 @@ if (index === 0) {
                     <>
         <div class="row">
     <div class="col-md-1 d-flex align-items-center justify-content-center" style={{maxWidth:'60px'}}>
-      <ul class="list-group ml-0 ml-2">
-        <button className={`btn shadow fs-5 ${modo === 0 ? 'btn-dark' : ''}`} style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingBottom:'20px',paddingTop:'20px'}} onClick={() => handleCambiarModo(0)}>Básica</button>
-        {datasets && (
-        <button className={`btn shadow fs-5 ${modo === 1 ? 'btn-dark' : ''}`}  style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingBottom:'20px',paddingTop:'20px'}} onClick={() => handleCambiarModo(1)}>Avanzada</button>
-        )}
+      <ul class="list-group ml-2">
+        <button className={`btn shadow fs-5 ${modo === 0 ? 'btn-dark' : ''}`} style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingBottom:'20px',paddingTop:'20px',maxWidth:'50px'}} onClick={() => handleCambiarModo(0)}>Básica</button>
+        <button className={`btn shadow fs-5 ${modo === 1 ? 'btn-dark' : ''}`}  style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingBottom:'20px',paddingTop:'20px',maxWidth:'50px'}} onClick={() => handleCambiarModo(1)}>Avanzada</button>
         </ul>
     </div>  
-    {modo ===1 && datasets &&(   
+    {modo ===1 && (   
       <>  
     <div class="col">
       <div class='row'>
-        
         <ul className="nav nav-tabs border-0">
           <li className="nav-item">
             <button className={`nav-link ml-3 border-2 ${activeTab === 0 ? 'active' : ''}`} onClick={() => handleTabClick(0)}>Temperatura</button>
@@ -289,12 +286,22 @@ if (index === 0) {
         </ul>
       
       </div>
-      <div className='row mb-5'>
-        {datasets && labels && tipo  && (
+      <div className='row mb-1'>
+        {(datasets && labels && tipo) ? (
+          <>
           <ChartTodas datasets={datasets} labels={labels} tipo={tipo} />
-        )}
+          </>
+        ): <>
+        <ChartTodas/>
+        
+        </>}
+        {labels.length < 10 ? (
+      <div className="alert text-center alert-warning mr-3 ml-3" style={{maxWidth:'1000px'}}>Se ha habilitado la monitorización del lugar recientemente, es posible que no aparezcan suficientes datos. Por favor, espere...</div>
+      ): <></>}
       </div>
+      
       </div>
+     
       </> 
     )}
     {modo ===0 &&(  
@@ -304,14 +311,14 @@ if (index === 0) {
         
         <ul className="nav nav-tabs border-0">
           <li className="nav-item">
-            <p className={`nav-link ml-3 border-2 active`}>Temperatura de los últimos 3 días</p>
+            <p className={`nav-link border-2 active`}>Temperatura de los últimos 3 días</p>
           </li>
         </ul>
       
       </div>
-      <div className='row mb-5'>
+      <div className='row mb-5 ml-0 mr-0' style={{transform:'translate(-25px, 0px)',minWidth:'300px'}}>
         {datasetsBasicos && labelsBasicos && (
-          <ChartTodas datasets={datasetsBasicos} labels={labelsBasicos} tipo={'line'} />
+          <ChartTodas datasets={datasetsBasicos} labels={labelsBasicos} tipo={'line'}  />
         )}
       </div>
       </div>
