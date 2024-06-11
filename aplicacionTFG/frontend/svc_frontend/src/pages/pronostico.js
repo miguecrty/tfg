@@ -22,6 +22,7 @@ const Pronostico = () => {
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({ lat: 40.7128, lng: -74.006 });
     const [backgroundColor, setBackgroundColor] = useState('rgba(255,0,0,0.7)');
     const [authenticated, setAuthenticated] = useState(false);
+    const [mostrarAyuda, setMostrarAyuda] = useState(false);
 
     
 
@@ -163,6 +164,26 @@ const Pronostico = () => {
             </Head>
             <Cabecera mostrarBotonHome={true} mostrarUser={true} />
                 <>
+                {mostrarAyuda && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '65%',
+            height: '90%',
+            backgroundColor: 'white',
+            border: '1px solid black',
+            zIndex: 1000,
+            padding: '20px',
+            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
+            display: 'flex'
+          }}
+        >
+            <img className="img-fluid" src='./images/prevision.png' style={{ maxWidth: '100%', maxHeight: '100%' }} alt="Ayuda Monitorización" />
+        </div>
+      )}
             <div className="row mr-0">
                 <div className='col-3 mt-1 mr-3'>
 
@@ -306,7 +327,7 @@ const Pronostico = () => {
         </>
        
 
-            <Pie ayuda={true} page={'pronostico'}/>
+            <Pie ayuda={true} page={'pronostico'} setMostrarAyuda={setMostrarAyuda} />
             </>
     );
 };

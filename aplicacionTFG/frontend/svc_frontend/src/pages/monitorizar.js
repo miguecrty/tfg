@@ -21,7 +21,7 @@ const Monitorizar = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [datasetsBasicos,setDatasetsBasicos]=useState(null);
   const [labelsBasicos,setLabelsBasicos]=useState(null);
-
+  const [mostrarAyuda, setMostrarAyuda] = useState(false);
   const handleCambiarModo = (index) => {
     if (index === 0) {
     }
@@ -192,11 +192,33 @@ if (index === 0) {
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
             </Head>
       <Cabecera mostrarBotonHome={true} mostrarUser={true} /> 
+      {mostrarAyuda && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '65%',
+            height: '90%',
+            backgroundColor: 'white',
+            border: '1px solid black',
+            zIndex: 1000,
+            padding: '20px',
+            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
+            display: 'flex'
+          }}
+        >
+          <div>
+            <img src='./images/ayuda_monitorizacion.png' style={{ maxWidth: '100%', maxHeight: '100%' }} alt="Ayuda Monitorización" />
+          </div>
+        </div>
+      )}
       <div className="row mr-0 ml-0">
      <div className="col-md-4">
       <div className="row-md-4 mt-3 ml-3">
       
-            <div className="card mr-3">
+            <div className="card mr-3 border-0 shadow">
               <div className="card-body">
               <h4>Lista de lugares</h4>
                 {opciones.length ?  (
@@ -223,7 +245,7 @@ if (index === 0) {
 
         {/*Segunda fila de la primera columna*/}
         <div className="row-md-4 mt-3 ml-3 mb-3">
-        <div className="card mr-3">
+        <div className="card mr-3 border-0 shadow">
         <div className="card-body">
         <h4>Mapa</h4>
           <SearchBox
@@ -252,17 +274,17 @@ if (index === 0) {
                 <div className="card mt-4 border-0">
                   {opcionSeleccionada ? (
                     <>
-        <div class="row">
-    <div class="col-md-1 d-flex align-items-center justify-content-center" style={{maxWidth:'60px'}}>
-      <ul class="list-group ml-2">
+        <div className="row">
+    <div className="col-md-1 d-flex align-items-center justify-content-center" style={{maxWidth:'60px'}}>
+      <ul className="list-group ml-2">
         <button className={`btn shadow fs-5 ${modo === 0 ? 'btn-dark' : ''}`} style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingBottom:'20px',paddingTop:'20px',maxWidth:'50px'}} onClick={() => handleCambiarModo(0)}>Básica</button>
         <button className={`btn shadow fs-5 ${modo === 1 ? 'btn-dark' : ''}`}  style={{writingMode: 'vertical-rl',textOrientation: 'mixed',transform: 'rotate(180deg)',whiteSpace: 'nowrap',paddingBottom:'20px',paddingTop:'20px',maxWidth:'50px'}} onClick={() => handleCambiarModo(1)}>Avanzada</button>
         </ul>
     </div>  
     {modo ===1 && (   
       <>  
-    <div class="col">
-      <div class='row'>
+    <div className="col">
+      <div className='row'>
         <ul className="nav nav-tabs border-0">
           <li className="nav-item">
             <button className={`nav-link ml-3 border-2 ${activeTab === 0 ? 'active' : ''}`} onClick={() => handleTabClick(0)}>Temperatura</button>
@@ -305,8 +327,8 @@ if (index === 0) {
     )}
     {modo ===0 &&(  
     <>
-    <div class="col">
-      <div class='row'>
+    <div className="col">
+      <div className='row'>
         
         <ul className="nav nav-tabs border-0">
           <li className="nav-item">
@@ -322,7 +344,7 @@ if (index === 0) {
       </div>
       </div>
                   
-      <div class="col-md-3">
+      <div className="col-md-3">
             
             {datosActuales && (
                     <>
@@ -360,7 +382,7 @@ if (index === 0) {
             </div>
           </div>
           </div>
-            <Pie ayuda={true} page={'monitorizar'}/>
+            <Pie ayuda={true} page={'monitorizar'} setMostrarAyuda={setMostrarAyuda}/>
         </>
         
     ); 

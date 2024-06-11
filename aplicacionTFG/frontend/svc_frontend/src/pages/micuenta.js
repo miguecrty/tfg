@@ -383,7 +383,7 @@ const MiCuenta = () => {
                     </div>
                 </div>
             </div>
-            <Pie ayuda={true} page={'mi cuenta'}/>
+            <Pie />
         </>
     );
 };
