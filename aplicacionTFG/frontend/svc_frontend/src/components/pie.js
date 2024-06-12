@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
-const Pie = ({ ayuda, page, setMostrarAyuda }) => {
+const Pie = ({ ayuda,setMostrarAyuda }) => {
   return (
     <footer
       className="bg-dark bg-opacity-75 text-white py-2"
@@ -33,10 +33,9 @@ const Pie = ({ ayuda, page, setMostrarAyuda }) => {
             Ayuda
             <FontAwesomeIcon
               icon={faCircleInfo}
-              onMouseEnter={() => setMostrarAyuda(true)}
-              onMouseLeave={() => setMostrarAyuda(false)}
+              onClick={() => setMostrarAyuda(true)}
               className='col-md-1 mr-2 mb-2'
-              style={{ width: '25px', height: '25px' }}
+              style={{ width: '25px', height: '25px',cursor:'pointer'}}
             />
           </>
         )}

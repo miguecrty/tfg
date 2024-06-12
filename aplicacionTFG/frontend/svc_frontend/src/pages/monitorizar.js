@@ -6,6 +6,8 @@ import Cookies from 'js-cookie';
 import ChartTodas from '@/components/chartTodas';
 import SearchBox from '@/components/searchbox';
 import withAuth from '@/components/withAuth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faXmark} from '@fortawesome/free-solid-svg-icons';
 const Monitorizar = () => {   
   const [opciones, setOpciones] = useState([]);
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(null);
@@ -193,27 +195,42 @@ if (index === 0) {
             </Head>
       <Cabecera mostrarBotonHome={true} mostrarUser={true} /> 
       {mostrarAyuda && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '65%',
-            height: '90%',
-            backgroundColor: 'white',
-            border: '1px solid black',
-            zIndex: 1000,
-            padding: '20px',
-            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
-            display: 'flex'
-          }}
-        >
-          <div>
-            <img src='./images/ayuda_monitorizacion.png' style={{ maxWidth: '100%', maxHeight: '100%' }} alt="Ayuda Monitorización" />
-          </div>
-        </div>
-      )}
+                    <div
+                    style={{
+                        position: 'fixed',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '65%',
+                        height: '100%',
+                        backgroundColor: 'white',
+                        border: '1px solid black',
+                        zIndex: 1000,
+                        padding: '20px',
+                        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}
+                    >
+                    <div className='row-md-1 mb-3'
+                        style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        }}
+                    >
+                        <FontAwesomeIcon
+                        icon={faXmark}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setMostrarAyuda(false)}
+                        />
+                    </div>
+                    <img
+                        className="img-fluid"
+                        src='./images/ayuda_monitorizacion.png'
+                        alt="Ayuda Monitorización"
+                    />
+                    </div>
+                )}
       <div className="row mr-0 ml-0">
      <div className="col-md-4">
       <div className="row-md-4 mt-3 ml-3">

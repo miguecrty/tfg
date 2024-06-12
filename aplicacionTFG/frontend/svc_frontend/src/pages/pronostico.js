@@ -7,6 +7,8 @@ import { useRef } from 'react';
 import ChartTodas from '@/components/chartTodas';
 import withAuth from '@/components/withAuth';
 import Cookies from 'js-cookie';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faXmark} from '@fortawesome/free-solid-svg-icons';
 const Pronostico = () => {
     const [diasSemana, setDiasSemana] = useState(null);
     const [bandera, setBandera] = useState(false);
@@ -165,25 +167,42 @@ const Pronostico = () => {
             <Cabecera mostrarBotonHome={true} mostrarUser={true} />
                 <>
                 {mostrarAyuda && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '65%',
-            height: '90%',
-            backgroundColor: 'white',
-            border: '1px solid black',
-            zIndex: 1000,
-            padding: '20px',
-            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
-            display: 'flex'
-          }}
-        >
-            <img className="img-fluid" src='./images/prevision.png' style={{ maxWidth: '100%', maxHeight: '100%' }} alt="Ayuda Monitorización" />
-        </div>
-      )}
+                    <div
+                    style={{
+                        position: 'fixed',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '65%',
+                        height: '75%',
+                        backgroundColor: 'white',
+                        border: '1px solid black',
+                        zIndex: 1000,
+                        padding: '20px',
+                        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}
+                    >
+                    <div className='row-md-1 mb-3'
+                        style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        }}
+                    >
+                        <FontAwesomeIcon
+                        icon={faXmark}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setMostrarAyuda(false)}
+                        />
+                    </div>
+                    <img
+                        className="img-fluid"
+                        src='./images/prevision.png'
+                        alt="Ayuda Monitorización"
+                    />
+                    </div>
+                )}
             <div className="row mr-0">
                 <div className='col-3 mt-1 mr-3'>
 
