@@ -24,9 +24,8 @@ const withAuth = (Component) => {
 };
 
 const checkAuthentication = async () => {
-    // Lógica para verificar la autenticación, por ejemplo, verificar las cookies
-    const username = await Cookies.get('username'); // Debes definir esta función
-    return !!username; // Devolver verdadero si hay un nombre de usuario en las cookies
+    const username = await Cookies.get('username');
+    return !!username; 
 };
 
 export default withAuth;

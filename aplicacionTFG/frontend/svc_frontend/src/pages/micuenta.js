@@ -212,7 +212,7 @@ const MiCuenta = () => {
     return (
         <>
             <Head>
-                <title>Menú principal</title>
+                <title>Mi Cuenta</title>
                 <link rel="icon" href="./images/logo.png" />
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
             </Head>

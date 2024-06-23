@@ -7,7 +7,6 @@ export default async function handler(req, res) {
                 'Content-Type': 'application/json'
             },
         });
-    
         if (response.ok) {
             const respuesta = await response.json();
             res.status(200).json(respuesta);

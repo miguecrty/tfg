@@ -189,7 +189,7 @@ if (index === 0) {
     return (
         <>
         <Head>
-                <title>Lugares</title>
+                <title>Monitorizar</title>
                 <link rel="icon" href="./images/logo.png" />
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
             </Head>
@@ -392,8 +392,6 @@ if (index === 0) {
                   )}
                 </div>
                 </div>
-                
-               
                 </div>
               </div>
             </div>

@@ -150,9 +150,6 @@ const SearchBox = ({ onPlaceSelected, mostrarMapa, ubicacionSeleccionada, setUbi
             </LoadScript>
         </>
         )}
-
-
-
         </>
       );
       

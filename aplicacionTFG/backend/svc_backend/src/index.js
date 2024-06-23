@@ -17,9 +17,6 @@ const transport = pino.transport({
   }
 });
 
-/**
- * Conexión con la base de datoddds.
- */
 const logger = pino(transport);
 
 
@@ -46,10 +43,6 @@ const dominio_app = process.env.DOMINIO_APP || 'localhost:8080';
 
 const PORT = process.env.PORT_APP || 3000;
 
-//   LOCAL
-/**
- * Conexión con la base de datos.
- */
 const client = new cassandra.Client({
   contactPoints: [hostBD],
   localDataCenter: datacenterBD,
@@ -73,11 +66,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Array para almacenar los clientes conectados
-const clients = [];
-//ms
-const TIEMPO_SONDEO=10000
-// Iniciar el servidor
+
 
 const server = app.listen(PORT, () => {
   logger.info(`Servidor Express en funcionamiento en el puerto ${PORT}`);
@@ -97,7 +86,6 @@ async function limpiarBBDD()
     resultado.rows.forEach(async usuario => {
       try {
       await client.execute("TRUNCATE datos_"+usuario.nombre_usu);
-      await client.execute("UPDATE tfg.usuarios SET lugares =null WHERE nombre_usu ='"+usuario.nombre_usu+"'");
       }
       catch(error)
       {

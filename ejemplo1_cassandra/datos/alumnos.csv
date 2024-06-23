@@ -2,7 +2,7 @@ id,nombre,apellido,curso,email
 25d21758-4fe8-4bd1-895d-11afb06b2271,Miguel,Lopez,"{1,2,3}",migue@email.com
 1de9136b-7557-4e54-a775-5cdd7836e466,Ana,Garcia,"{1,2,4}",ana@email.com
 6770831c-dd3e-4812-93ec-73c90bc927de,Pablo,Rodriguez,"{2,3}",pablo@email.com
-8db43857-a9ea-4601-b1c3-b4a89da9b575,Eduardo,Fernandez,"{4}",eduardo@email.com
+8db43857-a9ea-4601-b1c3-b4a89da9b575,Eduardo,Lopez,"{3}",eduardo@email.com
 5a2ab17e-1408-4297-a833-be8a3b439042,Maria,Alvarez,"{1,4}",maria@email.com
 1135e139-e962-4197-9336-d7105a872b7e,Luis,Martinez,"{2,3,4}",luis@email.com
 e7cfa6db-25cf-41cf-9c46-a2f1987cc6e8,Andrea,Ruiz,"{1,2,4}",andrea@email.com

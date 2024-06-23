@@ -18,9 +18,6 @@ const Menu = () => {
 
         obtenerUsuarioLogeado();
     }, []);
-    if (!authenticated) {
-        return null; // O algún indicador de carga mientras se verifica la autenticación
-    }
 
     const handleItemClick = (url) => {
         router.push(url);

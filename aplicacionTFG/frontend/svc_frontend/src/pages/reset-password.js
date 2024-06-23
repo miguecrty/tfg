@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import '@fortawesome/fontawesome-free/css/all.min.css'; // Import Font Awesome CSS
+import Pie from '../components/pie';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function ResetPassword() {
   const router = useRouter();
@@ -49,6 +50,7 @@ export default function ResetPassword() {
         <title>Restablecer la contraseña</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <link rel="icon" href="./images/logo.png" />
       </Head>
       <div className="container d-flex justify-content-center align-items-center vh-100">
         <div className="card" style={{minWidth:'300px'}}>
@@ -87,6 +89,7 @@ export default function ResetPassword() {
           </div>
         </div>
       </div>
+      <Pie/>
     </>
   );
 }

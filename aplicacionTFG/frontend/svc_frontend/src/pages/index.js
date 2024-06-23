@@ -66,12 +66,18 @@ const Home = () => {
     }, []);
 
     const handleLogin = () => {
+        if(username != "" && password != ""){
+            setError('');
         const userData = {
             username: username,
             password: password
         };
 
         fetchData(userData);
+    }
+    else{
+        setError('Completa los campos');
+    }
     };
 
     const handleRegistro = () => {

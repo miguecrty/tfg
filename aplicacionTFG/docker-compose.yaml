@@ -1,27 +1,36 @@
 version: '3'
-
 services:
   backend:
     build:
       context: ./backend
     ports:
       - "3000:3000"
-    environment:
-      - CASSANDRA=cassandra
-      - DATACENTER=datacenter1
-      - PORT=9042
-      - KEYSPACE=tfg
     networks:
       - red
     depends_on:
       - cassandra
+    environment:
+      - HOST_EMAIL=smtp-es.securemail.pro
+      - PORT_EMAIL=465
+      - USER_EMAIL=soporte@meteostats.es
+      - PASS_EMAIL=GOrrino711
+      - HOST_CASSANDRA=cassandra
+      - DATACENTER_CASSANDRA=datacenter1
+      - PORT_CASSANDRA=9042
+      - KEYSPACE_CASSANDRA=tfg
+      - USERNAME_CASSANDRA=cassandra
+      - PASSWORD_CASSANDRA=cassandra
+      - APIKEY_WEATHER=854c5489c0f85d6fd1fd9a30d77eee0a
+      - DOMINIO_APP=localhost:8080
+      - PORT_APP=3000
   frontend:
     build:
       context: ./frontend
     ports:
       - "8080:8080"
     environment:
-      - SERVIDOR=10.88.0.2
+      - SERVER=backend:3000
+      - GOOGLE_API_KEY=AIzaSyBsZnTlM4g1LCqmg4u74pouNXE3mlQF6Uk
     networks:
       - red
   cassandra:
