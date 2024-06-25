@@ -20,7 +20,7 @@ const transport = pino.transport({
 const logger = pino(transport);
 
 
-////// k8s (secrets) ////
+////// k8s (secrets y configmap) ////
 
 // EMAIL
 const host = process.env.HOST_EMAIL || "smtp-es.securemail.pro";
@@ -30,13 +30,14 @@ const emailpass = process.env.PASS_EMAIL || "GOrrino711";
 
 
 // CASSANDRA
-const hostBD = process.env.HOST_CASSANDRA || '10.88.0.2';
+const hostBD = process.env.HOST_CASSANDRA || '10.88.0.12';
 const datacenterBD = process.env.DATACENTER_CASSANDRA || 'datacenter1';
 const portBD = process.env.PORT_CASSANDRA || 9042;
 const keyspaceBD = process.env.KEYSPACE_CASSANDRA || 'tfg';
 const usernameBD = process.env.USERNAME_CASSANDRA || 'cassandra';
 const passwordBD = process.env.PASSWORD_CASSANDRA || 'cassandra';
 
+//API OPENWEATHER
 const APIKEY_WEATHER = process.env.APIKEY_WEATHER || '854c5489c0f85d6fd1fd9a30d77eee0a';
 // DOMINIO APP
 const dominio_app = process.env.DOMINIO_APP || 'localhost:8080';
@@ -75,26 +76,8 @@ const server = app.listen(PORT, () => {
 let intervalos ={}
 const tokens = {};
 intervalos['usuario']={}
-
-
-//limpiarBBDD();
-async function limpiarBBDD() 
-{
-  logger.warn("LIMPIANDO BBDD...");
-  const resultado = await client.execute("SELECT nombre_usu FROM usuarios");
-  if(resultado.rows.length >0){
-    resultado.rows.forEach(async usuario => {
-      try {
-      await client.execute("TRUNCATE datos_"+usuario.nombre_usu);
-      }
-      catch(error)
-      {
-        logger.info(error);
-      }
-    });
-    
-  }
-}
+const DIFERENCIAHORARIA=7200;
+const TIEMPOSONDEO=60000*30;
 
 async function actualizarTablaLugares(usuario,nombre_lugar,lat,lon,avanzada) {
     
@@ -257,7 +240,7 @@ app.get('/obtenerdatosgraficasbasicos', async (req, res) => {
       const temperaturas = [];
       const tomas = [];
       lista.forEach(element => {
-        let date = new Date(element.dt * 1000);
+        let date = new Date((element.dt+DIFERENCIAHORARIA) * 1000);
         let day = ("0" + date.getDate()).slice(-2);
         let month = ("0" + (date.getMonth() + 1)).slice(-2); 
         let hours = ("0" + date.getHours()).slice(-2);
@@ -372,12 +355,12 @@ for (const dia in temperaturaFormateada) {
   };
 }
 
-const atardecer = new Date(lista_datos_actuales.sys.sunset * 1000);
+const atardecer = new Date((lista_datos_actuales.sys.sunset+DIFERENCIAHORARIA) * 1000);
 const atardecer_horas = atardecer.getHours().toString().padStart(2, '0');
 const atardecer_minutos = atardecer.getMinutes().toString().padStart(2, '0');
 const atardecer_f = `${atardecer_horas}:${atardecer_minutos}`;
 
-const amanecer = new Date(lista_datos_actuales.sys.sunrise * 1000);
+const amanecer = new Date((lista_datos_actuales.sys.sunrise+DIFERENCIAHORARIA) * 1000);
 const amanecer_horas = amanecer.getHours().toString().padStart(2, '0');
 const amanecer_minutos = amanecer.getMinutes().toString().padStart(2, '0');
 const amanecer_f = `${amanecer_horas}:${amanecer_minutos}`;
@@ -458,7 +441,9 @@ app.post('/iniciarsondeo', async (req, res) => {
           const viento = response.data.wind;
           delete viento.gust;
           const nubes = response.data.clouds;
-          let date = new Date(response.data.dt * 1000);
+          let date = new Date((response.data.dt+DIFERENCIAHORARIA) * 1000);
+          console.log(date);
+
           try {
             const result = await client.execute(
               `INSERT INTO datos_${usuario}(nombre_lugar, nubes, temperatura, tiempo, viento, toma) VALUES (?, ?, ?, ?, ?, ?);`,
@@ -475,7 +460,7 @@ app.post('/iniciarsondeo', async (req, res) => {
 
       await insertarDatos();
 
-      let intervaloID = setInterval(insertarDatos, 10000);
+      let intervaloID = setInterval(insertarDatos, TIEMPOSONDEO);
       intervalos[usuario][nombre_lugar] = intervaloID;
 
       res.status(200).json({ exito: "Monitorización avanzada realizada correctamente!" });
