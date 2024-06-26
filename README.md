@@ -53,7 +53,7 @@ Para instalar Kubernetes, Kind (Kubernetes in Docker), kubectl, y gcloud (Google
 
 **SO:** Linux
 
-**Distribución:** Ubuntu
+**Distribución:** Ubuntu MATE
 
 **Versión:** 22.04
 
