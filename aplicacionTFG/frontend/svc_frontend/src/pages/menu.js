@@ -24,7 +24,7 @@ const Menu = () => {
     };
 
     if (!authenticated) {
-        return null; // O algún indicador de carga mientras se verifica la autenticación
+        return null; 
     }
 
     return (

@@ -23,26 +23,26 @@ const logger = pino(transport);
 ////// k8s (secrets y configmap) ////
 
 // EMAIL
-const host = process.env.HOST_EMAIL || "smtp-es.securemail.pro";
-const emailport = process.env.PORT_EMAIL || 465;
-const emailuser = process.env.USER_EMAIL || "soporte@meteostats.es";
-const emailpass = process.env.PASS_EMAIL || "GOrrino711";
+const host = process.env.HOST_EMAIL;
+const emailport = process.env.PORT_EMAIL;
+const emailuser = process.env.USER_EMAIL;
+const emailpass = process.env.PASS_EMAIL;
 
 
 // CASSANDRA
-const hostBD = process.env.HOST_CASSANDRA || '10.88.0.12';
-const datacenterBD = process.env.DATACENTER_CASSANDRA || 'datacenter1';
-const portBD = process.env.PORT_CASSANDRA || 9042;
-const keyspaceBD = process.env.KEYSPACE_CASSANDRA || 'tfg';
-const usernameBD = process.env.USERNAME_CASSANDRA || 'cassandra';
-const passwordBD = process.env.PASSWORD_CASSANDRA || 'cassandra';
+const hostBD = process.env.HOST_CASSANDRA;
+const datacenterBD = process.env.DATACENTER_CASSANDRA;
+const portBD = process.env.PORT_CASSANDRA;
+const keyspaceBD = process.env.KEYSPACE_CASSANDRA;
+const usernameBD = process.env.USERNAME_CASSANDRA;
+const passwordBD = process.env.PASSWORD_CASSANDRA;
 
 //API OPENWEATHER
-const APIKEY_WEATHER = process.env.APIKEY_WEATHER || '854c5489c0f85d6fd1fd9a30d77eee0a';
+const APIKEY_WEATHER = process.env.APIKEY_WEATHER;
 // DOMINIO APP
-const dominio_app = process.env.DOMINIO_APP || 'localhost:8080';
+const dominio_app = process.env.DOMINIO_APP;
 
-const PORT = process.env.PORT_APP || 3000;
+const PORT = process.env.PORT_APP;
 
 const client = new cassandra.Client({
   contactPoints: [hostBD],

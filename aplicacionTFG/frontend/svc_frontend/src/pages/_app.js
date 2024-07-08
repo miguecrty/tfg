@@ -10,5 +10,5 @@ function Tfg({ Component, pageProps }) {
 
 export default Tfg;
 
-export const server = process.env.SERVER || "localhost:3000";
-export const googleApiKey = process.env.GOOGLE_API_KEY || "AIzaSyBsZnTlM4g1LCqmg4u74pouNXE3mlQF6Uk";
+export const server = process.env.SERVER;
+export const googleApiKey = process.env.GOOGLE_API_KEY;
